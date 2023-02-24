@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, user-scalable=yes"
+		>
+
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+
+	<body>
+		<form id="bells-form" action="submit" method="post">
+			<table id="bells-table">
+				<thead>
+					<tr>
+						<th>
+							<input type="text" name="name" placeholder="Schedule">
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+
+				<template class="row-template">
+					<tr>
+						<td>
+							<input type="text" name="time">
+						</td>
+						<td>
+							<button class="add-button" type="button">+</button>
+							<button class="remove-button" type="button">-</button>
+						</td>
+					</tr>
+				</template>
+
+				</tbody>
+
+			</table>
+
+			<button class="get-button" type="button">Get</button>
+			<button class="submit-button" type="submit">Submit</button>
+		</form>
+
+
+		<script src="utils.js"></script>
+		<script src="HtmlDynamicTable.js"></script>
+		<script src="index.js"></script>
+	</body>
+</html>
