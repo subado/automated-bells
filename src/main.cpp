@@ -1,7 +1,6 @@
 #include <LittleFS.h>
 
 #include <ESP8266WiFi.h>
-#include <ESP8266mDNS.h>
 
 #include <SimpleFTPServer.h>
 #include <ESPAsyncTCP.h>
@@ -39,8 +38,6 @@ void setup()
 		return;
 	}
 	
-	MDNS.addService("http","tcp",80);
-
 	ftp.setCallback(_callback);
 	ftp.setTransferCallback(_transferCallback);
 	ftp.begin(domainName, domainName);
