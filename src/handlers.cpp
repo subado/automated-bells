@@ -2,8 +2,12 @@
 
 #include <ArduinoJson.h>
 #include <LittleFS.h>
+#include <DS3231.h>
+
+#include "Time.h"
 
 static const char *tablesDir = "/tables/";
+extern RTClib rtc;
 
 void handleRedirect(AsyncWebServerRequest *request)
 {
@@ -62,4 +66,14 @@ void handlePostTables(AsyncWebServerRequest *request)
 	file.close();
 
 	request->send(200);
+}
+
+void handleGetTime(AsyncWebServerRequest *request)
+{
+	Time now = rtc.now();
+
+	StaticJsonDocument<128> time;
+	time.add(String(now));
+
+	request->send(200, "application/json", time.as<String>());
 }

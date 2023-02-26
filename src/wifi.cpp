@@ -15,7 +15,7 @@ bool wifiSta(const char *ssid, const char *psk, const char *hostname)
 	return true;
 }
 
-bool wifiAp(const char *ssid, const char *psk = "", const IPAddress &localIp = IPAddress(192, 168, 0, 4))
+bool wifiAp(const char *ssid, const char *psk, const IPAddress &localIp)
 {
 	WiFi.softAPConfig(localIp, localIp, IPAddress(255, 255, 255, 0));
 

@@ -1,10 +1,11 @@
 #include <LittleFS.h>
-
 #include <ESP8266WiFi.h>
+#include <Wire.h>
 
 #include <SimpleFTPServer.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <DS3231.h>
 
 #include <stdio.h>
 #include <vector>
@@ -18,6 +19,7 @@
 
 AsyncWebServer server(80);
 FtpServer ftp;
+RTClib rtc;
 
 std::map<const char *,std::vector<Time>> table;
 
@@ -31,6 +33,8 @@ void setup()
 		return;
 	}
 	Serial.println("Mount file system");
+
+	Wire.begin();
 
 	const char *domainName = "bells";
 	if (!wifiSta(SSID, PSK, domainName))
@@ -47,6 +51,8 @@ void setup()
 	server.on("^\\/tables\\/([A-Za-z0-9]+)$", HTTP_GET, handleGetTable);
 	server.on("/tables", HTTP_GET, handleGetTables);
 	server.on("/tables", HTTP_POST, handlePostTables);
+
+	server.on("/time", HTTP_GET, handleGetTime);
 
 	server.on("^([^.]*[^/])$", HTTP_GET, handleRedirect);
 

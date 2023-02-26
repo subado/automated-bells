@@ -10,4 +10,6 @@ void handleGetTable(AsyncWebServerRequest *request);
 void handleGetTables(AsyncWebServerRequest *request);
 void handlePostTables(AsyncWebServerRequest *request);
 
+void handleGetTime(AsyncWebServerRequest *request);
+
 #endif // HANDLERS_H
