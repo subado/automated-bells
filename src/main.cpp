@@ -5,6 +5,7 @@
 #include <SimpleFTPServer.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <AsyncJson.h>
 #include <DS3231.h>
 
 #include <stdio.h>
@@ -50,7 +51,8 @@ void setup()
 
 	server.on("^\\/tables\\/([A-Za-z0-9]+)$", HTTP_GET, handleGetTable);
 	server.on("/tables", HTTP_GET, handleGetTables);
-	server.on("/tables", HTTP_POST, handlePostTables);
+
+	server.addHandler(new AsyncCallbackJsonWebHandler("/tables", handlePostTables));
 
 	server.on("/time", HTTP_GET, handleGetTime);
 

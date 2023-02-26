@@ -41,28 +41,30 @@ void handleGetTables(AsyncWebServerRequest *request)
 	request->send(200, "application/json", json.as<String>());
 }
 
-void handlePostTables(AsyncWebServerRequest *request)
+void handlePostTables(AsyncWebServerRequest *request, JsonVariant &json)
 {
-	StaticJsonDocument<256> json;
+	JsonArray array = json.as<JsonArray>();
+	StaticJsonDocument<256> doc;
+
 	String path = tablesDir;
 
-	size_t params = request->params();
-	for (size_t i = 0; i < params; i++)
+	for (JsonArray::iterator it = array.begin(); it != array.end(); ++it)
 	{
-		AsyncWebParameter* p = request->getParam(i);
-		if (p->name() == "title")
+		if ((*it).containsKey("title"))
 		{
-			path += p->value() + ".json";
+			path += (*it)["title"].as<String>();
 		}
-		else if (p->name() == "time")
+		else if ((*it).containsKey("time"))
 		{
-			json.add(p->value());
+			doc.add((*it)["time"].as<String>());
 		}
 	}
 
+	path += ".json";
+
 	File file;
 	file = LittleFS.open(path.c_str(), "w");
-	serializeJson(json, file);
+	serializeJson(doc, file);
 	file.close();
 
 	request->send(200);

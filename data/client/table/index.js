@@ -34,13 +34,19 @@ const form = document.querySelector("#bells-form");
 form.addEventListener("submit", handleFormSubmit);
 
 function serializeForm(formNode) {
-	return new URLSearchParams(new FormData(formNode));
+	const formData = new FormData(formNode);
+	const formArray = Array.from(formData.entries());
+	const pairs = formArray.reduce((result, obj) => {
+		result.push({ [obj[0]]: obj[1] });
+		return result;
+	}, []);
+	return JSON.stringify(pairs);
 }
 
 function sendData(data, name) {
 	return fetch('/tables', {
 		method: 'POST',
-		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+		headers: { 'Content-Type': 'application/json' },
 		body: data,
 	})
 }
