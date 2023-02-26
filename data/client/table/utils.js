@@ -13,25 +13,15 @@ function getParentElement(element, parent)
 	return element;
 }
 
-function loadJson(jsonData, dynamicTable)
+function loadArray(array, dynamicTable)
 {
-	deleteChildren(dynamicTable.table.tBodies);
+	deleteChildren(dynamicTable.table.tBodies[0]);
 
-	for (let i = 0; i < data.length; i++)
+	for (let i = 0; i < array.length; i++)
 	{
 		dynamicTable.addRow();
-		dynamicTable.table.rows[i].querySelectorAll('input[name="time"]').value = data[i];
+		dynamicTable.table.tBodies[0].rows[i].querySelector('input[name="time"]').value = array[i];
 	}
-}
-
-function addListener(selector, eventType, handler, obj = document)
-{
-	const elements = obj.querySelectorAll(selector);
-
-	Array.from(elements).forEach((element) =>
-	{
-		element.addEventListener(eventType, handler);
-	});
 }
 
 function deleteChildren(element)

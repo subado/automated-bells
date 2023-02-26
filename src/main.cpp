@@ -16,10 +16,6 @@
 #include "Time.h"
 #include "handlers.h"
 
-#define SSID "xxx"
-#define PSK "xxx"
-
-const char *jsonFile = "/bells.json";
 
 AsyncWebServer server(80);
 FtpServer ftp;
@@ -51,14 +47,15 @@ void setup()
 	Serial.println("Ftp server started");
 	Serial.printf("Login: %s\nPassword: %s\n", domainName, domainName);
 
+	server.on("^\\/tables\\/([A-Za-z0-9]+)$", HTTP_GET, handleGetTable);
+	server.on("/tables", HTTP_POST, handlePostTables);
+	server.on("/tables", HTTP_GET, handleGetTables);
 
 	server.on("^([^.]*[^/])$", HTTP_GET, handleRedirect);
-	server.on("/list/", HTTP_GET, handleList);
 
 	server
 	.serveStatic("/", LittleFS, "/client/")
 	.setDefaultFile("index.html");
-
 
 	server.begin();
 	Serial.println("Http server started");

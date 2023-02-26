@@ -11,12 +11,12 @@
 	</head>
 
 	<body>
-		<form id="bells-form" action="submit" method="post">
+		<form id="bells-form" action="/tables" method="POST">
 			<table id="bells-table">
 				<thead>
 					<tr>
 						<th>
-							<input type="text" name="name" placeholder="Schedule">
+							<input type="text" name="title" placeholder="Schedule">
 						</th>
 					</tr>
 				</thead>
@@ -25,7 +25,7 @@
 				<template class="row-template">
 					<tr>
 						<td>
-							<input type="text" name="time">
+							<input type="time" name="time">
 						</td>
 						<td>
 							<button class="add-button" type="button">+</button>
@@ -43,6 +43,7 @@
 		</form>
 
 
+		<script src="../utils.js"></script>
 		<script src="utils.js"></script>
 		<script src="HtmlDynamicTable.js"></script>
 		<script src="index.js"></script>
