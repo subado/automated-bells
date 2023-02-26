@@ -4,9 +4,10 @@
 #include <Arduino.h>
 #include <ESPAsyncWebServer.h>
 
-void handleGetTables(AsyncWebServerRequest *request);
 void handleRedirect(AsyncWebServerRequest *request);
-void handlePostTables(AsyncWebServerRequest *request);
+
 void handleGetTable(AsyncWebServerRequest *request);
+void handleGetTables(AsyncWebServerRequest *request);
+void handlePostTables(AsyncWebServerRequest *request);
 
 #endif // HANDLERS_H

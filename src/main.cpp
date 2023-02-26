@@ -45,8 +45,8 @@ void setup()
 	Serial.printf("Login: %s\nPassword: %s\n", domainName, domainName);
 
 	server.on("^\\/tables\\/([A-Za-z0-9]+)$", HTTP_GET, handleGetTable);
-	server.on("/tables", HTTP_POST, handlePostTables);
 	server.on("/tables", HTTP_GET, handleGetTables);
+	server.on("/tables", HTTP_POST, handlePostTables);
 
 	server.on("^([^.]*[^/])$", HTTP_GET, handleRedirect);
 
