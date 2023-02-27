@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <vector>
 
-#include "configuration.h"
 #include "ftpCallback.h"
 #include "wifi.h"
 #include "Time.h"
@@ -22,8 +21,6 @@ AsyncWebServer server(80);
 FtpServer ftp;
 RTClib rtc;
 String shedule = "";
-
-std::map<const char *,std::vector<Time>> table;
 
 void setup()
 {
