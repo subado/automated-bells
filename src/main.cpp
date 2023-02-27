@@ -12,14 +12,15 @@
 #include <vector>
 
 #include "wifi.h"
-#include "Time.h"
 #include "handlers.h"
+#include "Shedule.h"
 
+const char *tablesDir = "/tables/";
 
 AsyncWebServer server(80);
 FtpServer ftp;
 RTClib rtc;
-String shedule = "";
+Shedule shedule;
 
 void setup()
 {

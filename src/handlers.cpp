@@ -5,10 +5,11 @@
 #include <DS3231.h>
 
 #include "Time.h"
+#include "Shedule.h"
 
-static const char *tablesDir = "/tables/";
+extern const char *tablesDir;
 extern RTClib rtc;
-extern String shedule;
+extern Shedule shedule;
 
 void handleRedirect(AsyncWebServerRequest *request)
 {
@@ -85,13 +86,13 @@ void handleGetShedule(AsyncWebServerRequest *request)
 {
 	StaticJsonDocument<64> doc;
 
-	doc.add(shedule);
+	doc.add(shedule.name());
 
 	request->send(200, "application/json", doc.as<String>());
 }
 
 void handlePostShedule(AsyncWebServerRequest *request, JsonVariant &json)
 {
-	shedule = json.as<String>();
+	shedule.setup(json.as<String>());
 	request->send(200);
 }

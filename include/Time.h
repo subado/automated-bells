@@ -9,6 +9,7 @@ class Time
 public:
 
 	Time(const DateTime &dateTime);
+	Time(const String &str);
 
 	uint8_t hour() const;
 	uint8_t minute() const;
@@ -21,6 +22,7 @@ public:
 protected:
 
 	String unitToString(uint8_t unit) const;
+	uint8_t stringToUnit(String str) const;
 
 	uint8_t hour_, minute_;
 };
