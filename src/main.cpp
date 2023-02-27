@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <vector>
 
-#include "ftpCallback.h"
 #include "wifi.h"
 #include "Time.h"
 #include "handlers.h"
@@ -41,8 +40,6 @@ void setup()
 		return;
 	}
 	
-	ftp.setCallback(_callback);
-	ftp.setTransferCallback(_transferCallback);
 	ftp.begin(domainName, domainName);
 	Serial.println("Ftp server started");
 	Serial.printf("Login: %s\nPassword: %s\n", domainName, domainName);
