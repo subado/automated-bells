@@ -21,6 +21,7 @@
 AsyncWebServer server(80);
 FtpServer ftp;
 RTClib rtc;
+String shedule = "";
 
 std::map<const char *,std::vector<Time>> table;
 
@@ -49,12 +50,15 @@ void setup()
 	Serial.println("Ftp server started");
 	Serial.printf("Login: %s\nPassword: %s\n", domainName, domainName);
 
-	server.on("^\\/tables\\/([A-Za-z0-9]+)$", HTTP_GET, handleGetTable);
+	server.on("^\\/tables\\/([A-Za-z0-9]{1,31})$", HTTP_GET, handleGetTable);
 	server.on("/tables", HTTP_GET, handleGetTables);
 
 	server.addHandler(new AsyncCallbackJsonWebHandler("/tables", handlePostTables));
 
 	server.on("/time", HTTP_GET, handleGetTime);
+
+	server.on("/shedule", HTTP_GET, handleGetShedule);
+	server.addHandler(new AsyncCallbackJsonWebHandler("/shedule", handlePostShedule));
 
 	server.on("^([^.]*[^/])$", HTTP_GET, handleRedirect);
 

@@ -7,24 +7,13 @@ if (localStorage.getItem("table") != null) {
 }
 
 addListener(".get-button", "click", (event) => {
-	getTable(dynamicTable.table.tHead.querySelector('input[name="title"]').value);
+	getTable(dynamicTable.table.tHead.querySelector("input[name=title]").value);
 })
 
 function getTable(tableName)
 {
-	fetch(`/tables/${tableName}`, {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json"
-		}
-	})
-	.then(response => {
-		if (response.ok) {
-			return response.json();
-		}
-	})
-	.then(data => {
-		dynamicTable.table.tHead.querySelector('input[name="title"]').value = tableName;
+	getData(`/tables/${tableName}`).then(data => {
+		dynamicTable.table.tHead.querySelector("input[name=title]").value = tableName;
 		loadArray(data, dynamicTable);
 	});
 }
@@ -42,17 +31,8 @@ function serializeForm(formNode) {
 	return JSON.stringify(pairs);
 }
 
-function sendData(data, name) {
-	return fetch('/tables', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: data,
-	})
-}
-
-
 function handleFormSubmit(event) {
 	event.preventDefault();
 	const data = serializeForm(event.target)
-	const response = sendData(data);
+	const response = sendData("/tables", data);
 }

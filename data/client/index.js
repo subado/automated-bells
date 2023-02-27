@@ -1,15 +1,4 @@
-fetch("/tables", {
-	method: "GET",
-	headers: {
-		"Content-Type": "application/json"
-	}
-})
-.then(response => {
-	if (response.ok) {
-		return response.json();
-	}
-})
-.then(data => {
+getData("/tables").then(data => {
 	const list = document.querySelector("#list");
 
 	data.forEach(element => {
@@ -24,19 +13,21 @@ fetch("/tables", {
 		localStorage.setItem("table", button.value);
 		window.location.href = "/table";
 	});
+	addListener("input[name=table][type=radio]", "change", (event) => {
+		radio = event.target;
+		sendData("/shedule", JSON.stringify(radio.value));
+	});
 });
 
+getData("/shedule").then(data => {
+	if (data != "")
+	{
+		document.querySelector(`input[type=radio][value=${data}]`).checked = true;
+	}
+})
+
 function updateTime() {
-	fetch("/time", {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json"
-		}
-	}).then(response => {
-		if (response.ok) {
-			return response.json();
-		}
-	}).then(data => {
+	getData("/time").then(data => {
 		document.querySelector("#time").innerHTML = data;
 	});
 }

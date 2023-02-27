@@ -8,6 +8,7 @@
 
 static const char *tablesDir = "/tables/";
 extern RTClib rtc;
+extern String shedule;
 
 void handleRedirect(AsyncWebServerRequest *request)
 {
@@ -20,7 +21,7 @@ void handleRedirect(AsyncWebServerRequest *request)
 void handleGetTable(AsyncWebServerRequest *request)
 {
 	File file = LittleFS.open((tablesDir + request->pathArg(0) + ".json").c_str(), "r");
-	StaticJsonDocument<256> json;
+	DynamicJsonDocument json(2048);
 	deserializeJson(json, file);
 	file.close();
 
@@ -30,7 +31,7 @@ void handleGetTable(AsyncWebServerRequest *request)
 void handleGetTables(AsyncWebServerRequest *request)
 {
 	Dir root = LittleFS.openDir(tablesDir);
-	StaticJsonDocument<256> json;
+	DynamicJsonDocument json(1024);
 
 	for (String fileName; root.next();)
 	{
@@ -44,7 +45,7 @@ void handleGetTables(AsyncWebServerRequest *request)
 void handlePostTables(AsyncWebServerRequest *request, JsonVariant &json)
 {
 	JsonArray array = json.as<JsonArray>();
-	StaticJsonDocument<256> doc;
+	DynamicJsonDocument doc(2048);
 
 	String path = tablesDir;
 
@@ -74,8 +75,23 @@ void handleGetTime(AsyncWebServerRequest *request)
 {
 	Time now = rtc.now();
 
-	StaticJsonDocument<128> time;
+	StaticJsonDocument<32> time;
 	time.add(String(now));
 
 	request->send(200, "application/json", time.as<String>());
+}
+
+void handleGetShedule(AsyncWebServerRequest *request)
+{
+	StaticJsonDocument<64> doc;
+
+	doc.add(shedule);
+
+	request->send(200, "application/json", doc.as<String>());
+}
+
+void handlePostShedule(AsyncWebServerRequest *request, JsonVariant &json)
+{
+	shedule = json.as<String>();
+	request->send(200);
 }

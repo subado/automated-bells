@@ -13,4 +13,7 @@ void handlePostTables(AsyncWebServerRequest *request, JsonVariant &json);
 
 void handleGetTime(AsyncWebServerRequest *request);
 
+void handleGetShedule(AsyncWebServerRequest *request);
+void handlePostShedule(AsyncWebServerRequest *request, JsonVariant &json);
+
 #endif // HANDLERS_H
