@@ -5,11 +5,10 @@ if (localStorage.getItem("table") != null) {
 } else {
 	dynamicTable.addRow();
 }
-addListener(".get-button", "click", handleGetButton)
 
-function handleGetButton(event) {
+addListener(".get-button", "click", (event) => {
 	getTable(dynamicTable.table.tHead.querySelector('input[name="title"]').value);
-}
+})
 
 function getTable(tableName)
 {
