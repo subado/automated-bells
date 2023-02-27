@@ -6,7 +6,6 @@
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <AsyncJson.h>
-#include <DS3231.h>
 
 #include <stdio.h>
 #include <vector>
@@ -19,7 +18,6 @@ const char *tablesDir = "/tables/";
 
 AsyncWebServer server(80);
 FtpServer ftp;
-RTClib rtc;
 Shedule shedule;
 
 void setup()

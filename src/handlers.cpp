@@ -74,7 +74,7 @@ void handlePostTables(AsyncWebServerRequest *request, JsonVariant &json)
 
 void handleGetTime(AsyncWebServerRequest *request)
 {
-	Time now = rtc.now();
+	Time now = RTClib::now();
 
 	StaticJsonDocument<32> time;
 	time.add(String(now));
