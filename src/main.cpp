@@ -15,14 +15,19 @@
 #include "Shedule.hpp"
 
 
+#define RTC_SDA 12
+#define RTC_SCL 14
+
 const char *tablesDir = "/tables/";
 
 AsyncWebServer server(80);
 FtpServer ftp;
 Shedule shedule;
+TwoWire rtc;
 
 void setup()
 {
+	rtc.begin(RTC_SDA, RTC_SCL);
 	Serial.begin(9600);
 
 	if (!LittleFS.begin())

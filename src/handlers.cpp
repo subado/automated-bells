@@ -8,7 +8,7 @@
 #include "Shedule.hpp"
 
 extern const char *tablesDir;
-extern RTClib rtc;
+extern TwoWire rtc;
 extern Shedule shedule;
 
 void handleRedirect(AsyncWebServerRequest *request)
@@ -74,7 +74,7 @@ void handlePostTables(AsyncWebServerRequest *request, JsonVariant &json)
 
 void handleGetTime(AsyncWebServerRequest *request)
 {
-	Time now = RTClib::now();
+	Time now = RTClib::now(rtc);
 
 	StaticJsonDocument<32> time;
 	time.add(String(now));
