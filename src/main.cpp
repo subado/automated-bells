@@ -10,9 +10,10 @@
 #include <stdio.h>
 #include <vector>
 
-#include "wifi.h"
-#include "handlers.h"
-#include "Shedule.h"
+#include "wifi.hpp"
+#include "handlers.hpp"
+#include "Shedule.hpp"
+
 
 const char *tablesDir = "/tables/";
 

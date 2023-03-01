@@ -1,11 +1,11 @@
-#include "handlers.h"
+#include "handlers.hpp"
 
 #include <ArduinoJson.h>
 #include <LittleFS.h>
 #include <DS3231.h>
 
-#include "Time.h"
-#include "Shedule.h"
+#include "Time.hpp"
+#include "Shedule.hpp"
 
 extern const char *tablesDir;
 extern RTClib rtc;

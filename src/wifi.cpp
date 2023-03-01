@@ -1,4 +1,4 @@
-#include "wifi.h"
+#include "wifi.hpp"
 
 bool wifiSta(const char *ssid, const char *psk, const char *hostname)
 {
