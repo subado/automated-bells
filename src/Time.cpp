@@ -12,9 +12,6 @@ Time::Time(const String &str)
 minute_ { stringToUnit(str.substring(str.indexOf(":") + 1, str.lastIndexOf(":"))) },
 second_ { stringToUnit(str.substring(str.lastIndexOf(":") + 1, str.length())) }
 {
-	Serial.println(hour_);
-	Serial.println(minute_);
-	Serial.println(second_);
 }
 
 uint8_t Time::hour() const
