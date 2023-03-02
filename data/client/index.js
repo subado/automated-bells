@@ -1,36 +1,42 @@
-getData("/tables").then(data => {
+import { addListeners } from "/utils.js";
+import * as Data from "/data.js";
+
+async function drawList() {
+	const tables = await Data.get("/tables");
 	const list = document.querySelector("#list");
 
-	data.forEach(element => {
+	tables.forEach(element => {
 		list.innerHTML += `
 			<li>
 				<input type="button" class="link" value="${element}">
 				<input type="radio" name="table" value="${element}">
 			</li>`
 	});
-	addListener("input.link", "click", (event) => {
-		button = event.target;
+	addListeners("input.link", "click", (event) => {
+		const button = event.target;
 		localStorage.setItem("table", button.value);
 		window.location.href = "/table";
 	});
-	addListener("input[name=table][type=radio]", "change", (event) => {
-		radio = event.target;
-		sendData("/shedule", JSON.stringify(radio.value));
-	});
-});
-
-getData("/shedule").then(data => {
-	if (data != "")
-	{
-		document.querySelector(`input[type=radio][value=${data}]`).checked = true;
-	}
-})
-
-function updateTime() {
-	getData("/time").then(data => {
-		document.querySelector("#time").innerHTML = data;
+	addListeners("input[name=table][type=radio]", "change", (event) => {
+		const radio = event.target;
+		Data.send("/shedule", JSON.stringify(radio.value));
 	});
 }
 
+async function checkShedule() {
+	const shedule = await Data.get("/shedule");
+	if (shedule != "")
+	{
+		document.querySelector(`input[type=radio][value=${shedule}]`).checked = true;
+	}
+}
+
+async function updateTime() {
+	const time = await Data.get("/time");
+	document.querySelector("#time").innerHTML = time;
+}
+
+drawList();
+checkShedule();
 updateTime();
 setInterval(updateTime, 60 * 1000);

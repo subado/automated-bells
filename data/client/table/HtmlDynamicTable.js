@@ -1,4 +1,4 @@
-class HtmlDynamicTable
+export default class HtmlDynamicTable
 {
 	constructor(table, rowTemplate)
 	{
@@ -70,4 +70,19 @@ class HtmlDynamicTable
 			}
 		});
 	}
+}
+
+function getRowOfButton(button)
+{
+	return getParentElement(button, "tr");
+}
+
+function getParentElement(element, parent)
+{
+	while (element.localName != parent)
+	{
+		element = element.parentElement;
+	}
+
+	return element;
 }
