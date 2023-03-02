@@ -2,14 +2,19 @@
 
 Time::Time(const DateTime &dateTime)
 : hour_ { dateTime.hour() },
-minute_ { dateTime.minute() }
+minute_ { dateTime.minute() },
+second_ { dateTime.second() }
 {
 }
 
 Time::Time(const String &str)
 : hour_ { stringToUnit(str.substring(0, str.indexOf(":"))) },
-minute_ { stringToUnit(str.substring(str.indexOf(":") + 1, str.length())) }
+minute_ { stringToUnit(str.substring(str.indexOf(":") + 1, str.lastIndexOf(":"))) },
+second_ { stringToUnit(str.substring(str.lastIndexOf(":") + 1, str.length())) }
 {
+	Serial.println(hour_);
+	Serial.println(minute_);
+	Serial.println(second_);
 }
 
 uint8_t Time::hour() const
@@ -22,10 +27,16 @@ uint8_t Time::minute() const
 	return minute_;
 }
 
+uint32_t Time::toLong() const
+{
+	return hour_ * 60 * 60 + minute_ * 60 + second_;
+}
+
 Time& Time::operator=(const DateTime &dateTime)
 {
 	hour_ = dateTime.hour();
 	minute_ = dateTime.minute();
+	second_ = dateTime.second();
 
 	return *this;
 }
@@ -33,14 +44,15 @@ Time& Time::operator=(const DateTime &dateTime)
 Time& Time::operator=(const String &str)
 {
 	hour_ = stringToUnit(str.substring(0, str.indexOf(":")));
-	minute_ = stringToUnit(str.substring(str.indexOf(":") + 1, str.length()));
+	minute_ = stringToUnit(str.substring(str.indexOf(":") + 1, str.lastIndexOf(":")));
+	second_ = stringToUnit(str.substring(str.lastIndexOf(":") + 1, str.length()));
 
 	return *this;
 }
 
 bool operator==(const Time &time, const DateTime &dateTime)
 {
-	if (time.hour_ == dateTime.hour() && time.minute_ == dateTime.minute())
+	if (time.hour_ == dateTime.hour() && time.minute_ == dateTime.minute() && time.second_ == dateTime.second())
 	{
 		return true;
 	}
@@ -49,7 +61,21 @@ bool operator==(const Time &time, const DateTime &dateTime)
 
 bool operator==(const DateTime &dateTime, const Time &time)
 {
-	if (time.hour_ == dateTime.hour() && time.minute_ == dateTime.minute())
+	return (time == dateTime);
+}
+
+bool operator>(const Time &time1, const Time &time2)
+{
+	if (time1.toLong() > time2.toLong())
+	{
+		return true;
+	}
+	return false;
+}
+
+bool operator<(const Time &time1, const Time &time2)
+{
+	if (time1.toLong() < time2.toLong())
 	{
 		return true;
 	}
@@ -58,7 +84,7 @@ bool operator==(const DateTime &dateTime, const Time &time)
 
 Time::operator String() const
 {
-	return unitToString(hour_) + ":" + unitToString(minute_);
+	return unitToString(hour_) + ":" + unitToString(minute_) + ":" + unitToString(second_);
 }
 
 String Time::unitToString(uint8_t unit) const

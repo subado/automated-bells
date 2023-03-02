@@ -34,6 +34,6 @@ void Shedule::parseJson(File &file)
 
 	for (JsonVariant value : array)
 	{
-		table_.push_back(static_cast<Time>(value.as<String>()));
+		table_.push_back(static_cast<Time>(value.as<String>() + ":00"));
 	}
 }
