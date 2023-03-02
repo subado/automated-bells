@@ -1,5 +1,5 @@
-#ifndef HANDLERS_H
-#define HANDLERS_H
+#ifndef HANDLERS_HPP
+#define HANDLERS_HPP
 
 #include <Arduino.h>
 #include <ESPAsyncWebServer.h>
@@ -16,4 +16,4 @@ void handleGetTime(AsyncWebServerRequest *request);
 void handleGetShedule(AsyncWebServerRequest *request);
 void handlePostShedule(AsyncWebServerRequest *request, JsonVariant &json);
 
-#endif // HANDLERS_H
+#endif // HANDLERS_HPP

@@ -1,5 +1,5 @@
-#ifndef SHEDULE_H
-#define SHEDULE_H
+#ifndef SHEDULE_HPP
+#define SHEDULE_HPP
 
 #include <Arduino.h>
 #include <LittleFS.h>
@@ -29,4 +29,4 @@ private:
 
 };
 
-#endif // SHEDULE_H
+#endif // SHEDULE_HPP
