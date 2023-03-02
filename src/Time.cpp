@@ -38,6 +38,24 @@ Time& Time::operator=(const String &str)
 	return *this;
 }
 
+bool operator==(const Time &time, const DateTime &dateTime)
+{
+	if (time.hour_ == dateTime.hour() && time.minute_ == dateTime.minute())
+	{
+		return true;
+	}
+	return false;
+}
+
+bool operator==(const DateTime &dateTime, const Time &time)
+{
+	if (time.hour_ == dateTime.hour() && time.minute_ == dateTime.minute())
+	{
+		return true;
+	}
+	return false;
+}
+
 Time::operator String() const
 {
 	return unitToString(hour_) + ":" + unitToString(minute_);

@@ -17,6 +17,9 @@ public:
 	Time& operator=(const DateTime &dateTime);
 	Time& operator=(const String &str);
 
+	friend bool operator==(const Time &time, const DateTime &dateTime);
+	friend bool operator==(const DateTime &dateTime, const Time &time);
+
 	operator String() const;
 
 protected:
