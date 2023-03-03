@@ -1,5 +1,4 @@
-#ifndef SHEDULE_HPP
-#define SHEDULE_HPP
+#pragma once
 
 #include <Arduino.h>
 #include <LittleFS.h>
@@ -28,5 +27,3 @@ private:
 	std::vector<Time> table_;
 
 };
-
-#endif // SHEDULE_HPP

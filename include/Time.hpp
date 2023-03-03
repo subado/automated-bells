@@ -1,5 +1,4 @@
-#ifndef TIME_HPP
-#define TIME_HPP
+#pragma once
 
 #include <Arduino.h>
 #include <DS3231.h>
@@ -36,5 +35,3 @@ protected:
 	uint8_t hour_, minute_, second_;
 
 };
-
-#endif // TIME_HPP

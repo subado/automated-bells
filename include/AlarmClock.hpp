@@ -1,5 +1,4 @@
-#ifndef ALARM_CLOCK_HPP
-#define ALARM_CLOCK_HPP
+#pragma once
 
 #include <Wire.h>
 
@@ -41,5 +40,3 @@ private:
 	std::vector<Alarm> alarms_;
 
 };
-
-#endif // ALARM_CLOCK_HPP
