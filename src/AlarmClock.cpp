@@ -10,18 +10,35 @@ AlarmClock::AlarmClock(TwoWire &wire)
 {
 }
 
-void AlarmClock::on(const Time &time, AlarmHandlerFunction handler)
+void AlarmClock::on(const Time &time, AlarmHandlerFunction handler, const uint32_t &duration)
 {
-	alarms_.emplace(time, AlarmHandlerFunction(handler));
+	alarms_.push_back(Alarm(time, AlarmHandlerFunction(handler)));
 }
 
 void AlarmClock::handleAlarms()
 {
 	for (auto &alarm : alarms_)
 	{
-		if (alarm.first == RTClib::now(wire_))
+		if (alarm.time == RTClib::now(wire_))
 		{
-			alarm.second(alarm.first);
+			if (!alarm.runned)
+			{
+				alarm.runned = true;
+				alarm.startTime = millis();
+
+				alarm.handler(alarm.time);
+			}
+			else if (alarm.runned && (millis() - alarm.startTime == alarm.duration))
+			{
+				alarm.runned = false;
+			}
 		}
 	}
+}
+
+AlarmClock::Alarm::Alarm(const Time &time, AlarmHandlerFunction handler, const uint32_t &duration)
+: time { time },
+handler { handler },
+duration { duration }
+{
 }
