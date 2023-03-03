@@ -50,15 +50,15 @@ void handlePostTables(AsyncWebServerRequest *request, JsonVariant &json)
 
 	String path = tablesDir;
 
-	for (JsonArray::iterator it = array.begin(); it != array.end(); ++it)
+	for (JsonVariant value : array)
 	{
-		if ((*it).containsKey("title"))
+		if (value.containsKey("title"))
 		{
-			path += (*it)["title"].as<String>();
+			path += value["title"].as<String>();
 		}
-		else if ((*it).containsKey("time"))
+		else if (value.containsKey("time"))
 		{
-			doc.add((*it)["time"].as<String>());
+			doc.add(value["time"].as<String>());
 		}
 	}
 
