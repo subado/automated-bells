@@ -10,9 +10,9 @@ AlarmClock::AlarmClock(TwoWire &wire)
 {
 }
 
-void AlarmClock::on(const Time &time,AlarmHandlerFunction handler)
+void AlarmClock::on(const Time &time, AlarmHandlerFunction handler)
 {
-	alarms_.emplace(time, new AlarmHandlerFunction(handler));
+	alarms_.emplace(time, AlarmHandlerFunction(handler));
 }
 
 void AlarmClock::handleAlarms()
@@ -21,7 +21,7 @@ void AlarmClock::handleAlarms()
 	{
 		if (alarm.first == RTClib::now(wire_))
 		{
-			(*alarm.second)(alarm.first);
+			alarm.second(alarm.first);
 		}
 	}
 }

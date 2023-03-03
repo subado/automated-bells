@@ -5,6 +5,7 @@
 
 #include <functional>
 #include <map>
+#include <list>
 
 #include "Time.hpp"
 
@@ -24,8 +25,7 @@ public:
 private:
 
 	TwoWire wire_;
-	std::map<Time, AlarmHandlerFunction*> alarms_;
-
+	std::map<Time, AlarmHandlerFunction> alarms_;
 };
 
 #endif // ALARM_CLOCK_HPP
