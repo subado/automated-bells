@@ -15,7 +15,7 @@ public:
 	uint8_t minute() const;
 	uint8_t second() const;
 
-	uint32_t toLong() const;
+	uint32_t toMillis() const;
 
 	Time& operator=(const DateTime &dateTime);
 	Time& operator=(const String &str);

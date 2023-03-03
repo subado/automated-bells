@@ -24,9 +24,9 @@ uint8_t Time::minute() const
 	return minute_;
 }
 
-uint32_t Time::toLong() const
+uint32_t Time::toMillis() const
 {
-	return hour_ * 60 * 60 + minute_ * 60 + second_;
+	return hour_ * 3600000 + minute_ * 60000 + second_ * 1000;
 }
 
 Time& Time::operator=(const DateTime &dateTime)
@@ -63,7 +63,7 @@ bool operator==(const DateTime &dateTime, const Time &time)
 
 bool operator>(const Time &time1, const Time &time2)
 {
-	if (time1.toLong() > time2.toLong())
+	if (time1.toMillis() > time2.toMillis())
 	{
 		return true;
 	}
@@ -72,7 +72,7 @@ bool operator>(const Time &time1, const Time &time2)
 
 bool operator<(const Time &time1, const Time &time2)
 {
-	if (time1.toLong() < time2.toLong())
+	if (time1.toMillis() < time2.toMillis())
 	{
 		return true;
 	}
