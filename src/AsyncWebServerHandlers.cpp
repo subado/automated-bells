@@ -2,13 +2,13 @@
 
 #include <ArduinoJson.h>
 #include <LittleFS.h>
-#include <DS3231.h>
 
 #include "Time.hpp"
 #include "Shedule.hpp"
+#include "Rtc.hpp"
 
 extern const char *tablesDir;
-extern TwoWire rtc;
+extern Rtc rtc;
 extern Shedule shedule;
 
 void handleRedirect(AsyncWebServerRequest *request)
@@ -74,7 +74,7 @@ void handlePostTables(AsyncWebServerRequest *request, JsonVariant &json)
 
 void handleGetTime(AsyncWebServerRequest *request)
 {
-	Time now = RTClib::now(rtc);
+	Time now = rtc.now();
 
 	StaticJsonDocument<32> time;
 	time.add(String(now));

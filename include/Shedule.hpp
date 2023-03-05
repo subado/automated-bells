@@ -12,7 +12,6 @@
 class Shedule
 {
 public:
-
 	Shedule();
 
 	void setup(const String &name);
@@ -20,10 +19,8 @@ public:
 	String name();
 
 private:
-
 	void parseJson(File &file);
 
 	String name_;
 	std::vector<Time> table_;
-
 };

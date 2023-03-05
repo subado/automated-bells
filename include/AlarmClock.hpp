@@ -12,7 +12,6 @@ typedef std::function<void(const Time &time)> AlarmHandlerFunction;
 class AlarmClock
 {
 public:
-
 	AlarmClock();
 	AlarmClock(TwoWire &wire);
 
@@ -35,8 +34,6 @@ public:
 	};
 
 private:
-
 	TwoWire wire_;
 	std::vector<Alarm> alarms_;
-
 };

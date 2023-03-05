@@ -1,4 +1,7 @@
 #include "AlarmClock.hpp"
+#include "Rtc.hpp"
+
+extern Rtc rtc;
 
 AlarmClock::AlarmClock()
 : wire_ { Wire }
@@ -19,7 +22,7 @@ void AlarmClock::handleAlarms()
 {
 	for (auto &alarm : alarms_)
 	{
-		if (alarm.time == RTClib::now(wire_))
+		if (alarm.time == rtc.now())
 		{
 			if (!alarm.runned)
 			{

@@ -12,6 +12,7 @@
 #include "wifi.hpp"
 #include "AsyncWebServerHandlers.hpp"
 #include "Shedule.hpp"
+#include "Rtc.hpp"
 
 
 #define RTC_SDA 12
@@ -22,11 +23,10 @@ const char *tablesDir = "/tables/";
 AsyncWebServer server(80);
 FtpServer ftp;
 Shedule shedule;
-TwoWire rtc;
+Rtc rtc(RTC_SDA, RTC_SCL);
 
 void setup()
 {
-	rtc.begin(RTC_SDA, RTC_SCL);
 	Serial.begin(9600);
 
 	if (!LittleFS.begin())
