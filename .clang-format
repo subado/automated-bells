@@ -1,0 +1,15 @@
+---
+# We'll use defaults from the LLVM style, but with 4 columns indentation.
+BasedOnStyle: Microsoft
+IndentWidth: 4
+TabWidth: 4
+UseTab: Always
+---
+Language: Cpp
+ColumnLimit: 100
+PointerAlignment: Right
+---
+Language: JavaScript
+# Use 100 columns for JS.
+ColumnLimit: 100
+---
