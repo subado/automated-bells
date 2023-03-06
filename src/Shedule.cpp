@@ -1,12 +1,11 @@
-#include "Shedule.hpp"
+#include <Shedule.hpp>
 
 #include <ArduinoJson.h>
 
 extern const char *tablesDir;
+extern Rtc rtc;
 
-Shedule::Shedule()
-: name_ {},
-table_ {}
+Shedule::Shedule() : name_{}, table_{}
 {
 }
 
@@ -29,11 +28,13 @@ void Shedule::parseJson(File &file)
 {
 	DynamicJsonDocument json(2048);
 	deserializeJson(json, file);
-	
+
 	JsonArray array = json.as<JsonArray>();
 
 	for (JsonVariant value : array)
 	{
-		table_.push_back(static_cast<Time>(value.as<String>() + ":00"));
+		table_.push_back(DateTime(
+			(rtc.now().timestamp(DateTime::TIMESTAMP_DATE) + "T" + value.as<String>() + ":00")
+				.c_str()));
 	}
 }

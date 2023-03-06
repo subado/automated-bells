@@ -1,18 +1,23 @@
-#include <LittleFS.h>
+// built-in libraries in framework headers
 #include <ESP8266WiFi.h>
+#include <LittleFS.h>
 
-#include <SimpleFTPServer.h>
+// external libraries headers
+#include <AsyncJson.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-#include <AsyncJson.h>
+#include <SimpleFTPServer.h>
 
+// std c++ libraries headers
 #include <stdio.h>
 #include <vector>
 
-#include "wifi.hpp"
-#include "AsyncWebServerHandlers.hpp"
-#include "Shedule.hpp"
-#include "Rtc.hpp"
+// my own headers
+#include <AlarmClock.hpp>
+#include <AsyncWebServerHandlers.hpp>
+#include <Rtc.hpp>
+#include <Shedule.hpp>
+#include <wifi.hpp>
 
 
 #define RTC_SDA 12
@@ -24,6 +29,7 @@ AsyncWebServer server(80);
 FtpServer ftp;
 Shedule shedule;
 Rtc rtc(RTC_SDA, RTC_SCL);
+AlarmClock clocker;
 
 void setup()
 {
@@ -43,7 +49,7 @@ void setup()
 	{
 		return;
 	}
-	
+
 	ftp.begin(domainName, domainName);
 	Serial.println("Ftp server started");
 	Serial.printf("Login: %s\nPassword: %s\n", domainName, domainName);
@@ -60,15 +66,22 @@ void setup()
 
 	server.on("^([^.]*[^/])$", HTTP_GET, handleRedirect);
 
-	server
-	.serveStatic("/", LittleFS, "/client/")
-	.setDefaultFile("index.html");
+	server.serveStatic("/", LittleFS, "/client/").setDefaultFile("index.html");
 
 	server.begin();
 	Serial.println("Http server started");
+	clocker.setInterval(TimeSpan(5), [](const DateTime &dt) {
+		Serial.println("Interval 5 sec " + rtc.now().timestamp(DateTime::TIMESTAMP_TIME));
+	});
+	clocker.setAlarm(
+		DateTime(rtc.now().toString("MMM DD YYYY"), "00:00:15"), [](const DateTime &dt) {
+			Serial.println("Alarm 00:00:15 " + rtc.now().timestamp(DateTime::TIMESTAMP_TIME));
+		});
+	Serial.println(rtc.now().toString("DDD, DD MMM YYYY hh:mm:ss"));
 }
 
 void loop()
 {
 	ftp.handleFTP();
+	clocker.handleEvents();
 }

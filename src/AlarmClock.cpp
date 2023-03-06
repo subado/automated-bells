@@ -1,47 +1,76 @@
-#include "AlarmClock.hpp"
-#include "Rtc.hpp"
+#include <AlarmClock.hpp>
+#include <Rtc.hpp>
 
 extern Rtc rtc;
 
-AlarmClock::AlarmClock()
-: wire_ { Wire }
+AlarmClock::AlarmClock() : wire_{Wire}
 {
 }
 
-AlarmClock::AlarmClock(TwoWire &wire)
-: wire_ { wire }
+AlarmClock::AlarmClock(TwoWire &wire) : wire_{wire}
 {
 }
 
-void AlarmClock::on(const Time &time, AlarmHandlerFunction handler, const uint32_t &duration)
+void AlarmClock::setAlarm(const DateTime &dateTime, EventHandlerFunction handler)
 {
-	alarms_.push_back(Alarm(time, AlarmHandlerFunction(handler)));
+	events_.emplace_back(std::make_unique<Alarm>(dateTime, handler));
 }
 
-void AlarmClock::handleAlarms()
+void AlarmClock::setInterval(const TimeSpan &timeSpan, EventHandlerFunction handler)
 {
-	for (auto &alarm : alarms_)
+	events_.emplace_back(std::make_unique<Interval>(timeSpan, handler));
+}
+
+void AlarmClock::handleEvents()
+{
+	for (auto &event : events_)
 	{
-		if (alarm.time == rtc.now())
+		if (event->isHappen())
 		{
-			if (!alarm.runned)
+			if (!event->runned)
 			{
-				alarm.runned = true;
-				alarm.startTime = millis();
+				event->runned = true;
+				event->startTime = rtc.now().secondstime();
 
-				alarm.handler(alarm.time);
+				event->handler(rtc.now());
 			}
-			else if (alarm.runned && (millis() - alarm.startTime == alarm.duration))
+			else if (event->runned && (rtc.now().secondstime() - event->startTime >= 1))
 			{
-				alarm.runned = false;
+				event->runned = false;
 			}
 		}
 	}
 }
 
-AlarmClock::Alarm::Alarm(const Time &time, AlarmHandlerFunction handler, const uint32_t &duration)
-: time { time },
-handler { handler },
-duration { duration }
+AlarmClock::Event::Event(EventHandlerFunction handler, uint32_t startTime)
+	: handler{handler}, startTime{startTime}
 {
+}
+
+AlarmClock::Alarm::Alarm(const DateTime &dateTime, EventHandlerFunction handler)
+	: Event(handler), dateTime{dateTime}
+{
+}
+
+bool AlarmClock::Alarm::isHappen() const
+{
+	if (dateTime == rtc.now())
+	{
+		return true;
+	}
+	return false;
+}
+
+AlarmClock::Interval::Interval(const TimeSpan &timeSpan, EventHandlerFunction handler)
+	: Event(handler, rtc.now().secondstime()), timeSpan{timeSpan}
+{
+}
+
+bool AlarmClock::Interval::isHappen() const
+{
+	if (startTime + timeSpan.totalseconds() == rtc.now().secondstime())
+	{
+		return true;
+	}
+	return false;
 }

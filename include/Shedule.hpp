@@ -7,7 +7,7 @@
 
 #include <vector>
 
-#include "Time.hpp"
+#include <Rtc.hpp>
 
 class Shedule
 {
@@ -22,5 +22,5 @@ private:
 	void parseJson(File &file);
 
 	String name_;
-	std::vector<Time> table_;
+	std::vector<DateTime> table_;
 };

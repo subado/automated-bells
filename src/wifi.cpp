@@ -1,4 +1,4 @@
-#include "wifi.hpp"
+#include <wifi.hpp>
 
 bool wifiSta(const char *ssid, const char *psk, const char *hostname)
 {
@@ -24,7 +24,6 @@ bool wifiAp(const char *ssid, const char *psk, const IPAddress &localIp)
 		Serial.println("Failed to create access point");
 		return false;
 	}
-	
 
 	Serial.printf("Access point created ( %s )\n", ssid);
 	return true;

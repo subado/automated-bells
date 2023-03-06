@@ -1,7 +1,6 @@
-#include "Rtc.hpp"
+#include <Rtc.hpp>
 
-Rtc::Rtc()
-: wire_{Wire}
+Rtc::Rtc() : wire_{Wire}
 {
 	clock_.begin(&wire_);
 }

@@ -1,11 +1,10 @@
-#include "AsyncWebServerHandlers.hpp"
+#include <AsyncWebServerHandlers.hpp>
 
 #include <ArduinoJson.h>
 #include <LittleFS.h>
 
-#include "Time.hpp"
-#include "Shedule.hpp"
-#include "Rtc.hpp"
+#include <Rtc.hpp>
+#include <Shedule.hpp>
 
 extern const char *tablesDir;
 extern Rtc rtc;
@@ -74,10 +73,10 @@ void handlePostTables(AsyncWebServerRequest *request, JsonVariant &json)
 
 void handleGetTime(AsyncWebServerRequest *request)
 {
-	Time now = rtc.now();
+	DateTime now = rtc.now();
 
 	StaticJsonDocument<32> time;
-	time.add(String(now));
+	time.add(now.timestamp(DateTime::TIMESTAMP_TIME));
 
 	request->send(200, "application/json", time.as<String>());
 }
