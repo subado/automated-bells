@@ -67,6 +67,8 @@ void setup()
 
 	server.serveStatic("/", LittleFS, "/client/").setDefaultFile("index.html");
 
+	DefaultHeaders::Instance().addHeader(PSTR("Access-Control-Allow-Origin"), PSTR("*"));
+
 	server.begin();
 	Serial.println("Http server started");
 
