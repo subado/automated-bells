@@ -38,3 +38,5 @@ void Shedule::parseJson(File &file)
 				.c_str()));
 	}
 }
+
+Shedule shedule;

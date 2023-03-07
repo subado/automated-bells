@@ -85,3 +85,5 @@ void EventClock::Interval::run()
 	prevTime = rtc.now();
 	handler(prevTime);
 }
+
+EventClock eventClock;

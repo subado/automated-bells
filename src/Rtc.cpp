@@ -19,3 +19,5 @@ void Rtc::adjust(const DateTime &dt)
 {
 	_clock.adjust(dt);
 }
+
+Rtc rtc;

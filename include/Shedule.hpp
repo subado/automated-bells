@@ -24,3 +24,5 @@ private:
 	String _name;
 	std::vector<DateTime> _table;
 };
+
+extern Shedule shedule;

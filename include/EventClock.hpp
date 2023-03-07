@@ -58,3 +58,5 @@ private:
 	TwoWire _wire;
 	std::vector<std::unique_ptr<Event>> _events;
 };
+
+extern EventClock eventClock;

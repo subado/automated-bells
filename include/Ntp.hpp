@@ -8,9 +8,7 @@
 class Ntp
 {
 public:
-	Ntp(int timeZone = 0, const char *serverName = "ru.pool.ntp.org", uint8_t localPort = 123);
-
-	bool begin();
+	bool begin(int timeZone = 0, const char *serverName = "ru.pool.ntp.org", uint8_t localPort = 123);
 
 	uint32_t getTime();
 
@@ -26,3 +24,5 @@ private:
 
 	byte _packetBuffer[PACKET_SIZE]; // buffer to hold incoming & outgoing packets
 };
+
+extern Ntp ntp;

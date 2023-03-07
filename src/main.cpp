@@ -27,10 +27,6 @@ const char *tablesDir = "/tables/";
 
 AsyncWebServer server(80);
 FtpServer ftp;
-Shedule shedule;
-Rtc rtc;
-Ntp ntp(4);
-EventClock clocker;
 
 void setup()
 {
@@ -76,9 +72,9 @@ void setup()
 	{
 		Serial.println("Couldn't find RTC");
 	}
-	ntp.begin();
+	ntp.begin(4);
 	rtc.adjust(DateTime(ntp.getTime()));
-	clocker.setInterval(TimeSpan(60), [](const DateTime &dt) {
+	eventClock.setInterval(TimeSpan(60), [](const DateTime &dt) {
 		rtc.adjust(DateTime(ntp.getTime()));
 		Serial.printf("---\n%s %s\n---\n", "Sync time",
 					  rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
@@ -88,5 +84,5 @@ void setup()
 void loop()
 {
 	ftp.handleFTP();
-	clocker.handleEvents();
+	eventClock.handleEvents();
 }

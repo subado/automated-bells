@@ -1,12 +1,10 @@
 #include <Ntp.hpp>
 
-Ntp::Ntp(int timeZone, const char *serverName, uint8_t localPort)
-	: _timeZone{timeZone}, _serverName{serverName}, _localPort{localPort}
+bool Ntp::begin(int timeZone, const char *serverName, uint8_t localPort)
 {
-}
-
-bool Ntp::begin()
-{
+	_timeZone = timeZone;
+	_serverName = serverName;
+	_localPort = localPort;
 	WiFi.hostByName(_serverName, _serverIp);
 	return _udp.begin(_localPort);
 }
@@ -64,3 +62,5 @@ void Ntp::sendPacket()
 	_udp.write(_packetBuffer, PACKET_SIZE);
 	_udp.endPacket();
 }
+
+Ntp ntp;

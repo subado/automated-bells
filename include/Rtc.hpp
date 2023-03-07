@@ -23,3 +23,5 @@ private:
 	_clock;
 	TwoWire _wire;
 };
+
+extern Rtc rtc;
