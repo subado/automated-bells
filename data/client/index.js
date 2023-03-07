@@ -39,4 +39,4 @@ async function updateTime() {
 drawList();
 checkShedule();
 updateTime();
-setInterval(updateTime, 60 * 1000);
+setInterval(updateTime, 1000);
