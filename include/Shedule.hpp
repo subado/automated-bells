@@ -21,6 +21,6 @@ public:
 private:
 	void parseJson(File &file);
 
-	String name_;
-	std::vector<DateTime> table_;
+	String _name;
+	std::vector<DateTime> _table;
 };

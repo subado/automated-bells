@@ -8,11 +8,11 @@
 
 typedef std::function<void(const DateTime &dateTime)> EventHandlerFunction;
 
-class AlarmClock
+class EventClock
 {
 public:
-	AlarmClock();
-	AlarmClock(TwoWire &wire);
+	EventClock();
+	EventClock(TwoWire &wire);
 
 	void setAlarm(const DateTime &dateTime, EventHandlerFunction handler);
 	void setInterval(const TimeSpan &timeSpan, EventHandlerFunction handler);
@@ -22,9 +22,10 @@ public:
 	class Event
 	{
 	public:
-		Event(EventHandlerFunction handler, uint32_t startTime = 0);
+		Event(EventHandlerFunction handler);
 
 		virtual bool isHappen() const = 0;
+		virtual void run();
 
 		EventHandlerFunction handler;
 		uint32_t startTime;
@@ -47,11 +48,13 @@ public:
 		Interval(const TimeSpan &timeSpan, EventHandlerFunction handler);
 
 		bool isHappen() const override;
+		void run() override;
 
 		TimeSpan timeSpan;
+		DateTime prevTime;
 	};
 
 private:
-	TwoWire wire_;
-	std::vector<std::unique_ptr<Event>> events_;
+	TwoWire _wire;
+	std::vector<std::unique_ptr<Event>> _events;
 };

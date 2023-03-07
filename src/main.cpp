@@ -7,29 +7,30 @@
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <SimpleFTPServer.h>
-
 // std c++ libraries headers
 #include <stdio.h>
 #include <vector>
 
 // my own headers
-#include <AlarmClock.hpp>
 #include <AsyncWebServerHandlers.hpp>
+#include <EventClock.hpp>
+#include <Ntp.hpp>
 #include <Rtc.hpp>
 #include <Shedule.hpp>
 #include <wifi.hpp>
 
 
-#define RTC_SDA 12
-#define RTC_SCL 14
+#define RTC_SDA 4
+#define RTC_SCL 5
 
 const char *tablesDir = "/tables/";
 
 AsyncWebServer server(80);
 FtpServer ftp;
 Shedule shedule;
-Rtc rtc(RTC_SDA, RTC_SCL);
-AlarmClock clocker;
+Rtc rtc;
+Ntp ntp(4);
+EventClock clocker;
 
 void setup()
 {
@@ -41,8 +42,6 @@ void setup()
 		return;
 	}
 	Serial.println("Mount file system");
-
-	Wire.begin();
 
 	const char *domainName = "bells";
 	if (!wifiSta(SSID, PSK, domainName))
@@ -70,14 +69,18 @@ void setup()
 
 	server.begin();
 	Serial.println("Http server started");
-	clocker.setInterval(TimeSpan(5), [](const DateTime &dt) {
-		Serial.println("Interval 5 sec " + rtc.now().timestamp(DateTime::TIMESTAMP_TIME));
+
+	if (!rtc.begin(RTC_SDA, RTC_SCL))
+	{
+		Serial.println("Couldn't find RTC");
+	}
+	ntp.begin();
+	rtc.adjust(DateTime(ntp.getTime()));
+	clocker.setInterval(TimeSpan(60), [](const DateTime &dt) {
+		rtc.adjust(DateTime(ntp.getTime()));
+		Serial.printf("---\n%s %s\n---\n", "Sync time",
+					  rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
 	});
-	clocker.setAlarm(
-		DateTime(rtc.now().toString("MMM DD YYYY"), "00:00:15"), [](const DateTime &dt) {
-			Serial.println("Alarm 00:00:15 " + rtc.now().timestamp(DateTime::TIMESTAMP_TIME));
-		});
-	Serial.println(rtc.now().toString("DDD, DD MMM YYYY hh:mm:ss"));
 }
 
 void loop()

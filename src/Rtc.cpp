@@ -1,22 +1,21 @@
 #include <Rtc.hpp>
 
-Rtc::Rtc() : wire_{Wire}
+bool Rtc::begin(int sda, int scl)
 {
-	clock_.begin(&wire_);
-}
-
-Rtc::Rtc(int sda, int scl)
-{
-	wire_.begin(sda, scl);
-	clock_.begin(&wire_);
+	_wire.begin(sda, scl);
+	if (_clock.begin(&_wire))
+	{
+		return true;
+	}
+	return false;
 }
 
 DateTime Rtc::now()
 {
-	return clock_.now();
+	return _clock.now();
 }
 
-void Rtc::adjust(const DateTime &dateTime)
+void Rtc::adjust(const DateTime &dt)
 {
-	clock_.adjust(dateTime);
+	_clock.adjust(dt);
 }

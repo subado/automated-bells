@@ -5,23 +5,23 @@
 extern const char *tablesDir;
 extern Rtc rtc;
 
-Shedule::Shedule() : name_{}, table_{}
+Shedule::Shedule() : _name{}, _table{}
 {
 }
 
 void Shedule::setup(const String &name)
 {
-	table_.clear();
+	_table.clear();
 	File file = LittleFS.open((tablesDir + name + ".json").c_str(), "r");
 	parseJson(file);
 	file.close();
 
-	name_ = name;
+	_name = name;
 }
 
 String Shedule::name()
 {
-	return name_;
+	return _name;
 }
 
 void Shedule::parseJson(File &file)
@@ -33,7 +33,7 @@ void Shedule::parseJson(File &file)
 
 	for (JsonVariant value : array)
 	{
-		table_.push_back(DateTime(
+		_table.push_back(DateTime(
 			(rtc.now().timestamp(DateTime::TIMESTAMP_DATE) + "T" + value.as<String>() + ":00")
 				.c_str()));
 	}

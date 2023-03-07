@@ -5,11 +5,10 @@
 class Rtc
 {
 public:
-	Rtc();
-	Rtc(int sda, int scl);
+	bool begin(int sda, int scl);
 
 	DateTime now();
-	void adjust(const DateTime &dateTime);
+	void adjust(const DateTime &dt);
 
 private:
 #if defined(USE_DS3231)
@@ -21,6 +20,6 @@ private:
 #elif defined(USE_PCF8523)
 	RTC_PCF8523
 #endif
-	clock_;
-	TwoWire wire_;
+	_clock;
+	TwoWire _wire;
 };
