@@ -7,5 +7,5 @@ env.AddCustomTarget(
     actions=[
         "ctags -R ${PROJECT_SRC_DIR} ${PROJECT_INCLUDE_DIR} ${PROJECT_LIBDEPS_DIR}"
     ],
-    description="Generated tags file"
+    title="Generated tags file"
 )
