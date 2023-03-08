@@ -1,8 +1,24 @@
-BasedOnStyle: Microsoft
-IndentWidth: 4
-TabWidth: 4
+AccessModifierOffset: -2
+AlignAfterOpenBracket: DontAlign
+AlignArrayOfStructures: None
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines: true
+AlignEscapedNewlines: Left
+AlignTrailingComments: true
+AllowAllArgumentsOnNextLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Empty
+ContinuationIndentWidth: 2
+IndentWidth: 2
+TabWidth: 2
 UseTab: Always
 Language: Cpp
 ColumnLimit: 100
 PointerAlignment: Right
-AccessModifierOffset: -4
+BreakBeforeBraces: Allman
+KeepEmptyLinesAtTheStartOfBlocks: false
+SpacesBeforeTrailingComments: 1
+UseTab: Never
+EmptyLineBeforeAccessModifier: LogicalBlock
