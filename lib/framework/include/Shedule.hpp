@@ -12,17 +12,17 @@
 class Shedule
 {
 public:
-	Shedule();
+  Shedule();
 
-	void setup(const String &name);
+  void setup(const String &name);
 
-	String name();
+  String name();
 
 private:
-	void parseJson(File &file);
+  void parseJson(File &file);
 
-	String _name;
-	std::vector<DateTime> _table;
+  String _name;
+  std::vector<DateTime> _table;
 };
 
 extern Shedule shedule;
