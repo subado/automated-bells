@@ -17,7 +17,9 @@
 #include <Rtc.hpp>
 #include <Shedule.hpp>
 #include <WebServer.hpp>
-#include <wifi.hpp>
+#include <WiFiManager.hpp>
+
+#define APSSID  "bells"
 
 #define RTC_SDA 4
 #define RTC_SCL 5
@@ -35,12 +37,15 @@ void setup()
   }
   Serial.println("Mount file system");
 
-  const char *domainName = "bells";
-  if (!wifiSta(SSID, PSK, domainName))
+  wifiManager.config(IPAddress(192, 168, 0, 177), IPAddress(192, 168, 0, 177),
+    IPAddress(255, 255, 255, 0));
+  if (!wifiManager.beginSta(SSID, PASS))
   {
-    return;
+    if (!wifiManager.createAp(APSSID))
+      return;
   }
 
+  const char *domainName = "bells";
   ftp.begin(domainName, domainName);
   Serial.println("Ftp server started");
   Serial.printf("Login: %s\nPassword: %s\n", domainName, domainName);
@@ -52,7 +57,7 @@ void setup()
   {
     Serial.println("Couldn't find RTC");
   }
-  ntp.begin(4);
+  ntp.begin(4, "2.pool.ntp.org");
   rtc.adjust(DateTime(ntp.getTime()));
   eventClock.setInterval(TimeSpan(60),
     [](const DateTime &dt)

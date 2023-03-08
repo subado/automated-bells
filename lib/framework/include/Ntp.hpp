@@ -8,7 +8,7 @@
 class Ntp
 {
 public:
-  bool begin(int timeZone = 0, const char *serverName = "ru.pool.ntp.org", uint8_t localPort = 123);
+  bool begin(int timeZone, const char *serverName, uint8_t localPort = 123);
 
   uint32_t getTime();
 
