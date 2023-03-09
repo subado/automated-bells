@@ -44,11 +44,12 @@ void WebServer::addHandlers()
     {
       Dir root = LittleFS.openDir("/tables");
       DynamicJsonDocument json(1024);
+      JsonArray tables = json.createNestedArray("tables");
 
       for (String fileName; root.next();)
       {
         fileName = root.fileName();
-        json.add(fileName.substring(0, fileName.indexOf(".")));
+        tables.add(fileName.substring(0, fileName.indexOf(".")));
       }
 
       request->send(200, "application/json", json.as<String>());
@@ -90,9 +91,9 @@ void WebServer::addHandlers()
   _server.on("/time", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
+      StaticJsonDocument<32> time;
       DateTime now = rtc.now();
 
-      StaticJsonDocument<32> time;
       time["time"] = now.timestamp(DateTime::TIMESTAMP_TIME);
 
       request->send(200, "application/json", time.as<String>());
