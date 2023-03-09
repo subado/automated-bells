@@ -66,30 +66,16 @@ void WebServer::addHandlers()
   // Parse the form sent in json format
   // and save the file with the parsed table
   _server.addHandler(new AsyncCallbackJsonWebHandler("/api/tables",
-    [](AsyncWebServerRequest *request, JsonVariant &json)
+    [](AsyncWebServerRequest *request, JsonVariant &data)
     {
-      JsonArray array = json.as<JsonArray>();
-      DynamicJsonDocument doc(2048);
+      DynamicJsonDocument json(2048);
 
-      String path = "/tables";
-
-      for (JsonVariant value : array)
-      {
-        if (value.containsKey("title"))
-        {
-          path += value["title"].as<String>();
-        }
-        else if (value.containsKey("time"))
-        {
-          doc.add(value["time"].as<String>());
-        }
-      }
-
-      path += ".json";
+      String name = data["name"].as<String>();
+      json.add(data["time"].as<String>());
 
       File file;
-      file = LittleFS.open(path.c_str(), "w");
-      serializeJson(doc, file);
+      file = LittleFS.open("/tables/" + name + ".json", "w");
+      serializeJson(json, file);
       file.close();
 
       request->send(200);
@@ -111,11 +97,11 @@ void WebServer::addHandlers()
   _server.on("/api/shedule", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
-      StaticJsonDocument<64> doc;
+      StaticJsonDocument<64> json;
 
-      doc.add(shedule.name());
+      json["name"] = shedule.name();
 
-      request->send(200, "application/json", doc.as<String>());
+      request->send(200, "application/json", json.as<String>());
     });
 
   // Set the name of the active shedule
