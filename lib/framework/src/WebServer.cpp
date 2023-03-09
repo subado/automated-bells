@@ -27,7 +27,7 @@ void WebServer::addHandlers()
 {
   // Response contains json with table which name was passed as a uri parameter
   // ([A-Za-z0-9]{1,31}) is regex which define uri parameter format
-  _server.on("^\\/tables\\/([A-Za-z0-9]{1,31})$", HTTP_GET,
+  _server.on("^\\/api/tables\\/([A-Za-z0-9]{1,31})$", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
       File file = LittleFS.open(("/tables" + request->pathArg(0) + ".json").c_str(), "r");
@@ -39,7 +39,7 @@ void WebServer::addHandlers()
     });
 
   // Response contains json with the names of all tables
-  _server.on("/tables", HTTP_GET,
+  _server.on("/api/tables", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
       Dir root = LittleFS.openDir("/tables");
@@ -57,7 +57,7 @@ void WebServer::addHandlers()
 
   // Parse the form sent in json format
   // and save the file with the parsed table
-  _server.addHandler(new AsyncCallbackJsonWebHandler("/tables",
+  _server.addHandler(new AsyncCallbackJsonWebHandler("/api/tables",
     [](AsyncWebServerRequest *request, JsonVariant &json)
     {
       JsonArray array = json.as<JsonArray>();
@@ -88,7 +88,7 @@ void WebServer::addHandlers()
     }));
 
   // Get the time from the rtc module and send json with it
-  _server.on("/time", HTTP_GET,
+  _server.on("/api/time", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
       StaticJsonDocument<32> time;
@@ -100,7 +100,7 @@ void WebServer::addHandlers()
     });
 
   // Get the name of the active shedule and send json with it
-  _server.on("/shedule", HTTP_GET,
+  _server.on("/api/shedule", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
       StaticJsonDocument<64> doc;
@@ -111,7 +111,7 @@ void WebServer::addHandlers()
     });
 
   // Set the name of the active shedule
-  _server.addHandler(new AsyncCallbackJsonWebHandler("/shedule",
+  _server.addHandler(new AsyncCallbackJsonWebHandler("/api/shedule",
     [](AsyncWebServerRequest *request, JsonVariant &json)
     {
       shedule.setup(json.as<String>());
