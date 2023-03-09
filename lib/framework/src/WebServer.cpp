@@ -93,7 +93,7 @@ void WebServer::addHandlers()
       DateTime now = rtc.now();
 
       StaticJsonDocument<32> time;
-      time.add(now.timestamp(DateTime::TIMESTAMP_TIME));
+      time["time"] = now.timestamp(DateTime::TIMESTAMP_TIME);
 
       request->send(200, "application/json", time.as<String>());
     });
