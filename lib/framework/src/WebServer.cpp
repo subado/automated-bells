@@ -30,9 +30,17 @@ void WebServer::addHandlers()
   _server.on("^\\/api/tables\\/([A-Za-z0-9]{1,31})$", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
-      File file = LittleFS.open(("/tables" + request->pathArg(0) + ".json").c_str(), "r");
+      String name = request->pathArg(0);
+      File file = LittleFS.open("/tables/" + name + ".json", "r");
+
       DynamicJsonDocument json(2048);
-      deserializeJson(json, file);
+      DynamicJsonDocument buffer(1024);
+
+      deserializeJson(buffer, file);
+
+      json["name"] = name;
+      json["time"] = buffer;
+
       file.close();
 
       request->send(200, "application/json", json.as<String>());
