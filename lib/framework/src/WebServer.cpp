@@ -27,23 +27,28 @@ void WebServer::addHandlers()
 {
   // Response contains json with table which name was passed as a uri parameter
   // ([A-Za-z0-9]{1,31}) is regex which define uri parameter format
-  _server.on("^\\/api/tables\\/([A-Za-z0-9]{1,31})$", HTTP_GET,
+  _server.on("^\\/api\\/tables\\/([A-Za-z0-9]{1,31})$", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
-      String name = request->pathArg(0);
-      File file = LittleFS.open("/tables/" + name + ".json", "r");
+      String title = request->pathArg(0);
+      String fileName = "/tables/" + title + ".json";
+      if (LittleFS.exists(fileName))
+      {
+        File file = LittleFS.open(fileName, "r");
 
-      DynamicJsonDocument json(2048);
-      DynamicJsonDocument buffer(1024);
+        DynamicJsonDocument json(2048);
+        DynamicJsonDocument buffer(1024);
 
-      deserializeJson(buffer, file);
+        deserializeJson(buffer, file);
 
-      json["name"] = name;
-      json["time"] = buffer;
+        json["title"] = title;
+        json["time"] = buffer;
 
-      file.close();
+        file.close();
 
-      request->send(200, "application/json", json.as<String>());
+        request->send(200, "application/json", json.as<String>());
+      }
+      request->send(404);
     });
 
   // Response contains json with the names of all tables
@@ -70,7 +75,7 @@ void WebServer::addHandlers()
     {
       DynamicJsonDocument json(2048);
 
-      String name = data["name"].as<String>();
+      String name = data["title"].as<String>();
       json.add(data["time"].as<String>());
 
       File file;
