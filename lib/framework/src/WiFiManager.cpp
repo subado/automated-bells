@@ -17,7 +17,7 @@ bool WiFiManager::beginSta(const char *ssid, const char *passphrase, int32_t cha
   Serial.print("Connecting");
   if (WiFi.waitForConnectResult() != WL_CONNECTED)
   {
-    Serial.print("WiFi failed!");
+    Serial.println("WiFi failed!");
     return false;
   }
   Serial.printf("\nConnected to %s ( ip %s )\n", ssid, WiFi.localIP().toString().c_str());
@@ -30,13 +30,13 @@ bool WiFiManager::createAp(const char *ssid, const char *psk, int channel, int s
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(_localIp, _gateway, _subnet);
 
-  if (WiFi.softAP(ssid, psk, channel, ssid_hidden, max_connection, beacon_interval))
+  if (!WiFi.softAP(ssid, psk, channel, ssid_hidden, max_connection, beacon_interval))
   {
     Serial.println("Failed to create access point");
     return false;
   }
 
-  Serial.printf("Access point created ( %s )\n", ssid);
+  Serial.printf("Access point created %s ( ip %s )\n", ssid, WiFi.localIP().toString().c_str());
   return true;
 }
 

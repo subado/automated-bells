@@ -37,7 +37,7 @@ void setup()
   }
   Serial.println("Mount file system");
 
-  wifiManager.config(IPAddress(192, 168, 0, 177), IPAddress(192, 168, 0, 177),
+  wifiManager.config(IPAddress(192, 168, 0, 4), IPAddress(192, 168, 0, 4),
     IPAddress(255, 255, 255, 0));
   if (!wifiManager.beginSta(SSID, PASS))
   {
@@ -58,14 +58,17 @@ void setup()
     Serial.println("Couldn't find RTC");
   }
   ntp.begin(4, "2.pool.ntp.org");
-  rtc.adjust(DateTime(ntp.getTime()));
-  eventClock.setInterval(TimeSpan(60),
-    [](const DateTime &dt)
-    {
-      rtc.adjust(DateTime(ntp.getTime()));
-      Serial.printf("---\n%s %s\n---\n", "Sync time",
-        rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
-    });
+  if (ntp.getTime())
+  {
+    rtc.adjust(DateTime(ntp.getTime()));
+    eventClock.setInterval(TimeSpan(60),
+      [](const DateTime &dt)
+      {
+        rtc.adjust(DateTime(ntp.getTime()));
+        Serial.printf("---\n%s %s\n---\n", "Sync time",
+          rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
+      });
+  }
 }
 
 void loop()
