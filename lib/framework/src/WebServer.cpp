@@ -104,7 +104,7 @@ void WebServer::addHandlers()
     {
       StaticJsonDocument<64> json;
 
-      json["name"] = shedule.name();
+      json["title"] = shedule.title();
 
       request->send(200, "application/json", json.as<String>());
     });
@@ -113,7 +113,7 @@ void WebServer::addHandlers()
   _server.addHandler(new AsyncCallbackJsonWebHandler("/api/shedule",
     [](AsyncWebServerRequest *request, JsonVariant &json)
     {
-      shedule.setup(json.as<String>());
+      shedule.setup(json["title"].as<String>());
       request->send(200);
     }));
 

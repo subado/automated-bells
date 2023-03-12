@@ -3,23 +3,23 @@
 #include <ArduinoJson.h>
 #include <Rtc.hpp>
 
-Shedule::Shedule() : _name{}, _table{}
+Shedule::Shedule() : _title{}, _table{}
 {
 }
 
-void Shedule::setup(const String &name)
+void Shedule::setup(const String &title)
 {
   _table.clear();
-  File file = LittleFS.open(("/tables" + name + ".json").c_str(), "r");
+  File file = LittleFS.open(("/tables" + title + ".json").c_str(), "r");
   parseJson(file);
   file.close();
 
-  _name = name;
+  _title = title;
 }
 
-String Shedule::name()
+String Shedule::title()
 {
-  return _name;
+  return _title;
 }
 
 void Shedule::parseJson(File &file)

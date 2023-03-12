@@ -14,14 +14,14 @@ class Shedule
 public:
   Shedule();
 
-  void setup(const String &name);
+  void setup(const String &title);
 
-  String name();
+  String title();
 
 private:
   void parseJson(File &file);
 
-  String _name;
+  String _title;
   std::vector<DateTime> _table;
 };
 
