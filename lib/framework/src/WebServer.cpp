@@ -57,7 +57,7 @@ void WebServer::addHandlers()
     {
       Dir root = LittleFS.openDir("/tables");
       DynamicJsonDocument json(1024);
-      JsonArray tables = json.createNestedArray("tables");
+      JsonArray tables = json.createNestedArray("title");
 
       for (String fileName; root.next();)
       {
