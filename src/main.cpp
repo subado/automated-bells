@@ -65,9 +65,12 @@ void setup()
     eventClock.setInterval(TimeSpan(60),
       [](const DateTime &dt)
       {
-        rtc.adjust(DateTime(ntp.getTime()));
-        Serial.printf("---\n%s %s\n---\n", "Sync time",
-          rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
+        if (ntp.getTime())
+        {
+          rtc.adjust(DateTime(ntp.getTime()));
+          Serial.printf("---\n%s %s\n---\n", "Sync time",
+            rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
+        }
       });
   }
 }
