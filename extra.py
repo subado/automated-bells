@@ -9,3 +9,13 @@ env.AddCustomTarget(
     ],
     title="Generated tags file"
 )
+
+env.AddCustomTarget(
+    name="build-react",
+    dependencies=None,
+    actions=[
+        "cd interface/ && npm run build",
+        "cp -r interface/build/* data/"
+    ],
+    title="Build react and copy it to data"
+)
