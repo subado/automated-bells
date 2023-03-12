@@ -14,7 +14,7 @@ WebServer::WebServer(uint16_t port) : _server(port)
 
 void WebServer::begin()
 {
-  _server.serveStatic("/", LittleFS, "/client/").setDefaultFile("index.html");
+  _server.serveStatic("/", LittleFS, "/").setDefaultFile("index.html");
   _server.begin();
 }
 
