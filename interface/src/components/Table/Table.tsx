@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'
 import React, { useEffect } from 'react'
 import { tablesAPI } from '../../api/tablesAPI'
 import { useTable } from '../../contexts/TableContext'
@@ -8,16 +9,22 @@ export function Table() {
   const { state: table, dispatch: dispatchTable } = useTable()
 
   async function fetchTable() {
-    const data = await tablesAPI.getTables('Saturday')
-    dispatchTable({
-      type: 'set',
-      table: data,
-    })
+    if (table.title !== '') {
+      try {
+        const data = await tablesAPI.getTables(table.title)
+        dispatchTable({
+          type: 'set',
+          table: data,
+        })
+      } catch (error: unknown) {
+        table.time = []
+      }
+    }
   }
 
   useEffect(() => {
     fetchTable()
-  }, [])
+  }, [table.title])
 
   return (
     <table className='w-fit text-center m-auto'>
@@ -49,7 +56,7 @@ export function Table() {
             </td>
           </tr>
         )}
-        {table.time.map((t, i) => {
+        {table.time.map((time, i) => {
           return (
             <tr
               className='odd:bg-white even:bg-gray-100 border-2 border-gray-200'
@@ -59,7 +66,7 @@ export function Table() {
                 <input
                   type='time'
                   name='time'
-                  value={t}
+                  value={time}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     dispatchTable({
                       type: 'updateTimeItem',
