@@ -1,5 +1,11 @@
+import { Time } from './components/Time'
+
 function App() {
-  return <div />
+  return (
+    <div>
+      <Time />
+    </div>
+  )
 }
 
 export default App
