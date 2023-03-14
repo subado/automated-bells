@@ -8,5 +8,7 @@ export interface ITableTitles {
 }
 
 export interface ITime {
-  time: string
+  hour: string
+  minute: string
+  second: string
 }
