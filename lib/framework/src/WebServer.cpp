@@ -90,10 +90,16 @@ void WebServer::addHandlers()
   _server.on("/api/time", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
-      StaticJsonDocument<32> time;
+      StaticJsonDocument<128> time;
       DateTime now = rtc.now();
+      char buffer[4];
 
-      time["time"] = now.timestamp(DateTime::TIMESTAMP_TIME);
+      sprintf(buffer, "%02d", now.hour());
+      time["hour"] = String(buffer);
+      sprintf(buffer, "%02d", now.minute());
+      time["minute"] = String(buffer);
+      sprintf(buffer, "%02d", now.second());
+      time["second"] = String(buffer);
 
       request->send(200, "application/json", time.as<String>());
     });
