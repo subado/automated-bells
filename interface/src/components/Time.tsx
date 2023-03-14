@@ -3,7 +3,7 @@ import { timeAPI } from '../APIs/timeAPI'
 import type { ITime } from '../interfaces'
 
 export function Time() {
-  const initialState = {
+  const initialState: ITime = {
     hour: '',
     minute: '',
     second: '',
