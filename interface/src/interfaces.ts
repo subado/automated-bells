@@ -6,3 +6,7 @@ export interface ITable {
 export interface ITableTitles {
   title: string[]
 }
+
+export interface ITime {
+  time: string
+}
