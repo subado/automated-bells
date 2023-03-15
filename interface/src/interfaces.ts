@@ -12,3 +12,8 @@ export interface ITime {
   minute: string
   second: string
 }
+
+export interface IDropdownMenuState {
+  list: string[]
+  selected: string
+}
