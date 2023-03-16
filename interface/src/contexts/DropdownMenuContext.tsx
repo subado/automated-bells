@@ -31,6 +31,7 @@ export function useDropdownMenuDispatch() {
 }
 
 const initialState: IDropdownMenuState = {
+  isEnable: false,
   list: [],
   selected: '',
 }

@@ -9,6 +9,9 @@ export type DropdownMenuAction =
       type: 'set'
       list: string[]
     }
+  | {
+      type: 'enable' | 'disable'
+    }
 
 export function dropdownMenuReducer(
   state: IDropdownMenuState,
@@ -36,5 +39,9 @@ export function dropdownMenuReducer(
       }
     case 'set':
       return { ...state, list: action.list }
+    case 'enable':
+      return { ...state, isEnable: true }
+    case 'disable':
+      return { ...state, isEnable: false }
   }
 }

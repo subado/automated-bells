@@ -16,6 +16,7 @@ export interface ITime {
 }
 
 export interface IDropdownMenuState {
+  isEnable: boolean
   list: string[]
   selected: string
 }
