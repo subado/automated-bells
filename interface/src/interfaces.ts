@@ -1,3 +1,5 @@
+import type React from 'react'
+
 export interface ITable {
   title: string
   time: string[]
@@ -16,4 +18,8 @@ export interface ITime {
 export interface IDropdownMenuState {
   list: string[]
   selected: string
+}
+
+export interface IProviderProps {
+  children: React.ReactNode
 }
