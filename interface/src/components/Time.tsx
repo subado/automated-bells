@@ -21,10 +21,10 @@ export function Time() {
   }, [])
 
   return (
-    <p className='p-1  w-[8rem]  text-center m-auto bg-black text-white font-mono shadow-sm shadow-black'>
+    <div className='p-1  w-[8rem]  text-center bg-gray-50 text-black font-mono shadow-sm shadow-black'>
       <span className='px-2 align-middle'>{time.hour}</span>:
       <span className='px-2 align-middle'>{time.minute}</span>:
       <span className='px-2 align-middle'>{time.second}</span>
-    </p>
+    </div>
   )
 }
