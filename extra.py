@@ -14,9 +14,9 @@ env.AddCustomTarget(
     name="build-react",
     dependencies=None,
     actions=[
-        "cd interface/ && npm run build",
-        "rm -rf data/static/",
-        "mkdir -p data/ && cp -r interface/build/* data/"
+        "cd interface/ && yarn build",
+        "rm -rf data/assets/",
+        "mkdir -p data/ && cp -r interface/dist/* data/"
     ],
     title="Build react and copy it to data"
 )
