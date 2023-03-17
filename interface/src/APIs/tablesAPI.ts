@@ -1,9 +1,9 @@
 import { api } from '../constants'
-import type { ITable, ITableTitles } from '../interfaces'
+import type { ITableState, ITableTitles } from '../interfaces'
 
 export const tablesAPI = {
   async getTables(tableTitle: string) {
-    const response = await api.get<ITable>(`tables/${tableTitle}`)
+    const response = await api.get<ITableState>(`tables/${tableTitle}`)
     return response.data
   },
   async getTableTitles() {

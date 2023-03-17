@@ -1,6 +1,6 @@
 import type React from 'react'
 
-export interface ITable {
+export interface ITableState {
   title: string
   time: string[]
 }
