@@ -1,6 +1,5 @@
 import type { Dispatch } from 'react'
-import { useContext } from 'react'
-import { useReducer, createContext } from 'react'
+import { useContext, useReducer, createContext } from 'react'
 import type { IDropdownMenuState, IProviderProps } from '../interfaces'
 import type { DropdownMenuAction } from '../reducers/dropdownMenuReducer'
 import { dropdownMenuReducer } from '../reducers/dropdownMenuReducer'
