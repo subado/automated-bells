@@ -21,10 +21,8 @@ export function Time() {
   }, [])
 
   return (
-    <div className='p-1  w-[8rem]  text-center bg-gray-50 text-black font-mono shadow-sm text-sm shadow-black'>
-      <span className='px-2 align-middle'>{time.hour}</span>:
-      <span className='px-2 align-middle'>{time.minute}</span>:
-      <span className='px-2 align-middle'>{time.second}</span>
+    <div className='inline-flex align-middle gap-x-2.5 py-1 px-3 bg-gray-50 text-black shadow-sm shadow-black'>
+      <p>{time.hour}</p>:<p>{time.minute}</p>:<p>{time.second}</p>
     </div>
   )
 }
