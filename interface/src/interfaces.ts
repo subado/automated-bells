@@ -15,12 +15,6 @@ export interface ITime {
   second: string
 }
 
-export interface IDropdownMenuState {
-  isEnable: boolean
-  list: string[]
-  selected: string
-}
-
 export interface IProviderProps {
   children: React.ReactNode
 }
