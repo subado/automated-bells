@@ -7,7 +7,6 @@ export const sheduleAPI = {
     return response.data
   },
   async post(shedule: IShedule) {
-    const response = await api.post<IShedule>('shedule/', shedule)
-    return response
+    return await api.post<IShedule>('shedule/', shedule)
   },
 }

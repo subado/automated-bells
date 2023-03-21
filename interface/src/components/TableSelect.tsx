@@ -35,7 +35,7 @@ export function TableSelect() {
   const dispatchTable = useTableDispatch()
 
   async function fetchTableTitles() {
-    const data = await tablesAPI.getTableTitles()
+    const data = await tablesAPI.getTitles()
     setOptions(data.title)
     setSelected(data.title[0])
   }
@@ -50,7 +50,7 @@ export function TableSelect() {
       type: 'updateTitle',
       title: selected,
     })
-    const data = await tablesAPI.getTables(selected)
+    const data = await tablesAPI.get(selected)
     dispatchTable({
       type: 'set',
       table: data,
