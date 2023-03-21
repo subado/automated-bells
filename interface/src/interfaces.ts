@@ -1,5 +1,3 @@
-import type React from 'react'
-
 export interface ITable {
   title: string
   time: string[]

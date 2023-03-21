@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { sheduleAPI } from '../APIs/sheduleAPI'
 import { useShedule } from '../contexts/SheduleContext'
 

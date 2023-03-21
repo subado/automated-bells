@@ -1,6 +1,3 @@
-import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { tablesAPI } from '../../APIs/tablesAPI'
 import { useTable } from '../../contexts/TableContext'
 import { useTableDispatch } from '../../contexts/TableContext'
 import { AddButton } from './AddButton'

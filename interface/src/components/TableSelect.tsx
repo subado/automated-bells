@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { sheduleAPI } from '../APIs/sheduleAPI'
 import { tablesAPI } from '../APIs/tablesAPI'
 import { useShedule } from '../contexts/SheduleContext'
@@ -30,7 +30,7 @@ function Button({ color, content, onClick }: IButtonProps) {
 export function TableSelect() {
   const [options, setOptions] = useState<string[]>([])
   const [selected, setSelected] = useState<string>('')
-  const [shedule, setShedule] = useShedule()
+  const [, setShedule] = useShedule()
 
   async function fetchTableTitles() {
     const data = await tablesAPI.getTableTitles()

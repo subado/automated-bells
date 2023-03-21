@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
 import { Root } from './components/Root'
-import { TableEditor } from './components/TableEditor'
 
 function App() {
   return (
