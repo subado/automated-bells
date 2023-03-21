@@ -116,8 +116,9 @@ void WebServer::addHandlers()
     });
 
   // Set the name of the active shedule
-  _server.addHandler(new AsyncCallbackJsonWebHandler("^\\/api\\/shedule\\/$",
+  _server.addHandler(new AsyncCallbackJsonWebHandler("/api/shedule/",
     [](AsyncWebServerRequest *request, JsonVariant &json)
+
     {
       shedule.setup(json["title"].as<String>());
       request->send(200);
