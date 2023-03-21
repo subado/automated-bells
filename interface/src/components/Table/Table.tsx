@@ -18,6 +18,7 @@ export function Table() {
               type='text'
               name='title'
               value={table.title}
+              pattern='[A-Za-z0-9]{1,31}'
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 dispatch({
                   type: 'updateTitle',
