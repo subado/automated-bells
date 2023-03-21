@@ -15,7 +15,7 @@ export function RemoveButton({ index }: RemoveButtonProps) {
           index: index,
         })
       }}
-      className='bg-red-500 hover:bg-red-700 font-bold w-[50%] rounded text-lg text-white'
+      className='bg-rose-500 hover:bg-rose-700 font-bold w-[50%] rounded text-white'
     >
       -
     </button>

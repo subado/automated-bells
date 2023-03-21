@@ -15,7 +15,7 @@ export function AddButton({ index }: AddButtonProps) {
           index: index + 1,
         })
       }}
-      className='bg-green-500 hover:bg-green-700 font-bold w-[50%] rounded text-lg text-white'
+      className='bg-emerald-500 hover:bg-emerald-700 font-bold w-[50%] rounded text-white'
     >
       +
     </button>

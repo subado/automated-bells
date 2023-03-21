@@ -9,26 +9,9 @@ import { RemoveButton } from './RemoveButton'
 export function Table() {
   const table = useTable()
   const dispatch = useTableDispatch()
-  const params = useParams<{ title?: string }>()
-
-  async function fetchTable() {
-    try {
-      const data = await tablesAPI.getTables(params.title as string)
-      dispatch({
-        type: 'set',
-        table: data,
-      })
-    } catch (error: unknown) {
-      table.time = []
-    }
-  }
-
-  useEffect(() => {
-    fetchTable()
-  }, [])
 
   return (
-    <table className='text-center w-full'>
+    <table className='text-center w-[95vmin]'>
       <thead className='bg-gray-100 border-b-2 border-gray-200'>
         <tr>
           <th colSpan={2}>
@@ -75,7 +58,6 @@ export function Table() {
                   })
                 }}
                 required={true}
-                className='text-lg'
               />
             </td>
             <td className='w-[50%]'>
