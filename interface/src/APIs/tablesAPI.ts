@@ -9,8 +9,11 @@ export const tablesAPI = {
   async delete(title: string) {
     return await api.delete<ITable>(`tables/${title}/`)
   },
+  async post(table: ITable) {
+    return await api.post<ITable>('tables/', table)
+  },
   async getTitles() {
-    const response = await api.get<ITableTitles>(`tables/`)
+    const response = await api.get<ITableTitles>('tables/')
     return response.data
   },
 }
