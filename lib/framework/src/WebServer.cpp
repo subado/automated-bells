@@ -83,13 +83,13 @@ void WebServer::addHandlers()
 
   // Parse the form sent in json format
   // and save the file with the parsed table
-  _server.addHandler(new AsyncCallbackJsonWebHandler("^\\/api\\/tables\\/$",
+  _server.addHandler(new AsyncCallbackJsonWebHandler("/api/tables/",
     [](AsyncWebServerRequest *request, JsonVariant &data)
     {
       DynamicJsonDocument json(2048);
 
       String name = data["title"].as<String>();
-      json.add(data["time"].as<String>());
+      json.set(data["time"].as<JsonArray>());
 
       File file;
       file = LittleFS.open("/tables/" + name + ".json", "w");
