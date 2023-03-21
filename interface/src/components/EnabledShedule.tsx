@@ -5,7 +5,7 @@ export function EnabledShedule() {
   const [enabled, setEnabled] = useState<string>('')
 
   async function fetchShedule() {
-    const data = await sheduleAPI.getEnabledTitle()
+    const data = await sheduleAPI.getTitle()
     setEnabled(data.title)
   }
 
