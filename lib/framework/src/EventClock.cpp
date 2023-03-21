@@ -25,7 +25,6 @@ std::shared_ptr<Event> EventClock::setInterval(const TimeSpan &timeSpan,
 void EventClock::removeEvent(const std::shared_ptr<Event> &event)
 {
   _events.erase(std::remove(_events.begin(), _events.end(), event));
-  Serial.printf("%s = %d", "_events.size()", _events.size());
 }
 
 void EventClock::handleEvents()
