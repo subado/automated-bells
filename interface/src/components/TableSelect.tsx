@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { sheduleAPI } from '../APIs/sheduleAPI'
 import { tablesAPI } from '../APIs/tablesAPI'
+import { useOptions } from '../contexts/OptionsContext'
 import { useShedule } from '../contexts/SheduleContext'
 import { useTableDispatch } from '../contexts/TableContext'
 
@@ -29,7 +30,7 @@ function Button({ color, content, onClick }: IButtonProps) {
 }
 
 export function TableSelect() {
-  const [options, setOptions] = useState<string[]>([])
+  const [options, setOptions] = useOptions()
   const [selected, setSelected] = useState<string>('')
   const [, setShedule] = useShedule()
   const dispatchTable = useTableDispatch()
@@ -38,6 +39,7 @@ export function TableSelect() {
     const data = await tablesAPI.getTitles()
     setOptions(data.title)
   }
+
   function createButtonAction(callback: () => void) {
     return () => {
       if (selected != '') {
