@@ -1,9 +1,8 @@
-import { TableProvider } from '../contexts/TableContext'
 import { Table } from './Table/Table'
 
 export function TableEditor() {
   return (
-    <TableProvider>
+    <form className='flex flex-col items-center gap-y-5'>
       <Table />
       <button
         type='submit'
@@ -11,6 +10,6 @@ export function TableEditor() {
       >
         Submit Table
       </button>
-    </TableProvider>
+    </form>
   )
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { sheduleAPI } from '../APIs/sheduleAPI'
 import { tablesAPI } from '../APIs/tablesAPI'
 import { useShedule } from '../contexts/SheduleContext'
+import { useTableDispatch } from '../contexts/TableContext'
 
 const ColorVariants = {
   green: 'bg-green-500 hover:bg-green-700',
@@ -31,6 +32,7 @@ export function TableSelect() {
   const [options, setOptions] = useState<string[]>([])
   const [selected, setSelected] = useState<string>('')
   const [, setShedule] = useShedule()
+  const dispatchTable = useTableDispatch()
 
   async function fetchTableTitles() {
     const data = await tablesAPI.getTableTitles()
@@ -41,6 +43,18 @@ export function TableSelect() {
   function postShedule() {
     setShedule({ title: selected })
     sheduleAPI.post({ title: selected })
+  }
+
+  async function editTable() {
+    dispatchTable({
+      type: 'updateTitle',
+      title: selected,
+    })
+    const data = await tablesAPI.getTables(selected)
+    dispatchTable({
+      type: 'set',
+      table: data,
+    })
   }
 
   useEffect(() => {
@@ -69,7 +83,13 @@ export function TableSelect() {
             postShedule()
           }}
         />
-        <Button color='blue' content='Edit' />
+        <Button
+          color='blue'
+          content='Edit'
+          onClick={() => {
+            editTable()
+          }}
+        />
         <Button color='red' content='Delete' />
       </div>
     </div>
