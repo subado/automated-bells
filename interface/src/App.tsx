@@ -4,10 +4,9 @@ import { TableEditor } from './components/TableEditor'
 
 function App() {
   return (
-    <div className='flex flex-col items-center text-[3vh]'>
+    <div className='flex flex-col items-center text-[4vmin]'>
       <Routes>
         <Route path='/' element={<Root />} />
-        <Route path='/table/:title' element={<TableEditor />} />
       </Routes>
     </div>
   )
