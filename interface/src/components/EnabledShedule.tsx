@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
 import { sheduleAPI } from '../APIs/sheduleAPI'
+import { useShedule } from '../contexts/SheduleContext'
 
 export function EnabledShedule() {
-  const [enabled, setEnabled] = useState<string>('')
+  const [shedule, setShedule] = useShedule()
 
   async function fetchShedule() {
-    const data = await sheduleAPI.getTitle()
-    setEnabled(data.title)
+    const data = await sheduleAPI.get()
+    setShedule(data)
   }
 
   useEffect(() => {
     fetchShedule()
   }, [])
-  return <div>{enabled}</div>
+  return <div>{shedule.title}</div>
 }

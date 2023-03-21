@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { sheduleAPI } from '../APIs/sheduleAPI'
 import { tablesAPI } from '../APIs/tablesAPI'
+import { useShedule } from '../contexts/SheduleContext'
 
 const ColorVariants = {
   green: 'bg-green-500 hover:bg-green-700',
@@ -10,13 +12,15 @@ const ColorVariants = {
 interface IButtonProps {
   color: keyof typeof ColorVariants
   content: string
+  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined
 }
 
-function Button({ color, content }: IButtonProps) {
+function Button({ color, content, onClick }: IButtonProps) {
   return (
     <button
       type='button'
       className={`${ColorVariants[color]} font-bold rounded text-white p-2 w-[30%]`}
+      onClick={onClick}
     >
       {content}
     </button>
@@ -25,10 +29,18 @@ function Button({ color, content }: IButtonProps) {
 
 export function TableSelect() {
   const [options, setOptions] = useState<string[]>([])
+  const [selected, setSelected] = useState<string>('')
+  const [shedule, setShedule] = useShedule()
 
   async function fetchTableTitles() {
     const data = await tablesAPI.getTableTitles()
     setOptions(data.title)
+    setSelected(data.title[0])
+  }
+
+  function postShedule() {
+    setShedule({ title: selected })
+    sheduleAPI.post({ title: selected })
   }
 
   useEffect(() => {
@@ -37,7 +49,12 @@ export function TableSelect() {
 
   return (
     <div className='flex items-center flex-col '>
-      <select className='w-[95vmin] bg-gray-100 p-2 rounded ring-2 ring-gray-300 focus:ring-sky-400'>
+      <select
+        className='w-[95vmin] bg-gray-100 p-2 rounded ring-2 ring-gray-300 focus:ring-sky-400'
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+          setSelected(e.currentTarget.value)
+        }}
+      >
         {options.map((opt) => (
           <option key={opt} value={opt}>
             {opt}
@@ -45,7 +62,13 @@ export function TableSelect() {
         ))}
       </select>
       <div className='flex flex-row gap-x-5 mt-2 w-[95vmin] justify-center'>
-        <Button color='green' content='Set' />
+        <Button
+          color='green'
+          content='Set'
+          onClick={() => {
+            postShedule()
+          }}
+        />
         <Button color='blue' content='Edit' />
         <Button color='red' content='Delete' />
       </div>
