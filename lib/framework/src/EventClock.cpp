@@ -1,26 +1,31 @@
 #include <EventClock.hpp>
 #include <Rtc.hpp>
+#include <algorithm>
 
 #define MILLIS_PER_SECOND 1000
 
-extern Rtc rtc;
-
-EventClock::EventClock() : _wire{Wire}
+std::shared_ptr<Event> EventClock::setAbsoluteAlarm(const DateTime &dateTime,
+  EventHandlerFunction handler)
 {
+  return _addEvent(std::make_shared<AbsoluteAlarm>(dateTime, handler));
 }
 
-EventClock::EventClock(TwoWire &wire) : _wire{wire}
+std::shared_ptr<Event> EventClock::setRecurringAlarm(uint8_t days, uint8_t hour, uint8_t minute,
+  uint8_t second, EventHandlerFunction handler)
 {
+  return _addEvent(std::make_shared<RecurringAlarm>(days, hour, minute, second, handler));
 }
 
-void EventClock::setAlarm(const DateTime &dateTime, EventHandlerFunction handler)
+std::shared_ptr<Event> EventClock::setInterval(const TimeSpan &timeSpan,
+  EventHandlerFunction handler)
 {
-  _events.emplace_back(std::make_unique<Alarm>(dateTime, handler));
+  return _addEvent(std::make_shared<Interval>(timeSpan, handler));
 }
 
-void EventClock::setInterval(const TimeSpan &timeSpan, EventHandlerFunction handler)
+void EventClock::removeEvent(const std::shared_ptr<Event> &event)
 {
-  _events.emplace_back(std::make_unique<Interval>(timeSpan, handler));
+  _events.erase(std::remove(_events.begin(), _events.end(), event));
+  Serial.printf("%s = %d", "_events.size()", _events.size());
 }
 
 void EventClock::handleEvents()
@@ -29,61 +34,24 @@ void EventClock::handleEvents()
   {
     if (event->isHappen())
     {
-      if (!event->runned)
+      if (!event->_runned)
       {
-        event->runned = true;
-        event->startTime = millis();
-        event->run();
+        event->_runned = true;
+        event->_startTime = millis();
+        event->_run();
       }
-      else if (event->runned && (millis() - event->startTime >= MILLIS_PER_SECOND))
+      else if (event->_runned && (millis() - event->_startTime >= MILLIS_PER_SECOND))
       {
-        event->runned = false;
+        event->_runned = false;
       }
     }
   }
 }
 
-EventClock::Event::Event(EventHandlerFunction handler) : handler{handler}
+std::shared_ptr<Event> EventClock::_addEvent(const std::shared_ptr<Event> &event)
 {
-}
-
-void EventClock::Event::run()
-{
-  handler(rtc.now());
-}
-
-EventClock::Alarm::Alarm(const DateTime &dateTime, EventHandlerFunction handler)
-    : Event(handler), dateTime{dateTime}
-{
-}
-
-bool EventClock::Alarm::isHappen() const
-{
-  if (dateTime == rtc.now())
-  {
-    return true;
-  }
-  return false;
-}
-
-EventClock::Interval::Interval(const TimeSpan &timeSpan, EventHandlerFunction handler)
-    : Event(handler), timeSpan{timeSpan}, prevTime(rtc.now())
-{
-}
-
-bool EventClock::Interval::isHappen() const
-{
-  if (prevTime + timeSpan == rtc.now())
-  {
-    return true;
-  }
-  return false;
-}
-
-void EventClock::Interval::run()
-{
-  prevTime = rtc.now();
-  handler(prevTime);
+  _events.emplace_back(event);
+  return event;
 }
 
 EventClock eventClock;
