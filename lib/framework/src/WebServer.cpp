@@ -31,10 +31,10 @@ void WebServer::addHandlers()
     [](AsyncWebServerRequest *request)
     {
       String title = request->pathArg(0);
-      String fileName = "/tables/" + title + ".json";
-      if (LittleFS.exists(fileName))
+      String path = "/tables/" + title + ".json";
+      if (LittleFS.exists(path))
       {
-        File file = LittleFS.open(fileName, "r");
+        File file = LittleFS.open(path, "r");
 
         DynamicJsonDocument json(2048);
         DynamicJsonDocument buffer(1024);
@@ -47,6 +47,18 @@ void WebServer::addHandlers()
         file.close();
 
         request->send(200, "application/json", json.as<String>());
+      }
+      request->send(404);
+    });
+
+  _server.on("^\\/api\\/tables\\/([A-Za-z0-9]{1,31})\\/$", HTTP_DELETE,
+    [](AsyncWebServerRequest *request)
+    {
+      String title = request->pathArg(0);
+      String path = "/tables/" + title + ".json";
+      if (LittleFS.exists(path))
+      {
+        LittleFS.remove(path);
       }
       request->send(404);
     });
