@@ -37,7 +37,13 @@ export function TableSelect() {
   async function fetchTableTitles() {
     const data = await tablesAPI.getTitles()
     setOptions(data.title)
-    setSelected(data.title[0])
+  }
+  function createButtonAction(callback: () => void) {
+    return () => {
+      if (selected != '') {
+        callback()
+      }
+    }
   }
 
   function postShedule() {
@@ -57,9 +63,18 @@ export function TableSelect() {
     })
   }
 
+  function deleteTable() {
+    setOptions(options.filter((opt) => opt != selected))
+    tablesAPI.delete(selected)
+  }
+
   useEffect(() => {
     fetchTableTitles()
   }, [])
+
+  useEffect(() => {
+    setSelected(options.length ? options[0] : '')
+  }, [options])
 
   return (
     <div className='flex items-center flex-col '>
@@ -79,18 +94,18 @@ export function TableSelect() {
         <Button
           color='green'
           content='Set'
-          onClick={() => {
-            postShedule()
-          }}
+          onClick={createButtonAction(postShedule)}
         />
         <Button
           color='blue'
           content='Edit'
-          onClick={() => {
-            editTable()
-          }}
+          onClick={createButtonAction(editTable)}
         />
-        <Button color='red' content='Delete' />
+        <Button
+          color='red'
+          content='Delete'
+          onClick={createButtonAction(deleteTable)}
+        />
       </div>
     </div>
   )
