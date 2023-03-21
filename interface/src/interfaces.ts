@@ -18,3 +18,7 @@ export interface ITime {
 export interface IProviderProps {
   children: React.ReactNode
 }
+
+export interface IShedule {
+  title: string
+}
