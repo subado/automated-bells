@@ -59,6 +59,7 @@ void WebServer::addHandlers()
       if (LittleFS.exists(path))
       {
         LittleFS.remove(path);
+        request->send(200);
       }
       request->send(404);
     });
