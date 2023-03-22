@@ -7,11 +7,12 @@
 
 class EventClock;
 typedef std::function<void(const DateTime &dateTime)> EventHandlerFunction;
+typedef std::function<void()> EventTearDownFunction;
 
 class Event
 {
 public:
-  Event(EventHandlerFunction handler);
+  Event(EventHandlerFunction handler, uint32_t duration, EventTearDownFunction tearDown);
   virtual ~Event() = default;
 
   virtual bool isHappen() const = 0;
@@ -20,8 +21,11 @@ protected:
   virtual void _run();
 
   EventHandlerFunction _handler;
+  uint32_t _duration;
+  EventTearDownFunction _tearDown;
+
   uint32_t _startTime;
-  bool _runned = false;
+  bool _runned;
 
   friend class EventClock;
 };
@@ -29,7 +33,8 @@ protected:
 class AbsoluteAlarm : public Event
 {
 public:
-  AbsoluteAlarm(const DateTime &dateTime, EventHandlerFunction handler);
+  AbsoluteAlarm(const DateTime &dateTime, EventHandlerFunction handler, uint32_t duration,
+    EventTearDownFunction tearDown);
 
   bool isHappen() const override;
 
@@ -40,12 +45,12 @@ protected:
 class RecurringAlarm : public Event
 {
 public:
-  RecurringAlarm(uint8_t days, uint8_t hour, uint8_t minute, uint8_t second,
-    EventHandlerFunction handler);
+  RecurringAlarm(uint8_t daysOfWeek, uint8_t hour, uint8_t minute, uint8_t second,
+    EventHandlerFunction handler, uint32_t duration, EventTearDownFunction tearDown);
 
   bool isHappen() const override;
 
-  enum Day
+  enum Days
   {
     SUNDAY = 0b0000001,
     MONDAY = 0b0000010,
@@ -58,7 +63,7 @@ public:
   };
 
 protected:
-  std::bitset<7> _days;
+  std::bitset<7> _daysOfWeek;
   uint8_t _hour;
   uint8_t _minute;
   uint8_t _second;
@@ -67,7 +72,8 @@ protected:
 class Interval : public Event
 {
 public:
-  Interval(const TimeSpan &timeSpan, EventHandlerFunction handler);
+  Interval(const TimeSpan &timeSpan, EventHandlerFunction handler, uint32_t duration,
+    EventTearDownFunction tearDown);
 
   bool isHappen() const override;
 

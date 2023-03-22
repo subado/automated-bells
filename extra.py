@@ -15,8 +15,8 @@ env.AddCustomTarget(
     dependencies=None,
     actions=[
         "cd interface/ && yarn build",
-        "rm -rf data/assets/",
-        "mkdir -p data/ && cp -r interface/dist/* data/"
+        "rm -rf data/static/assets/",
+        "mkdir -p data/static/ && cp -r interface/dist/* data/static/"
     ],
     title="Build react and copy it to data"
 )

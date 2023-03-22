@@ -14,7 +14,7 @@ WebServer::WebServer(uint16_t port) : _server(port)
 
 void WebServer::begin()
 {
-  _server.serveStatic("/", LittleFS, "/").setDefaultFile("index.html");
+  _server.serveStatic("/", LittleFS, "/static/").setDefaultFile("index.html");
   _server.begin();
 }
 
@@ -133,7 +133,7 @@ void WebServer::addHandlers()
     [](AsyncWebServerRequest *request, JsonVariant &json)
 
     {
-      shedule.setup(json["title"].as<String>());
+      shedule.setTable(json["title"].as<String>());
       request->send(200);
     }));
 

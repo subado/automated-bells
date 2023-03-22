@@ -1,7 +1,12 @@
 #include <Event.hpp>
 #include <Rtc.hpp>
 
-Event::Event(EventHandlerFunction handler) : _handler{handler}
+Event::Event(EventHandlerFunction handler, uint32_t duration, EventTearDownFunction tearDown)
+    : _handler{handler},
+      _duration(duration),
+      _tearDown{tearDown},
+      _startTime{rtc.now().secondstime()},
+      _runned{false}
 {
 }
 
@@ -10,8 +15,10 @@ void Event::_run()
   _handler(rtc.now());
 }
 
-AbsoluteAlarm::AbsoluteAlarm(const DateTime &dateTime, EventHandlerFunction handler)
-    : Event(handler), _dateTime{dateTime}
+AbsoluteAlarm::AbsoluteAlarm(const DateTime &dateTime, EventHandlerFunction handler,
+  uint32_t duration, EventTearDownFunction tearDown)
+    : Event(handler, duration, tearDown),
+      _dateTime{dateTime}
 {
 }
 
@@ -24,9 +31,13 @@ bool AbsoluteAlarm::isHappen() const
   return false;
 }
 
-RecurringAlarm::RecurringAlarm(uint8_t days, uint8_t hour, uint8_t minute, uint8_t second,
-  EventHandlerFunction handler)
-    : Event(handler), _days(days), _hour(hour), _minute(minute), _second(second)
+RecurringAlarm::RecurringAlarm(uint8_t daysOfWeek, uint8_t hour, uint8_t minute, uint8_t second,
+  EventHandlerFunction handler, uint32_t duration, EventTearDownFunction tearDown)
+    : Event(handler, duration, tearDown),
+      _daysOfWeek{daysOfWeek},
+      _hour{hour},
+      _minute{minute},
+      _second{second}
 {
 }
 
@@ -38,7 +49,7 @@ bool RecurringAlarm::isHappen() const
   {
     for (uint8_t day = 0; day < 7; day++)
     {
-      if (now.dayOfTheWeek() == day && _days.test(day))
+      if (now.dayOfTheWeek() == day && _daysOfWeek.test(day))
       {
         return true;
       }
@@ -47,8 +58,11 @@ bool RecurringAlarm::isHappen() const
   return false;
 }
 
-Interval::Interval(const TimeSpan &timeSpan, EventHandlerFunction handler)
-    : Event(handler), _timeSpan{timeSpan}, _prevTime(rtc.now())
+Interval::Interval(const TimeSpan &timeSpan, EventHandlerFunction handler, uint32_t duration,
+  EventTearDownFunction tearDown)
+    : Event(handler, duration, tearDown),
+      _timeSpan{timeSpan},
+      _prevTime(rtc.now())
 {
 }
 

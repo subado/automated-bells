@@ -6,7 +6,6 @@
 #include <AsyncJson.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-#include <SimpleFTPServer.h>
 // std c++ libraries headers
 #include <stdio.h>
 #include <vector>
@@ -23,8 +22,6 @@
 
 #define RTC_SDA 4
 #define RTC_SCL 5
-
-FtpServer ftp;
 
 void setup()
 {
@@ -45,11 +42,6 @@ void setup()
       return;
   }
 
-  const char *domainName = "bells";
-  ftp.begin(domainName, domainName);
-  Serial.println("Ftp server started");
-  Serial.printf("Login: %s\nPassword: %s\n", domainName, domainName);
-
   server.begin();
   Serial.println("Http server started");
 
@@ -62,7 +54,7 @@ void setup()
   if (ntp.getTime())
   {
     rtc.adjust(DateTime(ntp.getTime()));
-    eventClock.setInterval(TimeSpan(60),
+    eventClock.setInterval(TimeSpan(0, 1, 0, 0),
       [](const DateTime &dt)
       {
         if (ntp.getTime())
@@ -73,10 +65,27 @@ void setup()
         }
       });
   }
+
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
+  shedule.setHandler(
+    [](const DateTime &dt)
+    {
+      digitalWrite(LED_BUILTIN, LOW);
+      Serial.printf("XXXXXXXXX\n%s %s\n", "RING START!!!",
+        dt.timestamp(DateTime::TIMESTAMP_TIME).c_str());
+    });
+  shedule.setDuration(5);
+  shedule.setTearDown(
+    []()
+    {
+      digitalWrite(LED_BUILTIN, HIGH);
+      Serial.printf("%s %s\nXXXXXXXXX\n", "RING END!!!",
+        rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
+    });
 }
 
 void loop()
 {
-  ftp.handleFTP();
   eventClock.handleEvents();
 }
