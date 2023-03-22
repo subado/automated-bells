@@ -22,3 +22,4 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 SpacesBeforeTrailingComments: 1
 UseTab: Never
 EmptyLineBeforeAccessModifier: LogicalBlock
+PackConstructorInitializers: Never
