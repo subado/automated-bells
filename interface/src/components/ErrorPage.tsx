@@ -5,24 +5,22 @@ export function ErrorPage() {
 
   if (isRouteErrorResponse(error)) {
     return (
-      <div className='h-screen flex flex-col text-[10vmin] items-center justify-center w-[100%] font-black'>
-        <h1>Oops! {error.status}</h1>
-        <p>{error.statusText}</p>
+      <div className='h-screen flex flex-col items-center justify-center w-[100%] gap-y-5'>
+        <h1 className='font-black text-[4vmin]'>Oops! {error.status}</h1>
+        <p className='text-[3vmin]'>{error.statusText}</p>
         {error.data?.message && (
-          <p>
-            <i>{error.data.message}</i>
+          <p className='italic text-gray-500 text-[2vmin]'>
+            {error.data.message}
           </p>
         )}
       </div>
     )
   } else if (error instanceof Error) {
     return (
-      <div className='h-screen flex flex-col text-[10vmin] items-center justify-center w-[100%] font-black'>
-        <h1>Oops! Unexpected Error</h1>
-        <p>Something went wrong.</p>
-        <p>
-          <i>{error.message}</i>
-        </p>
+      <div className='h-screen flex flex-col items-center justify-center w-[100%] gap-y-5'>
+        <h1 className='font-black text-[4vmin]'>Oops! Unexpected Error</h1>
+        <p className='text-[3vmin]'>Something went wrong.</p>
+        <p className='italic text-gray-500 text-[2vmin]'>{error.message}</p>
       </div>
     )
   } else {
