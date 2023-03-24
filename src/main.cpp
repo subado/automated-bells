@@ -14,7 +14,7 @@
 #include <EventClock.hpp>
 #include <Ntp.hpp>
 #include <Rtc.hpp>
-#include <Shedule.hpp>
+#include <Scheduler.hpp>
 #include <WebServer.hpp>
 #include <WiFiManager.hpp>
 
@@ -68,15 +68,15 @@ void setup()
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
-  shedule.setHandler(
+  scheduler.setHandler(
     [](const DateTime &dt)
     {
       digitalWrite(LED_BUILTIN, LOW);
       Serial.printf("XXXXXXXXX\n%s %s\n", "RING START!!!",
         dt.timestamp(DateTime::TIMESTAMP_TIME).c_str());
     });
-  shedule.setDuration(5);
-  shedule.setTearDown(
+  scheduler.setDuration(5);
+  scheduler.setTearDown(
     []()
     {
       digitalWrite(LED_BUILTIN, HIGH);

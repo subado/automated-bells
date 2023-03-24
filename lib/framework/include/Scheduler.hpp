@@ -10,10 +10,10 @@
 #include <Event.hpp>
 #include <Rtc.hpp>
 
-class Shedule
+class Scheduler
 {
 public:
-  Shedule();
+  Scheduler();
 
   void setTable(const String &title);
   void setHandler(EventHandlerFunction handler);
@@ -33,4 +33,4 @@ private:
   std::vector<std::shared_ptr<Event>> _events;
 };
 
-extern Shedule shedule;
+extern Scheduler scheduler;

@@ -1,9 +1,10 @@
 #include <AsyncJson.h>
 #include <Rtc.hpp>
-#include <Shedule.hpp>
+#include <Scheduler.hpp>
 #include <WebServer.hpp>
 
-WebServer::WebServer(uint16_t port) : _server(port)
+WebServer::WebServer(uint16_t port)
+    : _server(port)
 {
   // Needed for simply write front-end
 #if defined(ENABLE_CORS)
@@ -117,23 +118,23 @@ void WebServer::addHandlers()
       request->send(200, "application/json", time.as<String>());
     });
 
-  // Get the name of the active shedule and send json with it
-  _server.on("^\\/api\\/shedule\\/$", HTTP_GET,
+  // Get the name of the active scheduler and send json with it
+  _server.on("^\\/api\\/scheduler\\/$", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
       StaticJsonDocument<64> json;
 
-      json["title"] = shedule.title();
+      json["title"] = scheduler.title();
 
       request->send(200, "application/json", json.as<String>());
     });
 
-  // Set the name of the active shedule
-  _server.addHandler(new AsyncCallbackJsonWebHandler("/api/shedule/",
+  // Set the name of the active scheduler
+  _server.addHandler(new AsyncCallbackJsonWebHandler("/api/scheduler/",
     [](AsyncWebServerRequest *request, JsonVariant &json)
 
     {
-      shedule.setTable(json["title"].as<String>());
+      scheduler.setTable(json["title"].as<String>());
       request->send(200);
     }));
 

@@ -1,4 +1,4 @@
-#include <Shedule.hpp>
+#include <Scheduler.hpp>
 
 #include <ArduinoJson.h>
 #include <Rtc.hpp>
@@ -10,13 +10,13 @@ static uint8_t conv2d(const String &str)
   return 10 * (str[0] - '0') + str[1] - '0';
 }
 
-Shedule::Shedule()
+Scheduler::Scheduler()
     : _title{},
       _events{}
 {
 }
 
-void Shedule::setTable(const String &title)
+void Scheduler::setTable(const String &title)
 {
   _clearEvents();
   File file = LittleFS.open(("/tables/" + title + ".json").c_str(), "r");
@@ -26,27 +26,27 @@ void Shedule::setTable(const String &title)
   _title = title;
 }
 
-void Shedule::setHandler(EventHandlerFunction handler)
+void Scheduler::setHandler(EventHandlerFunction handler)
 {
   _handler = handler;
 }
 
-void Shedule::setDuration(uint32_t duration)
+void Scheduler::setDuration(uint32_t duration)
 {
   _duration = duration;
 }
 
-void Shedule::setTearDown(EventTearDownFunction tearDown)
+void Scheduler::setTearDown(EventTearDownFunction tearDown)
 {
   _tearDown = tearDown;
 }
 
-String Shedule::title()
+String Scheduler::title()
 {
   return _title;
 }
 
-void Shedule::_parseJson(File &file)
+void Scheduler::_parseJson(File &file)
 {
   DynamicJsonDocument json(2048);
   deserializeJson(json, file);
@@ -63,7 +63,7 @@ void Shedule::_parseJson(File &file)
   }
 }
 
-void Shedule::_clearEvents()
+void Scheduler::_clearEvents()
 {
   for (const auto &event : _events)
   {
@@ -72,4 +72,4 @@ void Shedule::_clearEvents()
   _events.clear();
 }
 
-Shedule shedule;
+Scheduler scheduler;
