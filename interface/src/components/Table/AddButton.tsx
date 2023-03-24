@@ -1,4 +1,5 @@
 import { useTableDispatch } from '../../contexts/TableContext'
+import { Button } from '../Button'
 
 interface AddButtonProps {
   index: number
@@ -7,17 +8,17 @@ interface AddButtonProps {
 export function AddButton({ index }: AddButtonProps) {
   const dispatch = useTableDispatch()
   return (
-    <button
-      type='button'
+    <Button
+      color='emerald'
       onClick={() => {
         dispatch({
           type: 'addTimeItem',
           index: index + 1,
         })
       }}
-      className='bg-emerald-500 hover:bg-emerald-700 font-bold w-[50%] rounded text-white'
+      className='w-[50%]'
     >
       +
-    </button>
+    </Button>
   )
 }

@@ -4,30 +4,7 @@ import { tablesAPI } from '../APIs/tablesAPI'
 import { useOptions } from '../contexts/OptionsContext'
 import { useShedule } from '../contexts/SheduleContext'
 import { useTableDispatch } from '../contexts/TableContext'
-
-const ColorVariants = {
-  green: 'bg-green-500 hover:bg-green-700',
-  blue: 'bg-blue-500 hover:bg-blue-700',
-  red: 'bg-red-500 hover:bg-red-700',
-}
-
-interface IButtonProps {
-  color: keyof typeof ColorVariants
-  content: string
-  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined
-}
-
-function Button({ color, content, onClick }: IButtonProps) {
-  return (
-    <button
-      type='button'
-      className={`${ColorVariants[color]} font-bold rounded text-white p-2 w-[30%]`}
-      onClick={onClick}
-    >
-      {content}
-    </button>
-  )
-}
+import { Button } from './Button'
 
 export function TableSelect() {
   const [options, setOptions] = useOptions()
@@ -95,19 +72,25 @@ export function TableSelect() {
       <div className='flex flex-row gap-x-5 mt-2 w-[95vmin] justify-center'>
         <Button
           color='green'
-          content='Set'
           onClick={createButtonAction(postShedule)}
-        />
+          className='p-2 w-[33%]'
+        >
+          Set
+        </Button>
         <Button
           color='blue'
-          content='Edit'
           onClick={createButtonAction(editTable)}
-        />
+          className='p-2 w-[33%]'
+        >
+          Edit
+        </Button>
         <Button
           color='red'
-          content='Delete'
           onClick={createButtonAction(deleteTable)}
-        />
+          className='p-2 w-[33%]'
+        >
+          Delete
+        </Button>
       </div>
     </div>
   )

@@ -1,4 +1,5 @@
 import { useTableDispatch } from '../../contexts/TableContext'
+import { Button } from '../Button'
 
 interface RemoveButtonProps {
   index: number
@@ -7,17 +8,17 @@ interface RemoveButtonProps {
 export function RemoveButton({ index }: RemoveButtonProps) {
   const dispatch = useTableDispatch()
   return (
-    <button
-      type='button'
+    <Button
+      color='rose'
       onClick={() => {
         dispatch({
           type: 'removeTimeItem',
           index: index,
         })
       }}
-      className='bg-rose-500 hover:bg-rose-700 font-bold w-[50%] rounded text-white'
+      className='w-[50%]'
     >
       -
-    </button>
+    </Button>
   )
 }

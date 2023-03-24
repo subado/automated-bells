@@ -1,6 +1,7 @@
 import { tablesAPI } from '../APIs/tablesAPI'
 import { useOptions } from '../contexts/OptionsContext'
 import { useTable } from '../contexts/TableContext'
+import { Button } from './Button'
 import { Table } from './Table/Table'
 
 export function TableEditor() {
@@ -21,12 +22,9 @@ export function TableEditor() {
       className='flex flex-col items-center gap-y-5'
     >
       <Table />
-      <button
-        type='submit'
-        className='bg-orange-500 hover:bg-orange-700 font-bold rounded text-white p-2 w-[50vmin]'
-      >
+      <Button color='orange' type='submit' className='p-2 w-[50vmin]'>
         Submit Table
-      </button>
+      </Button>
     </form>
   )
 }
