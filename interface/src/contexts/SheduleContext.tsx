@@ -1,13 +1,13 @@
 import type { Dispatch, SetStateAction } from 'react'
 import { useState } from 'react'
 import { useContext, createContext } from 'react'
-import type { IShedule, IProviderProps } from '../interfaces'
+import type { IShedule, IChildrenProps } from '../interfaces'
 
 type SheduleContextProps = [IShedule, Dispatch<SetStateAction<IShedule>>]
 
 const SheduleContext = createContext({} as SheduleContextProps)
 
-export function SheduleProvider({ children }: IProviderProps) {
+export function SheduleProvider({ children }: IChildrenProps) {
   const [shedule, setShedule] = useState(initialState)
 
   return (

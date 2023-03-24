@@ -1,13 +1,13 @@
 import type { Dispatch } from 'react'
 import { useContext, useReducer, createContext } from 'react'
-import type { ITable, IProviderProps } from '../interfaces'
+import type { ITable, IChildrenProps } from '../interfaces'
 import type { TableAction } from '../reducers/tableReducer'
 import { tableReducer } from '../reducers/tableReducer'
 
 const TableContext = createContext({} as ITable)
 const TableDispatchContext = createContext({} as Dispatch<TableAction>)
 
-export function TableProvider({ children }: IProviderProps) {
+export function TableProvider({ children }: IChildrenProps) {
   const [table, dispatch] = useReducer(tableReducer, initialState)
 
   return (

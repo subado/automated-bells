@@ -13,7 +13,7 @@ export interface ITime {
   second: string
 }
 
-export interface IProviderProps {
+export interface IChildrenProps {
   children: React.ReactNode
 }
 
