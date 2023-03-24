@@ -10,7 +10,7 @@ WebServer::WebServer(uint16_t port)
 #if defined(ENABLE_CORS)
   DefaultHeaders::Instance().addHeader(PSTR("Access-Control-Allow-Origin"), PSTR("*"));
 #endif
-  addHandlers();
+  _addHandlers();
 }
 
 void WebServer::begin()
@@ -24,7 +24,7 @@ void WebServer::end()
   _server.end();
 }
 
-void WebServer::addHandlers()
+void WebServer::_addHandlers()
 {
   // Response contains json with table which name was passed as a uri parameter
   // ([A-Za-z0-9]{1,31}) is regex which define uri parameter format

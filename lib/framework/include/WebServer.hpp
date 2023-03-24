@@ -11,7 +11,7 @@ public:
   void end();
 
 private:
-  void addHandlers();
+  void _addHandlers();
 
   AsyncWebServer _server;
 };
