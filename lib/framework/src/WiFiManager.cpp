@@ -9,7 +9,7 @@ void WiFiManager::config(const IPAddress &localIp, const IPAddress &gateway,
 }
 
 bool WiFiManager::beginSta(const char *ssid, const char *passphrase, int32_t channel,
-  const uint8_t *bssid, bool connect)
+  const uint8_t *bssid, bool connect) const
 {
   WiFi.mode(WIFI_STA);
   // WiFi.config(_localIp, _gateway, _subnet);
@@ -25,7 +25,7 @@ bool WiFiManager::beginSta(const char *ssid, const char *passphrase, int32_t cha
 }
 
 bool WiFiManager::createAp(const char *ssid, const char *psk, int channel, int ssid_hidden,
-  int max_connection, int beacon_interval)
+  int max_connection, int beacon_interval) const
 {
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(_localIp, _gateway, _subnet);

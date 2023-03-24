@@ -41,7 +41,7 @@ void Scheduler::setTearDown(EventTearDownFunction tearDown)
   _tearDown = tearDown;
 }
 
-String Scheduler::title()
+String Scheduler::title() const
 {
   return _title;
 }

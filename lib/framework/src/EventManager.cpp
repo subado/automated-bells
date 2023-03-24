@@ -26,7 +26,7 @@ void EventManager::removeEvent(const std::shared_ptr<Event> &event)
   _events.erase(std::remove(_events.begin(), _events.end(), event));
 }
 
-void EventManager::handleEvents()
+void EventManager::handleEvents() const
 {
   for (auto &event : _events)
   {

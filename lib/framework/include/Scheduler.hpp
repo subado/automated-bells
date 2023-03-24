@@ -20,7 +20,7 @@ public:
   void setDuration(uint32_t duration);
   void setTearDown(EventTearDownFunction tearDown);
 
-  String title();
+  String title() const;
 
 private:
   void _parseJson(File &file);

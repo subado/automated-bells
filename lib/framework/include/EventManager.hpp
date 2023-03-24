@@ -25,7 +25,7 @@ public:
 
   void removeEvent(const std::shared_ptr<Event> &event);
 
-  void handleEvents();
+  void handleEvents() const;
 
 private:
   std::shared_ptr<Event> _addEvent(const std::shared_ptr<Event> &event);
