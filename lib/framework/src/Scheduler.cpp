@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 #include <Rtc.hpp>
 
-#include <EventClock.hpp>
+#include <EventManager.hpp>
 
 static uint8_t conv2d(const String &str)
 {
@@ -58,7 +58,7 @@ void Scheduler::_parseJson(File &file)
   {
     time = value.as<String>();
     _events.push_back(
-      eventClock.setRecurringAlarm(RecurringAlarm::Days::EVERY, conv2d(time.substring(0, 2)),
+      eventManager.setRecurringAlarm(RecurringAlarm::Days::EVERY, conv2d(time.substring(0, 2)),
         conv2d(time.substring(3, 5)), 0, _handler, _duration, _tearDown));
   }
 }
@@ -67,7 +67,7 @@ void Scheduler::_clearEvents()
 {
   for (const auto &event : _events)
   {
-    eventClock.removeEvent(event);
+    eventManager.removeEvent(event);
   }
   _events.clear();
 }

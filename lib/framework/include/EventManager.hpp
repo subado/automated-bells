@@ -8,7 +8,7 @@
 
 #define DEFAULT_DURATION 1
 
-class EventClock
+class EventManager
 {
 public:
   std::shared_ptr<Event> setAbsoluteAlarm(
@@ -33,4 +33,4 @@ private:
   std::vector<std::shared_ptr<Event>> _events;
 };
 
-extern EventClock eventClock;
+extern EventManager eventManager;

@@ -5,7 +5,7 @@
 
 #include <bitset>
 
-class EventClock;
+class EventManager;
 typedef std::function<void(const DateTime &dateTime)> EventHandlerFunction;
 typedef std::function<void()> EventTearDownFunction;
 
@@ -27,7 +27,7 @@ protected:
   uint32_t _startTime;
   bool _runned;
 
-  friend class EventClock;
+  friend class EventManager;
 };
 
 class AbsoluteAlarm : public Event

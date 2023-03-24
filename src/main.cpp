@@ -11,7 +11,7 @@
 #include <vector>
 
 // my own headers
-#include <EventClock.hpp>
+#include <EventManager.hpp>
 #include <Ntp.hpp>
 #include <Rtc.hpp>
 #include <Scheduler.hpp>
@@ -54,7 +54,7 @@ void setup()
   if (ntp.getTime())
   {
     rtc.adjust(DateTime(ntp.getTime()));
-    eventClock.setInterval(TimeSpan(0, 1, 0, 0),
+    eventManager.setInterval(TimeSpan(0, 1, 0, 0),
       [](const DateTime &dt)
       {
         if (ntp.getTime())
@@ -87,5 +87,5 @@ void setup()
 
 void loop()
 {
-  eventClock.handleEvents();
+  eventManager.handleEvents();
 }
