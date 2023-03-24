@@ -19,6 +19,7 @@ uint32_t Ntp::getTime()
   Serial.print(": ");
   Serial.println(_serverIp);
   sendPacket();
+  // May not work after 50 days due to overflow of millis()
   uint32_t beginWait = millis();
   while (millis() - beginWait < 1500)
   {
