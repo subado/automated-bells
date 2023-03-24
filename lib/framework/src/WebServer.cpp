@@ -37,8 +37,7 @@ void WebServer::addHandlers()
       {
         File file = LittleFS.open(path, "r");
 
-        DynamicJsonDocument json(2048);
-        DynamicJsonDocument buffer(1024);
+        StaticJsonDocument<2048> json, buffer;
 
         deserializeJson(buffer, file);
 
@@ -70,7 +69,7 @@ void WebServer::addHandlers()
     [](AsyncWebServerRequest *request)
     {
       Dir root = LittleFS.openDir("/tables");
-      DynamicJsonDocument json(1024);
+      StaticJsonDocument<1024> json;
       JsonArray tables = json.createNestedArray("title");
 
       for (String fileName; root.next();)
@@ -87,7 +86,7 @@ void WebServer::addHandlers()
   _server.addHandler(new AsyncCallbackJsonWebHandler("/api/tables/",
     [](AsyncWebServerRequest *request, JsonVariant &data)
     {
-      DynamicJsonDocument json(2048);
+      StaticJsonDocument<2048> json;
 
       String name = data["title"].as<String>();
       json.set(data["time"].as<JsonArray>());
@@ -104,7 +103,7 @@ void WebServer::addHandlers()
   _server.on("^\\/api\\/time\\/$", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
-      StaticJsonDocument<128> time;
+      StaticJsonDocument<96> time;
       DateTime now = rtc.now();
       char buffer[4];
 
