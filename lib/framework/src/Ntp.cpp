@@ -1,11 +1,20 @@
 #include <Ntp.hpp>
 
-bool Ntp::begin(int timeZone, const char *serverName, uint8_t localPort)
+Ntp::Ntp()
+    : _udp(),
+      _servers{},
+      _serverIndex{0},
+      _serverIp{},
+      _timeZone{},
+      _localPort{}
+{
+}
+
+bool Ntp::begin(const std::set<String> &servers, int8_t timeZone, uint8_t localPort)
 {
   _timeZone = timeZone;
-  _serverName = serverName;
+  _servers = servers;
   _localPort = localPort;
-  WiFi.hostByName(_serverName, _serverIp);
   return _udp.begin(_localPort);
 }
 
@@ -13,20 +22,23 @@ uint32_t Ntp::getTime()
 {
   while (_udp.parsePacket() > 0)
     ; // discard any previously received packets
-  Serial.println("Transmit NTP Request");
-  // get a random server from the pool
-  Serial.print(_serverName);
-  Serial.print(": ");
-  Serial.println(_serverIp);
-  sendPacket();
-  // May not work after 50 days due to overflow of millis()
+
+  const char *serverName = std::next(_servers.begin(), _serverIndex++)->c_str();
+  WiFi.hostByName(serverName, _serverIp);
+  Serial.printf("Ntp: %s ( %s ) -> ", serverName, _serverIp.toString().c_str());
+  if (_serverIndex == _servers.size())
+  {
+    _serverIndex = 0;
+  }
+  _sendPacket();
+  // May not work once after 50 days due to overflow of millis()
   uint32_t beginWait = millis();
   while (millis() - beginWait < 1500)
   {
     int size = _udp.parsePacket();
     if (size >= PACKET_SIZE)
     {
-      Serial.println("Receive NTP Response");
+      Serial.println("get response");
       _udp.read(_packetBuffer, PACKET_SIZE); // read packet into the buffer
       unsigned long secsSince1900;
       // convert four bytes starting at location 40 to a long integer
@@ -37,12 +49,33 @@ uint32_t Ntp::getTime()
       return secsSince1900 - 2208988800UL + _timeZone * 3600UL; // 3600UL == SECS_PER_HOUR
     }
   }
-  Serial.println("No NTP Response :-(");
+  Serial.println("no response");
   return 0; // return 0 if unable to get the time
 }
 
+void Ntp::setServers(const std::set<String> &servers)
+{
+  _servers = servers;
+  _serverIndex = 0;
+}
+
+void Ntp::setTimezone(int8_t timeZone)
+{
+  _timeZone = timeZone;
+}
+
+std::set<String> Ntp::servers()
+{
+  return _servers;
+}
+
+int8_t Ntp::timeZone()
+{
+  return _timeZone;
+}
+
 // send an NTP request to the time server at the given address
-void Ntp::sendPacket()
+void Ntp::_sendPacket()
 {
   // set all bytes in the buffer to 0
   memset(_packetBuffer, 0, PACKET_SIZE);
