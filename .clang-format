@@ -1,6 +1,6 @@
 AccessModifierOffset: -2
 AlignAfterOpenBracket: DontAlign
-AlignArrayOfStructures: None
+AlignArrayOfStructures: Right
 AlignConsecutiveMacros:
   Enabled: true
   AcrossEmptyLines: true
