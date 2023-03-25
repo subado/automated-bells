@@ -11,7 +11,6 @@
 #include <vector>
 
 // my own headers
-#include <Config.hpp>
 #include <EventManager.hpp>
 #include <Ntp.hpp>
 #include <Rtc.hpp>
@@ -24,21 +23,8 @@
 #define RTC_SDA 4
 #define RTC_SCL 5
 
-Config config(2048, "config.json");
-
 void setup()
 {
-  JsonObject obj;
-  obj["wifi"]["ssid"] = "";
-  obj["wifi"]["pass"] = "";
-
-  obj["ntp"].createNestedArray("servers");
-
-  obj["pin"] = LED_BUILTIN;
-
-  config.setDefaultObject(obj);
-  config.reset();
-
   Serial.begin(9600);
 
   if (!LittleFS.begin())
