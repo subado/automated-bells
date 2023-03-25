@@ -48,7 +48,7 @@ String Scheduler::title() const
 
 void Scheduler::_parseJson(File &file)
 {
-  StaticJsonDocument<1024> json;
+  DynamicJsonDocument json(2048);
   deserializeJson(json, file);
 
   JsonArray array = json.as<JsonArray>();
