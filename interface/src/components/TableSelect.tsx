@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
-import { sheduleAPI } from '../APIs/sheduleAPI'
+import { schedulerAPI } from '../APIs/schedulerAPI'
 import { tablesAPI } from '../APIs/tablesAPI'
 import { useOptions } from '../contexts/OptionsContext'
-import { useShedule } from '../contexts/SheduleContext'
+import { useScheduler } from '../contexts/SchedulerContext'
 import { useTableDispatch } from '../contexts/TableContext'
 import { Button } from './Button'
 
 export function TableSelect() {
   const [options, setOptions] = useOptions()
   const [selected, setSelected] = useState<string>('')
-  const [, setShedule] = useShedule()
+  const [, setScheduler] = useScheduler()
   const dispatchTable = useTableDispatch()
 
   async function fetchTableTitles() {
@@ -26,8 +26,8 @@ export function TableSelect() {
   }
 
   function postShedule() {
-    setShedule({ title: selected })
-    sheduleAPI.post({ title: selected })
+    setScheduler({ title: selected })
+    schedulerAPI.post({ title: selected })
   }
 
   async function editTable() {

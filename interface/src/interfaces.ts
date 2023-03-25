@@ -17,6 +17,6 @@ export interface IChildrenProps {
   children: React.ReactNode
 }
 
-export interface IShedule {
+export interface IScheduler {
   title: string
 }

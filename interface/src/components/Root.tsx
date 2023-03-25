@@ -1,6 +1,5 @@
-import { Routes } from 'react-router-dom'
 import { OptionsProvider } from '../contexts/OptionsContext'
-import { SheduleProvider } from '../contexts/SheduleContext'
+import { SchedulerProvider } from '../contexts/SchedulerContext'
 import { TableProvider } from '../contexts/TableContext'
 import { Header } from './Header'
 import { TableEditor } from './TableEditor'
@@ -11,10 +10,10 @@ export function Root() {
     <div className='h-screen flex flex-col items-center gap-y-5 text-[4vmin]'>
       <TableProvider>
         <OptionsProvider>
-          <SheduleProvider>
+          <SchedulerProvider>
             <Header />
             <TableSelect />
-          </SheduleProvider>
+          </SchedulerProvider>
           <TableEditor />
         </OptionsProvider>
       </TableProvider>
