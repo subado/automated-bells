@@ -146,16 +146,6 @@ void WebServer::_addHandlers()
       scheduler.setTable(json["title"].as<const char *>());
       request->send(200);
     }));
-
-  // Redirect to url + '/', if nothing else wasn't work
-  _server.on("^([^.]*[^/])$", HTTP_GET,
-    [](AsyncWebServerRequest *request)
-    {
-      if (!request->url().endsWith("/"))
-      {
-        request->redirect(request->url() + "/");
-      }
-    });
 }
 
 WebServer server;
