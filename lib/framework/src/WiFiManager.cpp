@@ -36,7 +36,7 @@ bool WiFiManager::createAp(const char *ssid, const char *psk, int channel, int s
     return false;
   }
 
-  Serial.printf("Access point created %s ( ip %s )\n", ssid, WiFi.localIP().toString().c_str());
+  Serial.printf("Access point created %s ( ip %s )\n", ssid, WiFi.softAPIP().toString().c_str());
   return true;
 }
 
