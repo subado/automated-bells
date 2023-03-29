@@ -17,7 +17,7 @@ export function Time() {
 
   useEffect(() => {
     fetchTime()
-    setInterval(fetchTime, 1000)
+    setInterval(fetchTime, 5000)
   }, [])
 
   return (
