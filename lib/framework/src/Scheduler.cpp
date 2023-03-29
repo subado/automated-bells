@@ -4,8 +4,10 @@
 #include <Rtc.hpp>
 
 #include <EventManager.hpp>
+#include <macros.h>
+#include <utils.h>
 
-static uint8_t conv2d(const String &str)
+static uint8_t conv2d(const char *str)
 {
   return 10 * (str[0] - '0') + str[1] - '0';
 }
@@ -16,14 +18,16 @@ Scheduler::Scheduler()
 {
 }
 
-void Scheduler::setTable(const String &title)
+void Scheduler::setTable(const char *title)
 {
   _clearEvents();
-  File file = LittleFS.open(("/tables/" + title + ".json").c_str(), "r");
+  char path[MAX_FILENAME_LENGTH];
+  utils::getPathToTable(path, title);
+  File file = LittleFS.open(path, "r");
   _parseJson(file);
   file.close();
 
-  _title = title;
+  std::strcpy(_title, title);
 }
 
 void Scheduler::setHandler(EventHandlerFunction handler)
@@ -41,7 +45,7 @@ void Scheduler::setTearDown(EventTearDownFunction tearDown)
   _tearDown = tearDown;
 }
 
-String Scheduler::title() const
+const char *Scheduler::title() const
 {
   return _title;
 }
@@ -52,14 +56,12 @@ void Scheduler::_parseJson(File &file)
   deserializeJson(json, file);
 
   JsonArray array = json.as<JsonArray>();
-
-  String time;
+  const char *time;
   for (JsonVariant value : array)
   {
-    time = value.as<String>();
-    _events.push_back(
-      eventManager.setRecurringAlarm(RecurringAlarm::Days::EVERY, conv2d(time.substring(0, 2)),
-        conv2d(time.substring(3, 5)), 0, _handler, _duration, _tearDown));
+    time = value.as<const char *>();
+    _events.push_back(eventManager.setRecurringAlarm(RecurringAlarm::Days::EVERY, conv2d(time),
+      conv2d(time + 3), 0, _handler, _duration, _tearDown));
   }
 }
 

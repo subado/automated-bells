@@ -15,18 +15,18 @@ class Scheduler
 public:
   Scheduler();
 
-  void setTable(const String &title);
+  void setTable(const char *title);
   void setHandler(EventHandlerFunction handler);
   void setDuration(uint32_t duration);
   void setTearDown(EventTearDownFunction tearDown);
 
-  String title() const;
+  const char *title() const;
 
 private:
   void _parseJson(File &file);
   void _clearEvents();
 
-  String _title;
+  char _title[32];
   EventHandlerFunction _handler;
   uint32_t _duration;
   EventTearDownFunction _tearDown;

@@ -1,7 +1,11 @@
+#include <WebServer.hpp>
+
 #include <AsyncJson.h>
 #include <Rtc.hpp>
 #include <Scheduler.hpp>
-#include <WebServer.hpp>
+
+#include <macros.h>
+#include <utils.h>
 
 WebServer::WebServer(uint16_t port)
     : _server(port)
@@ -31,8 +35,9 @@ void WebServer::_addHandlers()
   _server.on("^\\/api\\/tables\\/([A-Za-z0-9]{1,31})\\/$", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
-      String title = request->pathArg(0);
-      String path = "/tables/" + title + ".json";
+      char path[MAX_FILENAME_LENGTH];
+      const char *title = request->pathArg(0).c_str();
+      utils::getPathToTable(path, title);
       if (LittleFS.exists(path))
       {
         File file = LittleFS.open(path, "r");
@@ -55,8 +60,8 @@ void WebServer::_addHandlers()
   _server.on("^\\/api\\/tables\\/([A-Za-z0-9]{1,31})\\/$", HTTP_DELETE,
     [](AsyncWebServerRequest *request)
     {
-      String title = request->pathArg(0);
-      String path = "/tables/" + title + ".json";
+      char path[MAX_FILENAME_LENGTH];
+      utils::getPathToTable(path, request->pathArg(0).c_str());
       if (LittleFS.exists(path))
       {
         LittleFS.remove(path);
@@ -66,17 +71,18 @@ void WebServer::_addHandlers()
     });
 
   // Response contains json with the names of all tables
-  _server.on("^\\/api\\/tables\\/$", HTTP_GET,
+  _server.on("/api/tables/", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
       Dir root = LittleFS.openDir("/tables");
       DynamicJsonDocument json(1024);
       JsonArray tables = json.createNestedArray("title");
 
-      for (String fileName; root.next();)
+      for (char fileName[MAX_FILENAME_LENGTH]; root.next();)
       {
-        fileName = root.fileName();
-        tables.add(fileName.substring(0, fileName.indexOf(".")));
+        std::strncpy(fileName, root.fileName().c_str(), sizeof(fileName));
+        utils::removeExtension(fileName);
+        tables.add(fileName);
       }
 
       request->send(200, "application/json", json.as<String>());
@@ -89,11 +95,12 @@ void WebServer::_addHandlers()
     {
       DynamicJsonDocument json(2048);
 
-      String name = data["title"].as<String>();
       json.set(data["time"].as<JsonArray>());
+      char path[MAX_FILENAME_LENGTH];
+      utils::getPathToTable(path, data["title"].as<const char *>());
 
       File file;
-      file = LittleFS.open("/tables/" + name + ".json", "w");
+      file = LittleFS.open(path, "w");
       serializeJson(json, file);
       file.close();
 
@@ -101,25 +108,27 @@ void WebServer::_addHandlers()
     }));
 
   // Get the time from the rtc module and send json with it
-  _server.on("^\\/api\\/time\\/$", HTTP_GET,
+  _server.on("/api/time/", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
-      StaticJsonDocument<128> time;
+      StaticJsonDocument<128> json;
       DateTime now = rtc.now();
-      char buffer[4];
+      char buffer[3] = {0};
 
-      sprintf(buffer, "%02d", now.hour());
-      time["hour"] = String(buffer);
-      sprintf(buffer, "%02d", now.minute());
-      time["minute"] = String(buffer);
-      sprintf(buffer, "%02d", now.second());
-      time["second"] = String(buffer);
+      std::snprintf(buffer, sizeof(buffer), "%02d", now.hour());
+      json["hour"] = buffer;
 
-      request->send(200, "application/json", time.as<String>());
+      std::snprintf(buffer, sizeof(buffer), "%02d", now.minute());
+      json["minute"] = buffer;
+
+      std::snprintf(buffer, sizeof(buffer), "%02d", now.second());
+      json["second"] = buffer;
+
+      request->send(200, "application/json", json.as<String>());
     });
 
   // Get the name of the active scheduler and send json with it
-  _server.on("^\\/api\\/scheduler\\/$", HTTP_GET,
+  _server.on("/api/scheduler/", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
       StaticJsonDocument<64> json;
@@ -134,7 +143,7 @@ void WebServer::_addHandlers()
     [](AsyncWebServerRequest *request, JsonVariant &json)
 
     {
-      scheduler.setTable(json["title"].as<String>());
+      scheduler.setTable(json["title"].as<const char *>());
       request->send(200);
     }));
 
