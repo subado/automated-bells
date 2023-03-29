@@ -1,9 +1,12 @@
 #pragma once
 
+#include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 
-#include <set>
+#include <vector>
+
+#include <Rtc.hpp>
 
 #define PACKET_SIZE 48 // NTP time is in the first 48 bytes of message
 
@@ -11,28 +14,36 @@ class Ntp
 {
 public:
   Ntp();
-  bool begin(const std::set<String> &servers, int8_t timeZone = 0, uint8_t localPort = 123);
+  bool begin(const std::vector<const char *> &servers, int8_t timeZone = 0,
+    uint8_t localPort = 123);
 
-  void setServers(const std::set<String> &servers);
+  void clearServers();
+  void addServer(const char *server);
+  void setServers(const std::vector<const char *> &servers);
+
   void setTimezone(int8_t timeZone);
 
-  std::set<String> servers();
-  int8_t timeZone();
+  const std::vector<String> &servers() const;
+  int8_t timeZone() const;
 
   uint32_t getTime();
+  bool syncTime(Rtc &rtc);
 
 private:
   void _sendPacket();
 
   WiFiUDP _udp; // NTP uses the UDP protocol for its work
 
-  std::set<String> _servers;
+  std::vector<String> _servers;
   size_t _serverIndex;
   IPAddress _serverIp;
-  int8_t _timeZone;   // 0 means UTC+0
-  uint8_t _localPort; // local port to listen for UDP packets
+  int8_t _timeZone;                // 0 means UTC+0
 
   byte _packetBuffer[PACKET_SIZE]; // buffer to hold incoming & outgoing packets
 };
+
+bool convertToJson(const Ntp &src, JsonVariant dst);
+void convertFromJson(JsonVariantConst src, Ntp &dst);
+bool canConvertFromJson(JsonVariantConst src, const Ntp &);
 
 extern Ntp ntp;

@@ -5,58 +5,82 @@ Ntp::Ntp()
       _servers{},
       _serverIndex{0},
       _serverIp{},
-      _timeZone{},
-      _localPort{}
+      _timeZone{}
 {
 }
 
-bool Ntp::begin(const std::set<String> &servers, int8_t timeZone, uint8_t localPort)
+bool Ntp::begin(const std::vector<const char *> &servers, int8_t timeZone, uint8_t localPort)
 {
-  _timeZone = timeZone;
-  _servers = servers;
-  _localPort = localPort;
-  return _udp.begin(_localPort);
+  setServers(servers);
+  setTimezone(timeZone);
+  return _udp.begin(localPort);
 }
 
 uint32_t Ntp::getTime()
 {
   while (_udp.parsePacket() > 0)
     ; // discard any previously received packets
-
-  const char *serverName = std::next(_servers.begin(), _serverIndex++)->c_str();
-  WiFi.hostByName(serverName, _serverIp);
-  Serial.printf("Ntp: %s ( %s ) -> ", serverName, _serverIp.toString().c_str());
-  if (_serverIndex == _servers.size())
+  if (!_servers.empty())
   {
-    _serverIndex = 0;
-  }
-  _sendPacket();
-  // May not work once after 50 days due to overflow of millis()
-  uint32_t beginWait = millis();
-  while (millis() - beginWait < 1500)
-  {
-    int size = _udp.parsePacket();
-    if (size >= PACKET_SIZE)
+    const char *serverName = _servers[_serverIndex++].c_str();
+    WiFi.hostByName(serverName, _serverIp);
+    Serial.printf("Ntp: %s ( %s ) -> ", serverName, _serverIp.toString().c_str());
+    if (_serverIndex >= _servers.size())
     {
-      Serial.println("get response");
-      _udp.read(_packetBuffer, PACKET_SIZE); // read packet into the buffer
-      unsigned long secsSince1900;
-      // convert four bytes starting at location 40 to a long integer
-      secsSince1900 = (unsigned long)_packetBuffer[40] << 24;
-      secsSince1900 |= (unsigned long)_packetBuffer[41] << 16;
-      secsSince1900 |= (unsigned long)_packetBuffer[42] << 8;
-      secsSince1900 |= (unsigned long)_packetBuffer[43];
-      return secsSince1900 - 2208988800UL + _timeZone * 3600UL; // 3600UL == SECS_PER_HOUR
+      _serverIndex = 0;
     }
+    _sendPacket();
+    // May not work once after 50 days due to overflow of millis()
+    uint32_t beginWait = millis();
+    while (millis() - beginWait < 1500)
+    {
+      int size = _udp.parsePacket();
+      if (size >= PACKET_SIZE)
+      {
+        Serial.println("get response");
+        _udp.read(_packetBuffer, PACKET_SIZE); // read packet into the buffer
+        unsigned long secsSince1900;
+        // convert four bytes starting at location 40 to a long integer
+        secsSince1900 = (unsigned long)_packetBuffer[40] << 24;
+        secsSince1900 |= (unsigned long)_packetBuffer[41] << 16;
+        secsSince1900 |= (unsigned long)_packetBuffer[42] << 8;
+        secsSince1900 |= (unsigned long)_packetBuffer[43];
+        return secsSince1900 - 2208988800UL + _timeZone * 3600UL; // 3600UL == SECS_PER_HOUR
+      }
+    }
+    Serial.println("no response");
   }
-  Serial.println("no response");
   return 0; // return 0 if unable to get the time
 }
 
-void Ntp::setServers(const std::set<String> &servers)
+bool Ntp::syncTime(Rtc &rtc)
 {
-  _servers = servers;
-  _serverIndex = 0;
+  uint32_t time = getTime();
+  if (time)
+  {
+    rtc.adjust(DateTime(time));
+    return true;
+  }
+  return false;
+}
+
+void Ntp::clearServers()
+{
+  _servers.clear();
+}
+
+void Ntp::addServer(const char *server)
+{
+  _servers.emplace_back(server);
+}
+
+void Ntp::setServers(const std::vector<const char *> &servers)
+{
+  clearServers();
+  for (const auto &server : servers)
+  {
+    addServer(server);
+  }
 }
 
 void Ntp::setTimezone(int8_t timeZone)
@@ -64,12 +88,12 @@ void Ntp::setTimezone(int8_t timeZone)
   _timeZone = timeZone;
 }
 
-std::set<String> Ntp::servers()
+const std::vector<String> &Ntp::servers() const
 {
   return _servers;
 }
 
-int8_t Ntp::timeZone()
+int8_t Ntp::timeZone() const
 {
   return _timeZone;
 }
@@ -78,7 +102,7 @@ int8_t Ntp::timeZone()
 void Ntp::_sendPacket()
 {
   // set all bytes in the buffer to 0
-  memset(_packetBuffer, 0, PACKET_SIZE);
+  std::memset(_packetBuffer, 0, PACKET_SIZE);
   // Initialize values needed to form NTP request
   // (see URL above for details on the packets)
   _packetBuffer[0] = 0b11100011; // LI, Version, Mode
@@ -95,6 +119,31 @@ void Ntp::_sendPacket()
   _udp.beginPacket(_serverIp, 123); // NTP requests are to port 123
   _udp.write(_packetBuffer, PACKET_SIZE);
   _udp.endPacket();
+}
+
+bool convertToJson(const Ntp &src, JsonVariant dst)
+{
+  JsonArray servers = dst.createNestedArray("servers");
+  for (auto server : src.servers())
+  {
+    servers.add(server);
+  }
+  return dst["servers"] && dst["timeZone"].set(src.timeZone());
+}
+
+void convertFromJson(JsonVariantConst src, Ntp &dst)
+{
+  dst.clearServers();
+  for (JsonVariantConst server : src["servers"].as<JsonArrayConst>())
+  {
+    dst.addServer(server.as<const char *>());
+  }
+  dst.setTimezone(src["timeZone"].as<int8_t>());
+}
+
+bool canConvertFromJson(JsonVariantConst src, const Ntp &)
+{
+  return src["servers"].is<JsonArrayConst>() && src["servers"].is<int8_t>();
 }
 
 Ntp ntp;
