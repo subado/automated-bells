@@ -57,6 +57,7 @@ void WebServer::_addHandlers()
       request->send(404);
     });
 
+  // Delete table which title was passed as a uri parameter
   _server.on("^\\/api\\/tables\\/([A-Za-z0-9]{1,31})\\/$", HTTP_DELETE,
     [](AsyncWebServerRequest *request)
     {
@@ -146,6 +147,7 @@ void WebServer::_addHandlers()
       request->send(200);
     }));
 
+  // Response with 404 code
   _server.onNotFound(
     [](AsyncWebServerRequest *request)
     {
