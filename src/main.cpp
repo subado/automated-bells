@@ -11,6 +11,7 @@
 #include <vector>
 
 // my own headers
+#include <Config.hpp>
 #include <EventManager.hpp>
 #include <Ntp.hpp>
 #include <Rtc.hpp>
@@ -23,9 +24,18 @@
 #define RTC_SDA 4
 #define RTC_SCL 5
 
+Config config(ntp, "config.json");
+
 void setup()
 {
+  config.loadFile();
   Serial.begin(9600);
+
+  if (!rtc.begin(RTC_SDA, RTC_SCL))
+  {
+    Serial.println("Couldn't find RTC\n");
+    ESP.restart();
+  }
 
   if (!LittleFS.begin())
   {
@@ -45,27 +55,23 @@ void setup()
   server.begin();
   Serial.println("Http server started");
 
-  if (!rtc.begin(RTC_SDA, RTC_SCL))
-  {
-    Serial.println("Couldn't find RTC\n");
-    ESP.restart();
-  }
-  ntp.begin({"0.ru.pool.ntp.org", "1.ru.pool.ntp.org", "2.ru.pool.ntp.org", "3.ru.pool.ntp.org"},
+  ntp.begin(
+    {
+      "2.ru.pool.ntp.org",
+      "3.ru.pool.ntp.org",
+    },
     4);
-  if (ntp.getTime())
-  {
-    rtc.adjust(DateTime(ntp.getTime()));
-    eventManager.setInterval(TimeSpan(0, 1, 0, 0),
-      [](const DateTime &dt)
+
+  ntp.syncTime(rtc);
+  eventManager.setInterval(TimeSpan(0, 1, 0, 0),
+    [](const DateTime &dt)
+    {
+      if (ntp.syncTime(rtc))
       {
-        if (ntp.getTime())
-        {
-          rtc.adjust(DateTime(ntp.getTime()));
-          Serial.printf("---\n%s %s\n---\n", "Sync time",
-            rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
-        }
-      });
-  }
+        Serial.printf("---\n%s %s\n---\n", "Sync time",
+          rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
+      }
+    });
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
