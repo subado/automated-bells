@@ -30,7 +30,7 @@ private:
   EventHandlerFunction _handler;
   uint32_t _duration;
   EventTearDownFunction _tearDown;
-  std::vector<std::shared_ptr<Event>> _events;
+  std::vector<const Event *> _events;
 };
 
 extern Scheduler scheduler;

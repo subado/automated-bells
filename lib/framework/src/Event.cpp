@@ -1,10 +1,10 @@
 #include <Event.hpp>
 #include <Rtc.hpp>
 
-Event::Event(EventHandlerFunction handler, uint32_t duration, EventTearDownFunction tearDown)
+Event::Event(EventHandlerFunction handler, EventTearDownFunction tearDown, uint32_t duration)
     : _handler{handler},
-      _duration(duration),
       _tearDown{tearDown},
+      _duration(duration),
       _startTime{rtc.now().secondstime()},
       _runned{false}
 {
@@ -15,9 +15,9 @@ void Event::_run()
   _handler(rtc.now());
 }
 
-AbsoluteAlarm::AbsoluteAlarm(const DateTime &dateTime, EventHandlerFunction handler,
-  uint32_t duration, EventTearDownFunction tearDown)
-    : Event(handler, duration, tearDown),
+AbsoluteAlarm::AbsoluteAlarm(EventHandlerFunction handler, EventTearDownFunction tearDown,
+  uint32_t duration, const DateTime &dateTime)
+    : Event(handler, tearDown, duration),
       _dateTime{dateTime}
 {
 }
@@ -31,13 +31,26 @@ bool AbsoluteAlarm::isHappen() const
   return false;
 }
 
-RecurringAlarm::RecurringAlarm(uint8_t daysOfWeek, uint8_t hour, uint8_t minute, uint8_t second,
-  EventHandlerFunction handler, uint32_t duration, EventTearDownFunction tearDown)
-    : Event(handler, duration, tearDown),
-      _daysOfWeek{daysOfWeek},
-      _hour{hour},
-      _minute{minute},
-      _second{second}
+RecurringAlarm::Time::Time(uint8_t hour, uint8_t minute)
+    : hour{hour},
+      minute{minute},
+      second{},
+      daysOfWeek{Days::EVERY}
+{
+}
+
+RecurringAlarm::Time::Time(uint8_t hour, uint8_t minute, uint8_t second, uint8_t daysOfWeek)
+    : hour{hour},
+      minute{minute},
+      second{second},
+      daysOfWeek{daysOfWeek}
+{
+}
+
+RecurringAlarm::RecurringAlarm(EventHandlerFunction handler, EventTearDownFunction tearDown,
+  uint32_t duration, const Time &time)
+    : Event(handler, tearDown, duration),
+      _time{time}
 {
 }
 
@@ -45,11 +58,11 @@ bool RecurringAlarm::isHappen() const
 {
   DateTime now = rtc.now();
 
-  if (now.hour() == _hour && now.minute() == _minute && now.second() == _second)
+  if (now.hour() == _time.hour && now.minute() == _time.minute && now.second() == _time.second)
   {
     for (uint8_t day = 0; day < 7; day++)
     {
-      if (now.dayOfTheWeek() == day && _daysOfWeek.test(day))
+      if (now.dayOfTheWeek() == day && _time.daysOfWeek.test(day))
       {
         return true;
       }
@@ -58,9 +71,9 @@ bool RecurringAlarm::isHappen() const
   return false;
 }
 
-Interval::Interval(const TimeSpan &timeSpan, EventHandlerFunction handler, uint32_t duration,
-  EventTearDownFunction tearDown)
-    : Event(handler, duration, tearDown),
+Interval::Interval(EventHandlerFunction handler, EventTearDownFunction tearDown, uint32_t duration,
+  const TimeSpan &timeSpan)
+    : Event(handler, tearDown, duration),
       _timeSpan{timeSpan},
       _prevTime(rtc.now())
 {

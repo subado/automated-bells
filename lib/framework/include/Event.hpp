@@ -12,7 +12,7 @@ typedef std::function<void()> EventTearDownFunction;
 class Event
 {
 public:
-  Event(EventHandlerFunction handler, uint32_t duration, EventTearDownFunction tearDown);
+  Event(EventHandlerFunction handler, EventTearDownFunction tearDown, uint32_t duration);
   virtual ~Event() = default;
 
   virtual bool isHappen() const = 0;
@@ -21,8 +21,8 @@ protected:
   virtual void _run();
 
   EventHandlerFunction _handler;
-  uint32_t _duration;
   EventTearDownFunction _tearDown;
+  uint32_t _duration;
 
   uint32_t _startTime;
   bool _runned;
@@ -33,8 +33,8 @@ protected:
 class AbsoluteAlarm : public Event
 {
 public:
-  AbsoluteAlarm(const DateTime &dateTime, EventHandlerFunction handler, uint32_t duration,
-    EventTearDownFunction tearDown);
+  AbsoluteAlarm(EventHandlerFunction handler, EventTearDownFunction tearDown, uint32_t duration,
+    const DateTime &dateTime);
 
   bool isHappen() const override;
 
@@ -45,10 +45,17 @@ protected:
 class RecurringAlarm : public Event
 {
 public:
-  RecurringAlarm(uint8_t daysOfWeek, uint8_t hour, uint8_t minute, uint8_t second,
-    EventHandlerFunction handler, uint32_t duration, EventTearDownFunction tearDown);
+  class Time
+  {
+  public:
+    Time(uint8_t hour, uint8_t minute);
+    Time(uint8_t hour, uint8_t minute, uint8_t second, uint8_t daysOfWeek = Days::EVERY);
 
-  bool isHappen() const override;
+    uint8_t hour;
+    uint8_t minute;
+    uint8_t second;
+    std::bitset<7> daysOfWeek;
+  };
 
   enum Days
   {
@@ -62,18 +69,20 @@ public:
     EVERY = 0b1111111
   };
 
+  RecurringAlarm(EventHandlerFunction handler, EventTearDownFunction tearDown, uint32_t duration,
+    const Time &time);
+
+  bool isHappen() const override;
+
 protected:
-  std::bitset<7> _daysOfWeek;
-  uint8_t _hour;
-  uint8_t _minute;
-  uint8_t _second;
+  Time _time;
 };
 
 class Interval : public Event
 {
 public:
-  Interval(const TimeSpan &timeSpan, EventHandlerFunction handler, uint32_t duration,
-    EventTearDownFunction tearDown);
+  Interval(EventHandlerFunction handler, EventTearDownFunction tearDown, uint32_t duration,
+    const TimeSpan &timeSpan);
 
   bool isHappen() const override;
 

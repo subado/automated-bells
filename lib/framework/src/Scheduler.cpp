@@ -60,8 +60,8 @@ void Scheduler::_parseJson(File &file)
   for (JsonVariant value : array)
   {
     time = value.as<const char *>();
-    _events.push_back(eventManager.setRecurringAlarm(RecurringAlarm::Days::EVERY, conv2d(time),
-      conv2d(time + 3), 0, _handler, _duration, _tearDown));
+    _events.emplace_back(eventManager.emplaceEvent<RecurringAlarm>(_handler, _tearDown, _duration,
+      RecurringAlarm::Time(conv2d(time), conv2d(time + 3))));
   }
 }
 

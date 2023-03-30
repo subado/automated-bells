@@ -63,7 +63,7 @@ void setup()
     4);
 
   ntp.syncTime(rtc);
-  eventManager.setInterval(TimeSpan(0, 1, 0, 0),
+  eventManager.emplaceEvent<Interval>(
     [](const DateTime &dt)
     {
       if (ntp.syncTime(rtc))
@@ -71,7 +71,8 @@ void setup()
         Serial.printf("---\n%s %s\n---\n", "Sync time",
           rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
       }
-    });
+    },
+    1, TimeSpan(0, 1, 0, 0));
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);

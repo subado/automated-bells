@@ -11,26 +11,37 @@
 class EventManager
 {
 public:
-  std::shared_ptr<Event> setAbsoluteAlarm(
-    const DateTime &dateTime, EventHandlerFunction handler, uint32_t duration = DEFAULT_DURATION,
-    EventTearDownFunction tearDown = []() {});
+  template <typename T, typename... Args>
+  const Event *emplaceEvent(EventHandlerFunction handler, EventTearDownFunction tearDown,
+    uint32_t duration, Args &&...args);
 
-  std::shared_ptr<Event> setRecurringAlarm(
-    uint8_t days, uint8_t hour, uint8_t minute, uint8_t second, EventHandlerFunction handler,
-    uint32_t duration = DEFAULT_DURATION, EventTearDownFunction tearDown = []() {});
+  template <typename T, typename... Args>
+  const Event *emplaceEvent(EventHandlerFunction handler, uint32_t duration, Args &&...args);
 
-  std::shared_ptr<Event> setInterval(
-    const TimeSpan &timeSpan, EventHandlerFunction handler, uint32_t duration = DEFAULT_DURATION,
-    EventTearDownFunction tearDown = []() {});
-
-  void removeEvent(const std::shared_ptr<Event> &event);
+  void removeEvent(const Event *event);
 
   void handleEvents() const;
 
 private:
-  std::shared_ptr<Event> _addEvent(const std::shared_ptr<Event> &event);
-
-  std::vector<std::shared_ptr<Event>> _events;
+  std::vector<std::unique_ptr<Event>> _events;
 };
+
+template <typename T, typename... Args>
+const Event *EventManager::emplaceEvent(EventHandlerFunction handler,
+  EventTearDownFunction tearDown, uint32_t duration, Args &&...args)
+{
+  _events.emplace_back(
+    std::make_unique<T>(handler, tearDown, duration, std::forward<Args>(args)...));
+  return _events.back().get();
+}
+
+template <typename T, typename... Args>
+const Event *EventManager::emplaceEvent(EventHandlerFunction handler, uint32_t duration,
+  Args &&...args)
+{
+  _events.emplace_back(std::make_unique<T>(
+    handler, []() {}, duration, std::forward<Args>(args)...));
+  return _events.back().get();
+}
 
 extern EventManager eventManager;
