@@ -5,7 +5,7 @@
 
 void utils::getPathToTable(char *dest, const char *title)
 {
-  char path[MAX_FILENAME_LENGTH];
+  char path[MAX_FILENAME_LENGTH]{};
   std::snprintf(path, sizeof(path), "/tables/%s%s", title, ".json");
   std::strncpy(dest, path, MAX_FILENAME_LENGTH);
 }
