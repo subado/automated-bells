@@ -22,13 +22,14 @@ uint32_t Ntp::getTime()
     ; // discard any previously received packets
   if (!_servers.empty())
   {
-    const char *serverName = _servers[_serverIndex++].c_str();
-    WiFi.hostByName(serverName, _serverIp);
-    Serial.printf("Ntp: %s ( %s ) -> ", serverName, _serverIp.toString().c_str());
     if (_serverIndex >= _servers.size())
     {
       _serverIndex = 0;
     }
+    const char *serverName = _servers[_serverIndex++].c_str();
+    WiFi.hostByName(serverName, _serverIp);
+    Serial.printf("Ntp: %s ( %s ) -> ", serverName, _serverIp.toString().c_str());
+
     _sendPacket();
     // May not work once after 50 days due to overflow of millis()
     uint32_t beginWait = millis();
