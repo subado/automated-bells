@@ -35,7 +35,7 @@ void WebServer::_addHandlers()
   _server.on("^\\/api\\/tables\\/([A-Za-z0-9]{1,31})\\/$", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
-      char path[MAX_FILENAME_LENGTH];
+      char path[MAX_FILENAME_LENGTH]{};
       const char *title = request->pathArg(0).c_str();
       utils::getPathToTable(path, title);
       if (LittleFS.exists(path))
@@ -60,7 +60,7 @@ void WebServer::_addHandlers()
   _server.on("^\\/api\\/tables\\/([A-Za-z0-9]{1,31})\\/$", HTTP_DELETE,
     [](AsyncWebServerRequest *request)
     {
-      char path[MAX_FILENAME_LENGTH];
+      char path[MAX_FILENAME_LENGTH]{};
       utils::getPathToTable(path, request->pathArg(0).c_str());
       if (LittleFS.exists(path))
       {
@@ -78,7 +78,7 @@ void WebServer::_addHandlers()
       DynamicJsonDocument json(1024);
       JsonArray tables = json.createNestedArray("title");
 
-      for (char fileName[MAX_FILENAME_LENGTH]; root.next();)
+      for (char fileName[MAX_FILENAME_LENGTH]{}; root.next();)
       {
         std::strncpy(fileName, root.fileName().c_str(), sizeof(fileName));
         utils::removeExtension(fileName);
@@ -96,11 +96,10 @@ void WebServer::_addHandlers()
       DynamicJsonDocument json(2048);
 
       json.set(data["time"].as<JsonArray>());
-      char path[MAX_FILENAME_LENGTH];
+      char path[MAX_FILENAME_LENGTH]{};
       utils::getPathToTable(path, data["title"].as<const char *>());
 
-      File file;
-      file = LittleFS.open(path, "w");
+      File file = LittleFS.open(path, "w");
       serializeJson(json, file);
       file.close();
 
@@ -146,6 +145,12 @@ void WebServer::_addHandlers()
       scheduler.setTable(json["title"].as<const char *>());
       request->send(200);
     }));
+
+  _server.onNotFound(
+    [](AsyncWebServerRequest *request)
+    {
+      request->send(404);
+    });
 }
 
 WebServer server;
