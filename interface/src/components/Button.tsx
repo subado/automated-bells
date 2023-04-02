@@ -5,6 +5,7 @@ interface IButtonProps extends IChildrenProps {
   color: keyof typeof Colors
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type']
   className?: string
+  text?: string
   onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined
 }
 
@@ -15,13 +16,16 @@ const Colors = {
   orange: 'bg-orange-500',
   emerald: 'bg-emerald-500',
   rose: 'bg-rose-500',
+  gray: 'bg-gray-500',
+  lightGray: 'bg-gray-100',
 }
 
 export function Button({
   color,
   type,
-  onClick,
   className,
+  text,
+  onClick,
   children,
 }: IButtonProps) {
   const ClickColor: typeof Colors = {
@@ -31,21 +35,23 @@ export function Button({
     orange: 'shadow-orange-500 bg-orange-700',
     emerald: 'shadow-emerald-500 bg-emerald-700',
     rose: 'shadow-rose-500 bg-rose-700',
+    gray: 'shadow-gray-500 bg-gray-700',
+    lightGray: 'shadow-black bg-gray-50',
   }
-  const [effect, setEffect] = useState(false)
+  const [clickEffect, setClickEffect] = useState(false)
   function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-    setEffect(true)
+    setClickEffect(true)
     onClick?.(e)
   }
 
   return (
     <button
       type={type || 'button'}
-      className={`${Colors[color]}
-        ${className} font-bold rounded text-white
-        ${effect && `animate-click shadow ${ClickColor[color]}`}`}
+      className={`${!clickEffect && Colors[color]}
+         font-bold rounded ${text || 'text-white'} ${className}
+        ${clickEffect && `animate-click shadow ${ClickColor[color]}`}`}
       onClick={handleClick}
-      onAnimationEnd={() => setEffect(false)}
+      onAnimationEnd={() => setClickEffect(false)}
     >
       {children}
     </button>
