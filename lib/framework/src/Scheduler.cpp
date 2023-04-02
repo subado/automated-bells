@@ -27,7 +27,7 @@ void Scheduler::setTable(const char *title)
   _parseJson(file);
   file.close();
 
-  std::strcpy(_title, title);
+  std::strncpy(_title, title, sizeof(_title));
 }
 
 void Scheduler::setHandler(EventHandlerFunction handler)

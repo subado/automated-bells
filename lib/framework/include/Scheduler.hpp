@@ -9,6 +9,7 @@
 
 #include <Event.hpp>
 #include <Rtc.hpp>
+#include <macros.h>
 
 class Scheduler
 {
@@ -26,7 +27,7 @@ private:
   void _parseJson(File &file);
   void _clearEvents();
 
-  char _title[32];
+  char _title[MAX_FILENAME_LENGTH];
   EventHandlerFunction _handler;
   uint32_t _duration;
   EventTearDownFunction _tearDown;
