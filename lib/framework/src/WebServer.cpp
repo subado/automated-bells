@@ -1,10 +1,11 @@
 #include <WebServer.hpp>
 
 #include <AsyncJson.h>
+
 #include <Ntp.hpp>
 #include <Rtc.hpp>
 #include <Scheduler.hpp>
-
+#include <WiFiManager.hpp>
 #include <macros.h>
 #include <utils.h>
 
@@ -166,6 +167,24 @@ void WebServer::_addHandlers()
     [this](AsyncWebServerRequest *request, JsonVariant &json)
     {
       ntp = json;
+      _saveConfig();
+      request->send(200);
+    }));
+
+  // Response contains config for WiFiManager
+  _server.on("/api/wifi/", HTTP_GET,
+    [](AsyncWebServerRequest *request)
+    {
+      DynamicJsonDocument json(1024);
+      json.set(wifiManager);
+      request->send(200, "application/json", json.as<String>());
+    });
+
+  // Set the config for WiFiManager
+  _server.addHandler(new AsyncCallbackJsonWebHandler("/api/wifi/",
+    [this](AsyncWebServerRequest *request, JsonVariant &json)
+    {
+      wifiManager = json;
       _saveConfig();
       request->send(200);
     }));
