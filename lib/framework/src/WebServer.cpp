@@ -144,7 +144,7 @@ void WebServer::_addHandlers()
       request->send(200, "application/json", json.as<String>());
     });
 
-  // Set the name of the active scheduler
+  // Set the title of the active scheduler
   _server.addHandler(new AsyncCallbackJsonWebHandler("/api/scheduler/",
     [](AsyncWebServerRequest *request, JsonVariant &json)
     {
@@ -152,7 +152,7 @@ void WebServer::_addHandlers()
       request->send(200);
     }));
 
-  // Response contains config for ntp
+  // Response contains config for Ntp
   _server.on("/api/ntp/", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
@@ -160,6 +160,15 @@ void WebServer::_addHandlers()
       json.set(ntp);
       request->send(200, "application/json", json.as<String>());
     });
+
+  // Set the config for Ntp
+  _server.addHandler(new AsyncCallbackJsonWebHandler("/api/ntp/",
+    [this](AsyncWebServerRequest *request, JsonVariant &json)
+    {
+      ntp = json;
+      _saveConfig();
+      request->send(200);
+    }));
 
   // Endpoint to facilitate development
   // Response contains config from CONFIG_FILENAME
