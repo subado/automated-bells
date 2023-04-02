@@ -24,7 +24,8 @@
 #define RTC_SDA 4
 #define RTC_SCL 5
 
-Config config(CONFIG_FILENAME, std::pair<const char *, Ntp &>{"ntp", ntp});
+Config config(CONFIG_FILENAME, 1024, std::pair<const char *, Ntp &>{"ntp", ntp},
+  std::pair<const char *, WiFiManager &>{"wifi", wifiManager});
 
 void setup()
 {
@@ -45,11 +46,11 @@ void setup()
 
   config.loadFile();
 
-  wifiManager.config(IPAddress(192, 168, 0, 4), IPAddress(192, 168, 0, 4),
+  wifiManager.configAp(IPAddress(192, 168, 0, 4), IPAddress(192, 168, 0, 4),
     IPAddress(255, 255, 255, 0));
-  if (!wifiManager.beginSta(SSID, PASS))
+  if (!wifiManager.beginSta())
   {
-    if (!wifiManager.createAp(APSSID))
+    if (!wifiManager.createAp())
       return;
   }
 
