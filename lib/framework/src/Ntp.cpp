@@ -1,7 +1,7 @@
 #include <Ntp.hpp>
 
 Ntp::Ntp()
-    : _udp(),
+    : _udp{},
       _servers{},
       _serverIndex{0},
       _serverIp{},
@@ -9,11 +9,40 @@ Ntp::Ntp()
 {
 }
 
-bool Ntp::begin(const std::vector<const char *> &servers, int8_t timeZone, uint8_t localPort)
+Ntp::Ntp(const Ntp &other)
+    : _udp{},
+      _servers{other._servers},
+      _serverIndex{0},
+      _serverIp{},
+      _timeZone{other._timeZone}
+
+{
+}
+
+Ntp::Ntp(const Ntp &&other)
+    : _udp{},
+      _servers{std::move(other._servers)},
+      _serverIndex{0},
+      _serverIp{},
+      _timeZone{other._timeZone}
+{
+}
+
+bool Ntp::begin(uint8_t localPort)
+{
+  return _udp.begin(localPort);
+}
+
+bool Ntp::begin(std::initializer_list<const char *> servers, int8_t timeZone, uint8_t localPort)
 {
   setServers(servers);
   setTimezone(timeZone);
   return _udp.begin(localPort);
+}
+
+void Ntp::stop()
+{
+  _udp.stop();
 }
 
 uint32_t Ntp::getTime()
@@ -36,11 +65,11 @@ uint32_t Ntp::getTime()
     while (millis() - beginWait < 1500)
     {
       int size = _udp.parsePacket();
-      if (size >= PACKET_SIZE)
+      if (size)
       {
         Serial.println("get response");
         _udp.read(_packetBuffer, PACKET_SIZE); // read packet into the buffer
-        unsigned long secsSince1900;
+        unsigned long secsSince1900{};
         // convert four bytes starting at location 40 to a long integer
         secsSince1900 = (unsigned long)_packetBuffer[40] << 24;
         secsSince1900 |= (unsigned long)_packetBuffer[41] << 16;
@@ -75,7 +104,7 @@ void Ntp::addServer(const char *server)
   _servers.emplace_back(server);
 }
 
-void Ntp::setServers(const std::vector<const char *> &servers)
+void Ntp::setServers(std::initializer_list<const char *> servers)
 {
   clearServers();
   for (const auto &server : servers)
@@ -97,6 +126,20 @@ const std::vector<String> &Ntp::servers() const
 int8_t Ntp::timeZone() const
 {
   return _timeZone;
+}
+
+Ntp &Ntp::operator=(const Ntp &other)
+{
+  _servers = other._servers;
+  _timeZone = other._timeZone;
+  return *this;
+}
+
+Ntp &Ntp::operator=(const Ntp &&other)
+{
+  _servers = std::move(other._servers);
+  _timeZone = other._timeZone;
+  return *this;
 }
 
 // send an NTP request to the time server at the given address
@@ -125,7 +168,7 @@ void Ntp::_sendPacket()
 bool convertToJson(const Ntp &src, JsonVariant dst)
 {
   JsonArray servers = dst.createNestedArray("servers");
-  for (auto server : src.servers())
+  for (const auto &server : src.servers())
   {
     servers.add(server);
   }

@@ -7,7 +7,7 @@
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 // std c++ libraries headers
-#include <stdio.h>
+#include <utility>
 #include <vector>
 
 // my own headers
@@ -24,11 +24,10 @@
 #define RTC_SDA 4
 #define RTC_SCL 5
 
-Config config(ntp, "config.json");
+Config config(CONFIG_FILENAME, std::pair<const char *, Ntp &>{"ntp", ntp});
 
 void setup()
 {
-  config.loadFile();
   Serial.begin(9600);
 
   if (!rtc.begin(RTC_SDA, RTC_SCL))
@@ -44,6 +43,8 @@ void setup()
   }
   Serial.println("Mount file system");
 
+  config.loadFile();
+
   wifiManager.config(IPAddress(192, 168, 0, 4), IPAddress(192, 168, 0, 4),
     IPAddress(255, 255, 255, 0));
   if (!wifiManager.beginSta(SSID, PASS))
@@ -52,15 +53,7 @@ void setup()
       return;
   }
 
-  server.begin();
-  Serial.println("Http server started");
-
-  ntp.begin(
-    {
-      "2.ru.pool.ntp.org",
-      "3.ru.pool.ntp.org",
-    },
-    4);
+  ntp.begin();
 
   ntp.syncTime(rtc);
   eventManager.emplaceEvent<Interval>(
@@ -91,6 +84,17 @@ void setup()
       Serial.printf("%s %s\nXXXXXXXXX\n", "RING END!!!",
         rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
     });
+
+  server.begin(
+    []()
+    {
+      config.saveFile();
+    },
+    []()
+    {
+      config.loadFile();
+    });
+  Serial.println("Http server started");
 }
 
 void loop()

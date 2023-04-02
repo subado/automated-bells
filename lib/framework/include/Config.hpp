@@ -2,13 +2,17 @@
 
 #include <ArduinoJson.h>
 
+#include <tuple>
+#include <utility>
+
 #include <Ntp.hpp>
 #include <macros.h>
 
+template <typename... Pairs>
 class Config
 {
 public:
-  Config(Ntp &ntp, const char *fileName);
+  Config(const char *fileName, const Pairs &...objects);
 
   void save(JsonObject obj) const;
   void load(JsonObjectConst obj);
@@ -20,11 +24,20 @@ public:
   void setFileName(const char *fileName);
 
 private:
-  Ntp &_ntp;
+  template <std::size_t... Indexes>
+  void _saveObjects(JsonObject obj, std::index_sequence<Indexes...>) const;
+
+  template <std::size_t... Indexes>
+  void _loadObjects(JsonObjectConst obj, std::index_sequence<Indexes...>);
+
+  std::tuple<Pairs...> _objects;
   char _fileName[MAX_FILENAME_LENGTH];
 };
 
-bool serializeConfig(const Config &config, Print &dest);
-bool deserializeConfig(Stream &src, Config &config);
+template <typename... Pairs>
+bool serializeConfig(const Config<Pairs...> &config, Print &dest);
 
-extern Config config;
+template <typename... Pairs>
+bool deserializeConfig(Stream &src, Config<Pairs...> &config);
+
+#include <Config.tpp>

@@ -14,12 +14,18 @@ class Ntp
 {
 public:
   Ntp();
-  bool begin(const std::vector<const char *> &servers, int8_t timeZone = 0,
+  Ntp(const Ntp &other);
+  Ntp(const Ntp &&other);
+
+  bool begin(uint8_t localPort = 123);
+  bool begin(std::initializer_list<const char *> servers, int8_t timeZone = 0,
     uint8_t localPort = 123);
+
+  void stop();
 
   void clearServers();
   void addServer(const char *server);
-  void setServers(const std::vector<const char *> &servers);
+  void setServers(std::initializer_list<const char *> servers);
 
   void setTimezone(int8_t timeZone);
 
@@ -29,6 +35,9 @@ public:
   uint32_t getTime();
   bool syncTime(Rtc &rtc);
 
+  Ntp &operator=(const Ntp &other);
+  Ntp &operator=(const Ntp &&other);
+
 private:
   void _sendPacket();
 
@@ -37,7 +46,7 @@ private:
   std::vector<String> _servers;
   size_t _serverIndex;
   IPAddress _serverIp;
-  int8_t _timeZone;                // 0 means UTC+0
+  int8_t _timeZone; // 0 means UTC+0
 
   byte _packetBuffer[PACKET_SIZE]; // buffer to hold incoming & outgoing packets
 };

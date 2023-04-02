@@ -1,6 +1,7 @@
 #include <WebServer.hpp>
 
 #include <AsyncJson.h>
+#include <Ntp.hpp>
 #include <Rtc.hpp>
 #include <Scheduler.hpp>
 
@@ -8,17 +9,22 @@
 #include <utils.h>
 
 WebServer::WebServer(uint16_t port)
-    : _server(port)
+    : _server(port),
+      _saveConfig{},
+      _loadConfig{}
+
 {
-  // Needed for simply write front-end
+// Needed for simply write front-end
 #if defined(ENABLE_CORS)
   DefaultHeaders::Instance().addHeader(PSTR("Access-Control-Allow-Origin"), PSTR("*"));
 #endif
   _addHandlers();
 }
 
-void WebServer::begin()
+void WebServer::begin(std::function<void()> saveConfig, std::function<void()> loadConfig)
 {
+  _saveConfig = saveConfig;
+  _loadConfig = loadConfig;
   _server.serveStatic("/", LittleFS, "/static/").setDefaultFile("index.html");
   _server.begin();
 }
@@ -141,11 +147,33 @@ void WebServer::_addHandlers()
   // Set the name of the active scheduler
   _server.addHandler(new AsyncCallbackJsonWebHandler("/api/scheduler/",
     [](AsyncWebServerRequest *request, JsonVariant &json)
-
     {
       scheduler.setTable(json["title"].as<const char *>());
       request->send(200);
     }));
+
+  // Response contains config for ntp
+  _server.on("/api/ntp/", HTTP_GET,
+    [](AsyncWebServerRequest *request)
+    {
+      DynamicJsonDocument json(1024);
+      json.set(ntp);
+      request->send(200, "application/json", json.as<String>());
+    });
+
+  // Endpoint to facilitate development
+  // Response contains config from CONFIG_FILENAME
+  _server.on("/api/config/", HTTP_GET,
+    [](AsyncWebServerRequest *request)
+    {
+      DynamicJsonDocument json(1024);
+
+      File file = LittleFS.open(CONFIG_FILENAME, "r");
+      deserializeJson(json, file);
+      file.close();
+
+      request->send(200, "application/json", json.as<String>());
+    });
 
   // Response with 404 code
   _server.onNotFound(

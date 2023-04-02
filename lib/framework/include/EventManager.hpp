@@ -6,8 +6,6 @@
 
 #include <Event.hpp>
 
-#define DEFAULT_DURATION 1
-
 class EventManager
 {
 public:
