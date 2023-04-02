@@ -44,7 +44,7 @@ private:
   WiFiUDP _udp; // NTP uses the UDP protocol for its work
 
   std::vector<String> _servers;
-  size_t _serverIndex;
+  std::size_t _serverIndex;
   IPAddress _serverIp;
   int8_t _timeZone; // 0 means UTC+0
 
