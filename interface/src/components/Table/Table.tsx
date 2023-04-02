@@ -11,7 +11,7 @@ export function Table() {
     <table className='text-center w-[95vmin]'>
       <thead className='bg-gray-100 border-b-2 border-gray-200'>
         <tr>
-          <th colSpan={2}>
+          <th colSpan={3}>
             <input
               className='bg-gray-100 w-full text-center p-2 font-semibold tracking-wide placeholder:italic placeholder:text-slate-400'
               placeholder='Title'
@@ -43,7 +43,8 @@ export function Table() {
             className='odd:bg-white even:bg-gray-100 border-2 border-gray-200'
             key={i}
           >
-            <td className='px-3 py-1 rounded w-[50%]'>
+            <td className='px-5 w-[10%]'>{i + 1}</td>
+            <td className='border-2 border-gray-200 px-1 py-1 rounded w-[40%]'>
               <input
                 type='time'
                 name='time'
