@@ -12,7 +12,7 @@ template <typename... Pairs>
 class Config
 {
 public:
-  Config(const char *fileName, const Pairs &...objects);
+  Config(const char *fileName, std::size_t capacity, const Pairs &...objects);
 
   void save(JsonObject obj) const;
   void load(JsonObjectConst obj);
@@ -20,8 +20,11 @@ public:
   bool saveFile();
   bool loadFile();
 
-  const char *fileName();
   void setFileName(const char *fileName);
+  void setCapacity(std::size_t capacity);
+
+  const char *fileName() const;
+  std::size_t capacity() const;
 
 private:
   template <std::size_t... Indexes>
@@ -30,8 +33,9 @@ private:
   template <std::size_t... Indexes>
   void _loadObjects(JsonObjectConst obj, std::index_sequence<Indexes...>);
 
-  std::tuple<Pairs...> _objects;
   char _fileName[MAX_FILENAME_LENGTH];
+  std::size_t _capacity;
+  std::tuple<Pairs...> _objects;
 };
 
 template <typename... Pairs>

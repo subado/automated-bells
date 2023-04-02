@@ -3,8 +3,9 @@
 #include <LittleFS.h>
 
 template <typename... Pairs>
-Config<Pairs...>::Config(const char *fileName, const Pairs &...objects)
-    : _objects{objects...}
+Config<Pairs...>::Config(const char *fileName, std::size_t capacity, const Pairs &...objects)
+    : _capacity{capacity},
+      _objects{objects...}
 {
   setFileName(fileName);
 }
@@ -60,15 +61,27 @@ bool Config<Pairs...>::loadFile()
 }
 
 template <typename... Pairs>
-const char *Config<Pairs...>::fileName()
+void Config<Pairs...>::setFileName(const char *fileName)
+{
+  std::strncpy(_fileName, fileName, sizeof(_fileName));
+}
+
+template <typename... Pairs>
+void Config<Pairs...>::setCapacity(std::size_t capacity)
+{
+  _capacity = capacity;
+}
+
+template <typename... Pairs>
+const char *Config<Pairs...>::fileName() const
 {
   return _fileName;
 }
 
 template <typename... Pairs>
-void Config<Pairs...>::setFileName(const char *fileName)
+std::size_t Config<Pairs...>::capacity() const
 {
-  std::strncpy(_fileName, fileName, sizeof(_fileName));
+  return _capacity;
 }
 
 template <typename... Pairs>
@@ -98,7 +111,7 @@ void Config<Pairs...>::_loadObjects(JsonObjectConst obj, std::index_sequence<Ind
 template <typename... Pairs>
 bool serializeConfig(const Config<Pairs...> &config, Print &dest)
 {
-  DynamicJsonDocument doc(1024);
+  DynamicJsonDocument doc(config.capacity());
 
   JsonObject root = doc.to<JsonObject>();
   config.save(root);
@@ -109,7 +122,7 @@ bool serializeConfig(const Config<Pairs...> &config, Print &dest)
 template <typename... Pairs>
 bool deserializeConfig(Stream &src, Config<Pairs...> &config)
 {
-  DynamicJsonDocument doc(1024);
+  DynamicJsonDocument doc(config.capacity());
   DeserializationError err = deserializeJson(doc, src);
   if (err)
   {
