@@ -1,3 +1,13 @@
 @tailwind base;
+
+@layer base {
+  input {
+    @apply text-center p-2 tracking-wide placeholder:italic placeholder:text-slate-400;
+  }
+  .input-styled {
+    @apply bg-gray-100 font-semibold;
+  }
+}
+
 @tailwind components;
 @tailwind utilities;
