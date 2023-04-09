@@ -27,6 +27,21 @@ void WebServer::begin(std::function<void()> saveConfig, std::function<void()> lo
   _saveConfig = saveConfig;
   _loadConfig = loadConfig;
   _server.serveStatic("/", LittleFS, "/static/").setDefaultFile("index.html");
+
+  _server.onNotFound(
+    [](AsyncWebServerRequest *request)
+    {
+      // Necessary for properly work with react-router-dom
+      if (request->method() == HTTP_GET)
+      {
+        request->send(LittleFS, "/static/index.html");
+      }
+      else
+      {
+        request->send(404);
+      }
+    });
+
   _server.begin();
 }
 
@@ -38,8 +53,7 @@ void WebServer::end()
 void WebServer::_addHandlers()
 {
   // Response contains json with table which name was passed as a uri parameter
-  // ([A-Za-z0-9]{1,31}) is regex which define uri parameter format
-  _server.on("^\\/api\\/tables\\/([A-Za-z0-9]{1,31})\\/$", HTTP_GET,
+  _server.on("^\\/api\\/tables\\/([A-Za-z0-9]{1,23})\\/$", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
       char path[MAX_FILENAME_LENGTH]{};
@@ -65,7 +79,7 @@ void WebServer::_addHandlers()
     });
 
   // Delete table which title was passed as a uri parameter
-  _server.on("^\\/api\\/tables\\/([A-Za-z0-9]{1,31})\\/$", HTTP_DELETE,
+  _server.on("^\\/api\\/tables\\/([A-Za-z0-9]{1,23})\\/$", HTTP_DELETE,
     [](AsyncWebServerRequest *request)
     {
       char path[MAX_FILENAME_LENGTH]{};
@@ -201,13 +215,6 @@ void WebServer::_addHandlers()
       file.close();
 
       request->send(200, "application/json", json.as<String>());
-    });
-
-  // Response with 404 code
-  _server.onNotFound(
-    [](AsyncWebServerRequest *request)
-    {
-      request->send(404);
     });
 }
 
