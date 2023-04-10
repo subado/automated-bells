@@ -24,7 +24,7 @@ export function Root() {
         <MenuOpenContext.Provider value={[isMenuOpen, setMenuOpen]}>
           <Header />
         </MenuOpenContext.Provider>
-        <main className='items-center'>
+        <main className='w-full md:w-[720px] m-auto flex flex-col gap-y-5 md:text-xl'>
           <Outlet />
         </main>
       </SchedulerProvider>
