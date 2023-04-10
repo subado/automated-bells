@@ -12,7 +12,9 @@ export function MenuItem({ to, children }: IMenuItemProps) {
   return (
     <NavLink
       className={({ isActive }) =>
-        'w-full ' + (isActive ? 'border-b-4 border-sky-700' : '')
+        'w-full hover:text-sky-500 hover:bg-sky-50' +
+        ' ' +
+        (isActive ? 'border-b-4 border-sky-700 bg-sky-50' : '')
       }
       to={to}
       onClick={() => {

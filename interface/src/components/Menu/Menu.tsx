@@ -8,7 +8,7 @@ export function Menu() {
   }
 
   return (
-    <ul className='absolute h-screen w-1/3 z-10 py-8 px-3 bg-white shadow-xl shadow-black text-center text-2xl flex flex-col gap-y-6'>
+    <ul className='absolute h-screen w-full md:w-[calc(320px_+_10vw)] z-10 py-8 px-3 bg-white shadow-xl shadow-black text-center text-2xl flex flex-col gap-y-6 tracking-wide'>
       <MenuItem to='/'>Time</MenuItem>
       <MenuItem to='/ntp/'>NTP</MenuItem>
       <MenuItem to='/wifi/'>WiFi</MenuItem>
