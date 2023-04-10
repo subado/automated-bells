@@ -11,7 +11,7 @@ void EventManager::removeEvent(const Event *event)
     }));
 }
 
-void EventManager::handleEvents() const
+void EventManager::handleEvents()
 {
   for (auto &event : _events)
   {
@@ -25,6 +25,11 @@ void EventManager::handleEvents() const
     {
       event->_runned = false;
       event->_tearDown();
+
+      if (event->isSelfDestructive())
+      {
+        removeEvent(event.get());
+      }
     }
   }
 }

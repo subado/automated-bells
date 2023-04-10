@@ -16,6 +16,7 @@ public:
   virtual ~Event() = default;
 
   virtual bool isHappen() const = 0;
+  virtual bool isSelfDestructive() const;
 
 protected:
   virtual void _run();
@@ -37,6 +38,7 @@ public:
     const DateTime &dateTime);
 
   bool isHappen() const override;
+  bool isSelfDestructive() const override;
 
 protected:
   DateTime _dateTime;

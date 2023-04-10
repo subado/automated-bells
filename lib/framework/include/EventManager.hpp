@@ -18,7 +18,7 @@ public:
 
   void removeEvent(const Event *event);
 
-  void handleEvents() const;
+  void handleEvents();
 
 private:
   std::vector<std::unique_ptr<Event>> _events;

@@ -10,6 +10,11 @@ Event::Event(EventHandlerFunction handler, EventTearDownFunction tearDown, uint3
 {
 }
 
+bool Event::isSelfDestructive() const
+{
+  return false;
+}
+
 void Event::_run()
 {
   _handler(rtc.now());
@@ -29,6 +34,11 @@ bool AbsoluteAlarm::isHappen() const
     return true;
   }
   return false;
+}
+
+bool AbsoluteAlarm::isSelfDestructive() const
+{
+  return true;
 }
 
 RecurringAlarm::Time::Time(uint8_t hour, uint8_t minute)
