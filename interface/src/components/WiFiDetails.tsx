@@ -26,8 +26,10 @@ export function WiFiDetails({
 
   return (
     <>
-      <div className='flex flex-col gap-y-2 items-center  w-full'>
-        <h1 className={`font-black w-full text-center border-b-4 ${className}`}>
+      <div className='flex flex-col gap-y-3 items-center w-full'>
+        <h1
+          className={`text-[130%] font-black w-full text-center border-b-4 ${className}`}
+        >
           {title}
         </h1>
         <Input
