@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { schedulerAPI } from '../APIs/schedulerAPI'
-import { useScheduler } from '../contexts/SchedulerContext'
+import { schedulerAPI } from '../../APIs/schedulerAPI'
+import { useScheduler } from '../../contexts/SchedulerContext'
 
 export function EnabledScheduler() {
   const [scheduler, setScheduler] = useScheduler()
@@ -13,5 +13,6 @@ export function EnabledScheduler() {
   useEffect(() => {
     fetchScheduler()
   }, [])
-  return <div>{scheduler.title}</div>
+
+  return <span>{scheduler.title}</span>
 }

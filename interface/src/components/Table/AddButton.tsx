@@ -12,11 +12,11 @@ export function AddButton({ index }: AddButtonProps) {
       color='emerald'
       onClick={() => {
         dispatch({
-          type: 'addTimeItem',
+          type: 'addItem',
           index: index + 1,
         })
       }}
-      className='w-[50%]'
+      className='w-[50%] py-2'
     >
       +
     </Button>

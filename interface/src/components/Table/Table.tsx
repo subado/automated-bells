@@ -3,63 +3,82 @@ import { useTableDispatch } from '../../contexts/TableContext'
 import { AddButton } from './AddButton'
 import { RemoveButton } from './RemoveButton'
 
-export function Table() {
+export interface ITableProps {
+  inputType: string
+  inputName: string
+  inputPattern?: string
+  titlePattern?: string
+  readOnlyTitle?: boolean
+}
+
+export function Table({
+  inputType,
+  inputName,
+  inputPattern,
+  titlePattern,
+  readOnlyTitle,
+}: ITableProps) {
   const table = useTable()
   const dispatch = useTableDispatch()
 
+  function changeTitle(e: React.ChangeEvent<HTMLInputElement>) {
+    dispatch({
+      type: 'updateTitle',
+      title: e.target.value,
+    })
+  }
+
   return (
-    <table className='text-center w-[95vmin]'>
+    <table className='text-center w-full'>
       <thead className='bg-gray-100 border-b-2 border-gray-200'>
         <tr>
           <th colSpan={3}>
             <input
-              className='bg-gray-100 w-full text-center p-2 font-semibold tracking-wide placeholder:italic placeholder:text-slate-400'
+              className='text-center w-full bg-inherit p-2 tracking-wide placeholder:italic placeholder:text-slate-400'
               placeholder='Title'
               type='text'
               name='title'
+              pattern={titlePattern}
               value={table.title}
-              pattern='[A-Za-z0-9]{1,31}'
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                dispatch({
-                  type: 'updateTitle',
-                  title: event.target.value,
-                })
-              }}
+              onChange={changeTitle}
+              readOnly={readOnlyTitle}
               required={true}
             />
           </th>
         </tr>
       </thead>
       <tbody>
-        {table.time.length === 0 && (
+        {table.items.length === 0 && (
           <tr>
             <td>
               <AddButton index={0} />
             </td>
           </tr>
         )}
-        {table.time.map((item, i) => (
+        {table.items.map((item, i) => (
           <tr
             className='odd:bg-white even:bg-gray-100 border-2 border-gray-200'
             key={i}
           >
-            <td className='px-5 w-[10%]'>{i + 1}</td>
-            <td className='border-2 border-gray-200 px-1 py-1 rounded w-[40%]'>
+            <td className='w-1/12'>{i + 1}</td>
+            <td className='border-x-2 border-gray-200'>
               <input
-                type='time'
-                name='time'
+                type={inputType}
+                name={inputName}
+                pattern={inputPattern}
                 value={item}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   dispatch({
-                    type: 'updateTimeItem',
+                    type: 'updateItem',
                     index: i,
-                    item: event.target.value,
+                    item: e.target.value,
                   })
                 }}
                 required={true}
+                className='w-full bg-inherit text-center text-xl'
               />
             </td>
-            <td className='w-[50%]'>
+            <td className='w-1/3'>
               <AddButton index={i} />
               <RemoveButton index={i} />
             </td>

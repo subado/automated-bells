@@ -1,22 +1,33 @@
-import { OptionsProvider } from '../contexts/OptionsContext'
+import { useState } from 'react'
+import { Outlet } from 'react-router-dom'
+import { MenuOpenContext } from '../contexts/MenuOpenContext'
 import { SchedulerProvider } from '../contexts/SchedulerContext'
-import { TableProvider } from '../contexts/TableContext'
-import { Header } from './Header'
-import { TableEditor } from './TableEditor'
-import { TableSelect } from './TableSelect'
+import { Header } from './Header/Header'
+import { Menu } from './Menu/Menu'
 
 export function Root() {
+  const [isMenuOpen, setMenuOpen] = useState(false)
+
+  if (isMenuOpen) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+
   return (
-    <div className='h-screen flex flex-col items-center gap-y-5 text-[4vmin]'>
-      <TableProvider>
-        <OptionsProvider>
-          <SchedulerProvider>
-            <Header />
-            <TableSelect />
-          </SchedulerProvider>
-          <TableEditor />
-        </OptionsProvider>
-      </TableProvider>
-    </div>
+    <>
+      <MenuOpenContext.Provider value={[isMenuOpen, setMenuOpen]}>
+        {isMenuOpen && <Menu />}
+      </MenuOpenContext.Provider>
+
+      <SchedulerProvider>
+        <MenuOpenContext.Provider value={[isMenuOpen, setMenuOpen]}>
+          <Header />
+        </MenuOpenContext.Provider>
+        <main className='items-center'>
+          <Outlet />
+        </main>
+      </SchedulerProvider>
+    </>
   )
 }

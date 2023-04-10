@@ -12,11 +12,11 @@ export function RemoveButton({ index }: RemoveButtonProps) {
       color='rose'
       onClick={() => {
         dispatch({
-          type: 'removeTimeItem',
+          type: 'removeItem',
           index: index,
         })
       }}
-      className='w-[50%]'
+      className='w-[50%] py-2'
     >
       -
     </Button>

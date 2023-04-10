@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { schedulerAPI } from '../APIs/schedulerAPI'
-import { tablesAPI } from '../APIs/tablesAPI'
-import { useOptions } from '../contexts/OptionsContext'
-import { useScheduler } from '../contexts/SchedulerContext'
-import { useTableDispatch } from '../contexts/TableContext'
-import { Button } from './Button'
+import { schedulerAPI } from '../../APIs/schedulerAPI'
+import { tablesAPI } from '../../APIs/tablesAPI'
+import { useOptions } from '../../contexts/OptionsContext'
+import { useScheduler } from '../../contexts/SchedulerContext'
+import { useTableDispatch } from '../../contexts/TableContext'
+import { ButtonList } from '../ButtonList'
+import { Button } from './../Button'
 
 export function TableSelect() {
   const [options, setOptions] = useOptions()
@@ -14,7 +15,7 @@ export function TableSelect() {
 
   async function fetchTableTitles() {
     const data = await tablesAPI.getTitles()
-    setOptions(data.title)
+    setOptions([...options, ...data.title])
   }
 
   function createButtonAction(callback: () => void) {
@@ -38,7 +39,7 @@ export function TableSelect() {
     const data = await tablesAPI.get(selected)
     dispatchTable({
       type: 'set',
-      table: data,
+      table: { title: data.title, items: data.time },
     })
   }
 
@@ -51,47 +52,33 @@ export function TableSelect() {
     fetchTableTitles()
   }, [])
 
-  useEffect(() => {
-    setSelected(options.length ? options[0] : '')
-  }, [options])
-
   return (
-    <div className='flex items-center flex-col '>
+    <div className='flex items-center flex-col gap-y-2 px-2 w-full'>
       <select
-        className='w-[95vmin] bg-gray-100 p-2 rounded ring-2 ring-gray-300 focus:ring-sky-400'
+        id='table-select'
+        className='w-full bg-gray-100 p-2 rounded ring-2 ring-gray-300 focus:ring-sky-400'
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           setSelected(e.currentTarget.value)
         }}
       >
+        <option value=''>-- Select Table --</option>
         {options.map((opt) => (
           <option key={opt} value={opt}>
             {opt}
           </option>
         ))}
       </select>
-      <div className='flex flex-row gap-x-5 mt-2 w-[95vmin] justify-center'>
-        <Button
-          color='green'
-          onClick={createButtonAction(postShedule)}
-          className='p-2 w-[33%]'
-        >
+      <ButtonList buttonClassName='p-2'>
+        <Button color='green' onClick={createButtonAction(postShedule)}>
           Set
         </Button>
-        <Button
-          color='blue'
-          onClick={createButtonAction(editTable)}
-          className='p-2 w-[33%]'
-        >
+        <Button color='blue' onClick={createButtonAction(editTable)}>
           Edit
         </Button>
-        <Button
-          color='red'
-          onClick={createButtonAction(deleteTable)}
-          className='p-2 w-[33%]'
-        >
+        <Button color='red' onClick={createButtonAction(deleteTable)}>
           Delete
         </Button>
-      </div>
+      </ButtonList>
     </div>
   )
 }

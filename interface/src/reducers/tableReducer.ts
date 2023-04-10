@@ -10,13 +10,16 @@ export type TableAction =
       title: ITable['title']
     }
   | {
-      type: 'updateTimeItem'
+      type: 'updateItem'
       index: number
-      item: ITable['time'][number]
+      item: ITable['items'][number]
     }
   | {
-      type: 'addTimeItem' | 'removeTimeItem'
+      type: 'addItem' | 'removeItem'
       index: number
+    }
+  | {
+      type: 'clearItems'
     }
 
 export function tableReducer(state: ITable, action: TableAction): ITable {
@@ -28,25 +31,27 @@ export function tableReducer(state: ITable, action: TableAction): ITable {
         ...state,
         title: action.title,
       }
-    case 'updateTimeItem':
+    case 'updateItem':
       return {
         ...state,
-        time: [
-          ...state.time.map((t, i) => (i === action.index ? action.item : t)),
+        items: [
+          ...state.items.map((t, i) => (i === action.index ? action.item : t)),
         ],
       }
-    case 'addTimeItem':
-      state.time.splice(action.index, 0, '')
+    case 'addItem':
+      state.items.splice(action.index, 0, '')
       return {
         ...state,
-        time: state.time,
+        items: state.items,
       }
-    case 'removeTimeItem':
-      state.time.splice(action.index, 1)
+    case 'removeItem':
+      state.items.splice(action.index, 1)
       return {
         ...state,
-        time: state.time,
+        items: state.items,
       }
+    case 'clearItems':
+      return { ...state, items: [] }
     default:
       throw new Error()
   }

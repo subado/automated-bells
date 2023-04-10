@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { timeAPI } from '../APIs/timeAPI'
-import type { ITime } from '../interfaces'
+import { timeAPI } from '../../APIs/timeAPI'
+import type { ITime } from '../../interfaces'
 
 export function Time() {
   const initialState: ITime = {
