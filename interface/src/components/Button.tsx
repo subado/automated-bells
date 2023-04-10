@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import type { IChildrenProps } from '../interfaces'
 
-interface IButtonProps extends IChildrenProps {
+export interface IButtonProps extends IChildrenProps {
   color: keyof typeof Colors
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type']
   className?: string
   text?: string
-  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
+  isAnimated?: boolean
 }
 
 const Colors = {
@@ -18,6 +19,7 @@ const Colors = {
   rose: 'bg-rose-500',
   gray: 'bg-gray-500',
   lightGray: 'bg-gray-100',
+  sky: 'bg-sky-500',
 }
 
 export function Button({
@@ -26,6 +28,7 @@ export function Button({
   className,
   text,
   onClick,
+  isAnimated = true,
   children,
 }: IButtonProps) {
   const ClickColor: typeof Colors = {
@@ -37,21 +40,25 @@ export function Button({
     rose: 'shadow-rose-500 bg-rose-700',
     gray: 'shadow-gray-500 bg-gray-700',
     lightGray: 'shadow-black bg-gray-50',
+    sky: 'shadow-sky-500 bg-sky-700',
   }
-  const [clickEffect, setClickEffect] = useState(false)
+
+  const [isClicked, setClicked] = useState(false)
   function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-    setClickEffect(true)
+    setClicked(true)
     onClick?.(e)
   }
 
   return (
     <button
       type={type || 'button'}
-      className={`${!clickEffect && Colors[color]}
+      className={`${(!isClicked || !isAnimated) && Colors[color]}
          font-bold rounded ${text || 'text-white'} ${className}
-        ${clickEffect && `animate-click shadow ${ClickColor[color]}`}`}
+        ${
+          isAnimated && isClicked && `animate-click shadow ${ClickColor[color]}`
+        }`}
       onClick={handleClick}
-      onAnimationEnd={() => setClickEffect(false)}
+      onAnimationEnd={() => setClicked(false)}
     >
       {children}
     </button>
