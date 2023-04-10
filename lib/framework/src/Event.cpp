@@ -15,6 +15,21 @@ bool Event::isSelfDestructive() const
   return false;
 }
 
+void Event::setHandler(EventHandlerFunction handler)
+{
+  _handler = handler;
+}
+
+void Event::setTearDown(EventTearDownFunction tearDown)
+{
+  _tearDown = tearDown;
+}
+
+void Event::setDuration(uint32_t duration)
+{
+  _duration = duration;
+}
+
 void Event::_run()
 {
   _handler(rtc.now());

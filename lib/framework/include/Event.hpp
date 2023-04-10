@@ -18,6 +18,10 @@ public:
   virtual bool isHappen() const = 0;
   virtual bool isSelfDestructive() const;
 
+  void setHandler(EventHandlerFunction handler);
+  void setTearDown(EventTearDownFunction tearDown);
+  void setDuration(uint32_t duration);
+
 protected:
   virtual void _run();
 
