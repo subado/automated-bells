@@ -216,6 +216,14 @@ void WebServer::_addHandlers()
       request->send(200);
     }));
 
+  // Restart ESP and send empty html
+  _server.on("/api/restart/", HTTP_POST,
+    [](AsyncWebServerRequest *request)
+    {
+      request->send(200);
+      ESP.restart();
+    });
+
   // Endpoint to facilitate development
   // Response contains config from CONFIG_FILENAME
   _server.on("/api/config/", HTTP_GET,
