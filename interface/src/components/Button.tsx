@@ -20,6 +20,7 @@ const Colors = {
   gray: 'bg-gray-500',
   lightGray: 'bg-gray-100',
   sky: 'bg-sky-500',
+  pink: 'bg-pink-500',
 }
 
 export function Button({
@@ -41,6 +42,7 @@ export function Button({
     gray: 'shadow-gray-500 bg-gray-700',
     lightGray: 'shadow-black bg-gray-50',
     sky: 'shadow-sky-500 bg-sky-700',
+    pink: 'shadow-pink-500 bg-pink-700',
   }
 
   const [isClicked, setClicked] = useState(false)
