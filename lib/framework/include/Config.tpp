@@ -132,3 +132,9 @@ bool deserializeConfig(Stream &src, Config<Pairs...> &config)
 
   return true;
 }
+
+template <typename T>
+std::pair<const char *, T &> make_configurable(const char *name, T &configurable)
+{
+  return std::pair<const char *, T &>{name, configurable};
+}

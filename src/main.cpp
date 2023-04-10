@@ -22,8 +22,8 @@
 #define RTC_SDA 4
 #define RTC_SCL 5
 
-Config config(CONFIG_FILENAME, 1024, std::pair<const char *, Ntp &>{"ntp", ntp},
-  std::pair<const char *, WiFiManager &>{"wifi", wifiManager});
+Config config(CONFIG_FILENAME, 1024, make_configurable("ntp", ntp),
+  make_configurable("wifi", wifiManager));
 
 void setup()
 {

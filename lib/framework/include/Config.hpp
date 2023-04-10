@@ -44,4 +44,7 @@ bool serializeConfig(const Config<Pairs...> &config, Print &dest);
 template <typename... Pairs>
 bool deserializeConfig(Stream &src, Config<Pairs...> &config);
 
+template <typename T>
+std::pair<const char *, T &> make_configurable(const char *name, T &configurable);
+
 #include <Config.tpp>
