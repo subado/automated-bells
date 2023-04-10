@@ -19,8 +19,6 @@
 #include <WebServer.hpp>
 #include <WiFiManager.hpp>
 
-#define APSSID  "bells"
-
 #define RTC_SDA 4
 #define RTC_SCL 5
 
@@ -48,11 +46,7 @@ void setup()
 
   wifiManager.configAp(IPAddress(192, 168, 0, 4), IPAddress(192, 168, 0, 4),
     IPAddress(255, 255, 255, 0));
-  if (!wifiManager.beginSta())
-  {
-    if (!wifiManager.createAp())
-      return;
-  }
+  wifiManager.begin();
 
   ntp.begin();
 

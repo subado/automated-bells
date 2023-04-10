@@ -40,6 +40,11 @@ void WiFiManager::configAp(const IPAddress &apLocalIp, const IPAddress &apGatewa
   _apSubnet = apSubnet;
 }
 
+bool WiFiManager::begin()
+{
+  return wifiManager.beginSta() || wifiManager.createAp();
+}
+
 bool WiFiManager::beginSta(int32_t channel, const uint8_t *bssid, bool connect) const
 {
   WiFi.mode(WIFI_STA);

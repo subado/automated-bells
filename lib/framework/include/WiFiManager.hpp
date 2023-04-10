@@ -27,6 +27,7 @@ public:
   };
   void configAp(const IPAddress &apLocalIp, const IPAddress &apGateway, const IPAddress &apSubnet);
 
+  bool begin();
   bool beginSta(int32_t channel = 0, const uint8_t *bssid = NULL, bool connect = true) const;
   bool createAp(int channel = 1, int ssid_hidden = 0, int max_connection = 4,
     int beacon_interval = 100) const;
