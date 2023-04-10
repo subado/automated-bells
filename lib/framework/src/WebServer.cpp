@@ -2,6 +2,7 @@
 
 #include <AsyncJson.h>
 
+#include <EventManager.hpp>
 #include <Ntp.hpp>
 #include <Rtc.hpp>
 #include <Scheduler.hpp>
@@ -180,8 +181,20 @@ void WebServer::_addHandlers()
   _server.addHandler(new AsyncCallbackJsonWebHandler("/api/ntp/",
     [this](AsyncWebServerRequest *request, JsonVariant &json)
     {
+      int8_t prevTimeZone = ntp.timeZone();
       ntp = json;
       _saveConfig();
+
+      if (ntp.timeZone() != prevTimeZone)
+      {
+        eventManager.emplaceEvent<AbsoluteAlarm>(
+          [](const DateTime &dt)
+          {
+            ntp.syncTime(rtc);
+          },
+          2, rtc.now());
+      }
+
       request->send(200);
     }));
 
