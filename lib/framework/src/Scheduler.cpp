@@ -14,6 +14,9 @@ static uint8_t conv2d(const char *str)
 
 Scheduler::Scheduler()
     : _title{},
+      _handler{},
+      _tearDown{},
+      _duration{},
       _events{}
 {
 }

@@ -18,8 +18,8 @@ public:
 
   void setTable(const char *title);
   void setHandler(EventHandlerFunction handler);
-  void setDuration(uint32_t duration);
   void setTearDown(EventTearDownFunction tearDown);
+  void setDuration(uint32_t duration);
 
   const char *title() const;
 
@@ -29,8 +29,8 @@ private:
 
   char _title[MAX_FILENAME_LENGTH];
   EventHandlerFunction _handler;
-  uint32_t _duration;
   EventTearDownFunction _tearDown;
+  uint32_t _duration;
   std::vector<const Event *> _events;
 };
 
