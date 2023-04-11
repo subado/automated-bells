@@ -135,7 +135,7 @@ void WebServer::_addHandlers()
     {
       StaticJsonDocument<128> json;
       DateTime now = rtc.now();
-      char buffer[3] = {0};
+      char buffer[3] = {};
 
       std::snprintf(buffer, sizeof(buffer), "%02d", now.hour());
       json["hour"] = buffer;
@@ -155,7 +155,10 @@ void WebServer::_addHandlers()
     {
       StaticJsonDocument<64> json;
 
-      json["title"] = scheduler.title();
+      char title[MAX_FILENAME_LENGTH]{};
+      utils::getFileName(title, scheduler.path(), sizeof(title));
+      utils::removeExtension(title);
+      json["title"] = title;
 
       request->send(200, "application/json", json.as<String>());
     });
@@ -164,7 +167,9 @@ void WebServer::_addHandlers()
   _server.addHandler(new AsyncCallbackJsonWebHandler("/api/scheduler/",
     [](AsyncWebServerRequest *request, JsonVariant &json)
     {
-      scheduler.setTable(json["title"].as<const char *>());
+      char fileName[MAX_FILENAME_LENGTH]{};
+      utils::getPathToTable(fileName, json["title"].as<const char *>());
+      scheduler.setEvents(fileName);
       request->send(200);
     }));
 

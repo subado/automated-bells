@@ -13,7 +13,7 @@ static uint8_t conv2d(const char *str)
 }
 
 Scheduler::Scheduler()
-    : _title{},
+    : _path{},
       _handler{},
       _tearDown{},
       _duration{},
@@ -21,16 +21,14 @@ Scheduler::Scheduler()
 {
 }
 
-void Scheduler::setTable(const char *title)
+void Scheduler::setEvents(const char *path)
 {
   _clearEvents();
-  char path[MAX_FILENAME_LENGTH];
-  utils::getPathToTable(path, title);
   File file = LittleFS.open(path, "r");
   _parseJson(file);
   file.close();
 
-  std::strncpy(_title, title, sizeof(_title));
+  std::strncpy(_path, path, sizeof(_path));
 }
 
 void Scheduler::setHandler(EventHandlerFunction handler)
@@ -48,9 +46,9 @@ void Scheduler::setTearDown(EventTearDownFunction tearDown)
   _tearDown = tearDown;
 }
 
-const char *Scheduler::title() const
+const char *Scheduler::path() const
 {
-  return _title;
+  return _path;
 }
 
 void Scheduler::_parseJson(File &file)

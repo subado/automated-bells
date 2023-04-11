@@ -16,18 +16,18 @@ class Scheduler
 public:
   Scheduler();
 
-  void setTable(const char *title);
+  void setEvents(const char *path);
   void setHandler(EventHandlerFunction handler);
   void setTearDown(EventTearDownFunction tearDown);
   void setDuration(uint32_t duration);
 
-  const char *title() const;
+  const char *path() const;
 
 private:
   void _parseJson(File &file);
   void _clearEvents();
 
-  char _title[MAX_FILENAME_LENGTH];
+  char _path[MAX_FILENAME_LENGTH];
   EventHandlerFunction _handler;
   EventTearDownFunction _tearDown;
   uint32_t _duration;
