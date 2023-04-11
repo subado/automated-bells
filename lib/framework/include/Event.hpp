@@ -6,8 +6,8 @@
 #include <bitset>
 
 class EventManager;
-typedef std::function<void(const DateTime &dateTime)> EventHandlerFunction;
-typedef std::function<void()> EventTearDownFunction;
+using EventHandlerFunction = std::function<void(const DateTime &dateTime)>;
+using EventTearDownFunction = std::function<void()>;
 
 class Event
 {
