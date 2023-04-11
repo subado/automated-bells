@@ -15,7 +15,7 @@ export function Menu() {
       <span className='border' />
       <Button
         className='px-1 py-2 font-normal rounded-none'
-        color='pink'
+        color='darkRose'
         onClick={handleRestart}
       >
         Restart
