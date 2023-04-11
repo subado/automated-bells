@@ -10,11 +10,11 @@ class EventManager
 {
 public:
   template <typename T, typename... Args>
-  const Event *emplaceEvent(EventHandlerFunction handler, EventTearDownFunction tearDown,
+  Event *emplaceEvent(EventHandlerFunction handler, EventTearDownFunction tearDown,
     uint32_t duration, Args &&...args);
 
   template <typename T, typename... Args>
-  const Event *emplaceEvent(EventHandlerFunction handler, uint32_t duration, Args &&...args);
+  Event *emplaceEvent(EventHandlerFunction handler, uint32_t duration, Args &&...args);
 
   void removeEvent(const Event *event);
 
@@ -25,8 +25,8 @@ private:
 };
 
 template <typename T, typename... Args>
-const Event *EventManager::emplaceEvent(EventHandlerFunction handler,
-  EventTearDownFunction tearDown, uint32_t duration, Args &&...args)
+Event *EventManager::emplaceEvent(EventHandlerFunction handler, EventTearDownFunction tearDown,
+  uint32_t duration, Args &&...args)
 {
   _events.emplace_back(
     std::make_unique<T>(handler, tearDown, duration, std::forward<Args>(args)...));
@@ -34,8 +34,7 @@ const Event *EventManager::emplaceEvent(EventHandlerFunction handler,
 }
 
 template <typename T, typename... Args>
-const Event *EventManager::emplaceEvent(EventHandlerFunction handler, uint32_t duration,
-  Args &&...args)
+Event *EventManager::emplaceEvent(EventHandlerFunction handler, uint32_t duration, Args &&...args)
 {
   _events.emplace_back(std::make_unique<T>(
     handler, []() {}, duration, std::forward<Args>(args)...));

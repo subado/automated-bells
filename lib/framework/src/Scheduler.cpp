@@ -39,6 +39,10 @@ void Scheduler::setHandler(EventHandlerFunction handler)
 void Scheduler::setDuration(uint32_t duration)
 {
   _duration = duration;
+  for (auto event : _events)
+  {
+    event->setDuration(_duration);
+  }
 }
 
 void Scheduler::setTearDown(EventTearDownFunction tearDown)
