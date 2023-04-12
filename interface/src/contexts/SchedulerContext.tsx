@@ -1,14 +1,14 @@
 import type { Dispatch, SetStateAction } from 'react'
 import { useState } from 'react'
 import { useContext, createContext } from 'react'
-import type { IScheduler, IChildrenProps } from '../interfaces'
+import type { IChildrenProps, IScheduler } from '../interfaces'
 
 type SchedulerContextProps = [IScheduler, Dispatch<SetStateAction<IScheduler>>]
 
 const SchedulerContext = createContext({} as SchedulerContextProps)
 
 export function SchedulerProvider({ children }: IChildrenProps) {
-  const [scheduler, setScheduler] = useState(initialState)
+  const [scheduler, setScheduler] = useState({} as IScheduler)
 
   return (
     <SchedulerContext.Provider value={[scheduler, setScheduler]}>
@@ -19,8 +19,4 @@ export function SchedulerProvider({ children }: IChildrenProps) {
 
 export function useScheduler() {
   return useContext(SchedulerContext)
-}
-
-const initialState: IScheduler = {
-  title: '',
 }

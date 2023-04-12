@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { schedulerAPI } from '../../APIs/schedulerAPI'
 import { useScheduler } from '../../contexts/SchedulerContext'
 
-export function EnabledScheduler() {
+export function SchedulerTitle() {
   const [scheduler, setScheduler] = useScheduler()
 
   async function fetchScheduler() {

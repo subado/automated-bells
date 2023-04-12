@@ -23,6 +23,8 @@ export interface IChildrenProps {
 }
 
 export interface IScheduler {
+  pin: number
+  duration: number
   title: string
 }
 

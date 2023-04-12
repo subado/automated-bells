@@ -153,23 +153,17 @@ void WebServer::_addHandlers()
   _server.on("/api/scheduler/", HTTP_GET,
     [](AsyncWebServerRequest *request)
     {
-      StaticJsonDocument<64> json;
-
-      char title[MAX_FILENAME_LENGTH]{};
-      utils::getFileName(title, scheduler.path(), sizeof(title));
-      utils::removeExtension(title);
-      json["title"] = title;
-
+      StaticJsonDocument<128> json;
+      json.set(scheduler);
       request->send(200, "application/json", json.as<String>());
     });
 
   // Set the title of the active scheduler
   _server.addHandler(new AsyncCallbackJsonWebHandler("/api/scheduler/",
-    [](AsyncWebServerRequest *request, JsonVariant &json)
+    [this](AsyncWebServerRequest *request, JsonVariant &json)
     {
-      char fileName[MAX_FILENAME_LENGTH]{};
-      utils::getPathToTable(fileName, json["title"].as<const char *>());
-      scheduler.setEvents(fileName);
+      scheduler = json;
+      _saveConfig();
       request->send(200);
     }));
 
@@ -187,7 +181,7 @@ void WebServer::_addHandlers()
     [this](AsyncWebServerRequest *request, JsonVariant &json)
     {
       int8_t prevTimeZone = ntp.timeZone();
-      ntp = json;
+      ntp = std::move(json);
       _saveConfig();
 
       if (ntp.timeZone() != prevTimeZone)

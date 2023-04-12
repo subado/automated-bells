@@ -1,6 +1,6 @@
 import { useMenuOpen } from '../../contexts/MenuOpenContext'
 import { Button } from './../Button'
-import { EnabledScheduler } from './EnabledScheduler'
+import { SchedulerTitle } from './SchedulerTitle'
 import { Time } from './Time'
 
 export function Header() {
@@ -18,7 +18,7 @@ export function Header() {
         ☰
       </Button>
       <span className='px-2 border-x border-gray-400 w-full'>
-        <EnabledScheduler />
+        <SchedulerTitle />
       </span>
       <span className='pl-2'>
         <Time />

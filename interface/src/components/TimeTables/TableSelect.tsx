@@ -10,7 +10,7 @@ import { Button } from './../Button'
 export function TableSelect() {
   const [options, setOptions] = useOptions()
   const [selected, setSelected] = useState<string>('')
-  const [, setScheduler] = useScheduler()
+  const [scheduler, setScheduler] = useScheduler()
   const dispatchTable = useTableDispatch()
 
   async function fetchTableTitles() {
@@ -26,9 +26,9 @@ export function TableSelect() {
     }
   }
 
-  function postShedule() {
-    setScheduler({ title: selected })
-    schedulerAPI.post({ title: selected })
+  function postScheduler() {
+    setScheduler({ ...scheduler, title: selected })
+    schedulerAPI.post({ ...scheduler, title: selected })
   }
 
   async function editTable() {
@@ -69,7 +69,7 @@ export function TableSelect() {
         ))}
       </select>
       <ButtonList buttonClassName='p-2'>
-        <Button color='green' onClick={createButtonAction(postShedule)}>
+        <Button color='green' onClick={createButtonAction(postScheduler)}>
           Set
         </Button>
         <Button color='blue' onClick={createButtonAction(editTable)}>

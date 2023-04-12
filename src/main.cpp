@@ -23,7 +23,7 @@
 #define RTC_SCL 5
 
 Config config(CONFIG_FILENAME, 1024, make_configurable("ntp", ntp),
-  make_configurable("wifi", wifiManager));
+  make_configurable("wifi", wifiManager), make_configurable("scheduler", scheduler));
 
 void setup()
 {
@@ -41,6 +41,21 @@ void setup()
     return;
   }
   Serial.println("Mount file system");
+
+  scheduler.setHandler(
+    [](uint8_t pin, const DateTime &dt)
+    {
+      digitalWrite(pin, HIGH);
+      Serial.printf("XXXXXXXXX\n%s %s\n", "RING START!!!",
+        dt.timestamp(DateTime::TIMESTAMP_TIME).c_str());
+    });
+  scheduler.setTearDown(
+    [](uint8_t pin)
+    {
+      digitalWrite(pin, LOW);
+      Serial.printf("%s %s\nXXXXXXXXX\n", "RING END!!!",
+        rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
+    });
 
   config.loadFile();
 
@@ -61,24 +76,6 @@ void setup()
       }
     },
     1, TimeSpan(0, 1, 0, 0));
-
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, HIGH);
-  scheduler.setHandler(
-    [](const DateTime &dt)
-    {
-      digitalWrite(LED_BUILTIN, LOW);
-      Serial.printf("XXXXXXXXX\n%s %s\n", "RING START!!!",
-        dt.timestamp(DateTime::TIMESTAMP_TIME).c_str());
-    });
-  scheduler.setDuration(5);
-  scheduler.setTearDown(
-    []()
-    {
-      digitalWrite(LED_BUILTIN, HIGH);
-      Serial.printf("%s %s\nXXXXXXXXX\n", "RING END!!!",
-        rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
-    });
 
   server.begin(
     []()

@@ -187,7 +187,7 @@ void convertFromJson(JsonVariantConst src, Ntp &dst)
 
 bool canConvertFromJson(JsonVariantConst src, const Ntp &)
 {
-  return src["servers"].is<JsonArrayConst>() && src["servers"].is<int8_t>();
+  return src["servers"].is<JsonArrayConst>() && src["timeZone"].is<int8_t>();
 }
 
 Ntp ntp;

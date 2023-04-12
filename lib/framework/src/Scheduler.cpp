@@ -13,27 +13,57 @@ static uint8_t conv2d(const char *str)
 }
 
 Scheduler::Scheduler()
-    : _path{},
+    : _title{},
+      _events{},
       _handler{},
       _tearDown{},
       _duration{},
-      _events{}
+      _pin{}
 {
 }
 
-void Scheduler::setEvents(const char *path)
+Scheduler::Scheduler(const Scheduler &other)
+    : _title{},
+      _events{},
+      _handler{},
+      _tearDown{},
+      _duration{other._duration},
+      _pin{other._pin}
+
 {
-  _clearEvents();
+  setEvents(other._title);
+}
+
+void Scheduler::setTitle(const char *title)
+{
+  std::strncpy(_title, title, sizeof(_title));
+}
+
+void Scheduler::setEvents()
+{
+  setEvents(_title);
+}
+
+void Scheduler::setEvents(const char *title)
+{
+  clearEvents();
+  char path[MAX_FILENAME_LENGTH]{};
+  utils::getPathToTable(path, title);
   File file = LittleFS.open(path, "r");
   _parseJson(file);
   file.close();
 
-  std::strncpy(_path, path, sizeof(_path));
+  setTitle(title);
 }
 
-void Scheduler::setHandler(EventHandlerFunction handler)
+void Scheduler::setHandler(SchedulerHandlerFunction handler)
 {
   _handler = handler;
+}
+
+void Scheduler::setTearDown(SchedulerTearDownFunction tearDown)
+{
+  _tearDown = tearDown;
 }
 
 void Scheduler::setDuration(uint32_t duration)
@@ -45,14 +75,42 @@ void Scheduler::setDuration(uint32_t duration)
   }
 }
 
-void Scheduler::setTearDown(EventTearDownFunction tearDown)
+void Scheduler::setPin(uint8_t pin)
 {
-  _tearDown = tearDown;
+  _pin = pin;
+  pinMode(_pin, OUTPUT);
+}
+const char *Scheduler::title() const
+{
+  return _title;
 }
 
-const char *Scheduler::path() const
+uint32_t Scheduler::duration() const
 {
-  return _path;
+  return _duration;
+}
+
+uint8_t Scheduler::pin() const
+{
+  return _pin;
+}
+
+void Scheduler::clearEvents()
+{
+  for (const auto &event : _events)
+  {
+    eventManager.removeEvent(event);
+  }
+  _events.clear();
+}
+
+Scheduler &Scheduler::operator=(const Scheduler &other)
+{
+  setEvents(other._title);
+  _duration = other._duration;
+  _pin = other._pin;
+
+  return *this;
 }
 
 void Scheduler::_parseJson(File &file)
@@ -65,18 +123,29 @@ void Scheduler::_parseJson(File &file)
   for (JsonVariant value : array)
   {
     time = value.as<const char *>();
-    _events.emplace_back(eventManager.emplaceEvent<RecurringAlarm>(_handler, _tearDown, _duration,
+    _events.emplace_back(eventManager.emplaceEvent<RecurringAlarm>(
+      std::bind(_handler, _pin, std::placeholders::_1), std::bind(_tearDown, _pin), _duration,
       RecurringAlarm::Time(conv2d(time), conv2d(time + 3))));
   }
 }
 
-void Scheduler::_clearEvents()
+bool convertToJson(const Scheduler &src, JsonVariant dst)
 {
-  for (const auto &event : _events)
-  {
-    eventManager.removeEvent(event);
-  }
-  _events.clear();
+  return dst["duration"].set(src.duration()) && dst["pin"].set(src.pin()) &&
+         dst["title"].set(src.title());
+}
+
+void convertFromJson(JsonVariantConst src, Scheduler &dst)
+{
+  dst.setDuration(src["duration"].as<uint32_t>());
+  dst.setPin(src["pin"].as<uint8_t>());
+  dst.setTitle(src["title"].as<const char *>());
+}
+
+bool canConvertFromJson(JsonVariantConst src, const Scheduler &)
+{
+  return src["duration"].is<uint32_t>() && src["pin"].is<uint8_t>() &&
+         src["title"].is<const char *>();
 }
 
 Scheduler scheduler;
