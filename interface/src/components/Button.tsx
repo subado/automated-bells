@@ -46,6 +46,22 @@ export function Button({
 
   const [isActive, setActive] = useState(false)
 
+  function createAnimationStart<EventType>(
+    handler: (e: EventType) => void
+  ): (e: EventType) => void {
+    return (e: EventType) => {
+      handler(e)
+      setActive(true)
+    }
+  }
+
+  function createAnimationEnd<EventType>(handler: (e: EventType) => void) {
+    return (e: EventType) => {
+      handler(e)
+      setActive(false)
+    }
+  }
+
   rest = {
     ...rest,
     className: `${(!isActive || !isAnimated) && Colors[color]}
@@ -57,23 +73,17 @@ export function Button({
   }
 
   if (rest.onClick != undefined) {
-    const handleClick = rest.onClick
-    rest.onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      setActive(true)
-      handleClick?.(e)
-    }
+    rest.onClick = createAnimationStart(rest.onClick)
     rest.onAnimationEnd = () => setActive(false)
-  } else if (rest.onMouseDown != undefined && rest.onMouseUp) {
-    const handleDown = rest.onMouseDown
-    rest.onMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
-      setActive(true)
-      handleDown?.(e)
-    }
-    const handleUp = rest.onMouseUp
-    rest.onMouseUp = (e: React.MouseEvent<HTMLButtonElement>) => {
-      setActive(false)
-      handleUp?.(e)
-    }
   }
+  if (rest.onMouseDown && rest.onMouseUp) {
+    rest.onMouseDown = createAnimationStart(rest.onMouseDown)
+    rest.onMouseUp = createAnimationEnd(rest.onMouseUp)
+  }
+  if (rest.onTouchStart && rest.onTouchEnd) {
+    rest.onTouchStart = createAnimationStart(rest.onTouchStart)
+    rest.onTouchEnd = createAnimationStart(rest.onTouchEnd)
+  }
+
   return <button {...rest}>{children}</button>
 }
