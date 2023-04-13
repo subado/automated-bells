@@ -23,7 +23,7 @@ export function Form({
       onSubmit={onSubmit}
     >
       {children}
-      <ButtonList buttonClassName='p-2 text-white'>
+      <ButtonList buttonClassName='py-2 px-7 text-white'>
         <Button color='orange' type='submit'>
           {submitButtonContent}
         </Button>

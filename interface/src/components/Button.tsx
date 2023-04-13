@@ -75,14 +75,20 @@ export function Button({
   if (rest.onClick != undefined) {
     rest.onClick = createAnimationStart(rest.onClick)
     rest.onAnimationEnd = () => setActive(false)
-  }
-  if (rest.onMouseDown && rest.onMouseUp) {
+  } else if (
+    rest.onMouseDown &&
+    rest.onMouseUp &&
+    rest.onTouchStart &&
+    rest.onTouchEnd
+  ) {
     rest.onMouseDown = createAnimationStart(rest.onMouseDown)
     rest.onMouseUp = createAnimationEnd(rest.onMouseUp)
-  }
-  if (rest.onTouchStart && rest.onTouchEnd) {
     rest.onTouchStart = createAnimationStart(rest.onTouchStart)
     rest.onTouchEnd = createAnimationStart(rest.onTouchEnd)
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    rest.onClick = createAnimationStart(() => {})
+    rest.onAnimationEnd = () => setActive(false)
   }
 
   return <button {...rest}>{children}</button>

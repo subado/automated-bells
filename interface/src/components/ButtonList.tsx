@@ -10,12 +10,12 @@ interface IButtonListProps {
 export function ButtonList({ children, buttonClassName }: IButtonListProps) {
   children = React.Children.map(children, (child) =>
     React.cloneElement(child, {
-      className: `${child.props.className} ${buttonClassName} w-full`,
+      className: `${child.props.className} ${buttonClassName} w-fit`,
     })
   )
 
   return (
-    <div className='inline-flex flex-row gap-x-2 w-full justify-center'>
+    <div className='flex flex-wrap flex-row gap-x-2 w-full justify-center gap-y-2'>
       {children}
     </div>
   )

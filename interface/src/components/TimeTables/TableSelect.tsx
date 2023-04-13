@@ -69,15 +69,15 @@ export function TableSelect() {
           </option>
         ))}
       </select>
-      <ButtonList buttonClassName='p-2 text-white'>
+      <ButtonList buttonClassName='py-2 px-7 text-white'>
         <Button color='green' onClick={createButtonAction(postScheduler)}>
           Установить
         </Button>
-        <Button color='blue' onClick={createButtonAction(editTable)}>
-          Редактировать
-        </Button>
         <Button color='red' onClick={createButtonAction(deleteTable)}>
           Удалить
+        </Button>
+        <Button color='blue' onClick={createButtonAction(editTable)}>
+          Редактировать
         </Button>
       </ButtonList>
     </div>
