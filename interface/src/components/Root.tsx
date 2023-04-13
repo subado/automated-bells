@@ -8,12 +8,6 @@ import { Menu } from './Menu/Menu'
 export function Root() {
   const [isMenuOpen, setMenuOpen] = useState(false)
 
-  if (isMenuOpen) {
-    document.body.style.overflow = 'hidden'
-  } else {
-    document.body.style.overflow = ''
-  }
-
   return (
     <>
       <MenuOpenContext.Provider value={[isMenuOpen, setMenuOpen]}>
