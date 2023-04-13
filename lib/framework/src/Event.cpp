@@ -97,24 +97,32 @@ bool RecurringAlarm::isHappen() const
 }
 
 Interval::Interval(EventHandlerFunction handler, EventTearDownFunction tearDown, uint32_t duration,
-  const TimeSpan &timeSpan)
+  uint32_t timeSpan, uint32_t repeatsNum)
     : Event(handler, tearDown, duration),
       _timeSpan{timeSpan},
-      _prevTime(rtc.now())
+      _prevTime{},
+      _repeatsNum{repeatsNum},
+      _repeatsCounter{}
 {
 }
 
 bool Interval::isHappen() const
 {
-  if (_prevTime + _timeSpan == rtc.now())
+  if (_prevTime.secondstime() + _timeSpan <= rtc.now().secondstime())
   {
     return true;
   }
   return false;
 }
 
+bool Interval::isSelfDestructive() const
+{
+  return _repeatsNum != 0 && _repeatsCounter == _repeatsNum;
+}
+
 void Interval::_run()
 {
+  ++_repeatsCounter;
   _prevTime = rtc.now();
   _handler(_prevTime);
 }

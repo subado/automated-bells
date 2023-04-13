@@ -88,13 +88,16 @@ class Interval : public Event
 {
 public:
   Interval(EventHandlerFunction handler, EventTearDownFunction tearDown, uint32_t duration,
-    const TimeSpan &timeSpan);
+    uint32_t timeSpan, uint32_t repeatsNum = 0);
 
   bool isHappen() const override;
+  bool isSelfDestructive() const override;
 
 protected:
   void _run() override;
 
-  TimeSpan _timeSpan;
+  uint32_t _timeSpan;
   DateTime _prevTime;
+  uint32_t _repeatsNum;
+  uint32_t _repeatsCounter;
 };

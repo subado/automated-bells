@@ -65,7 +65,6 @@ void setup()
 
   ntp.begin();
 
-  ntp.syncTime(rtc);
   eventManager.emplaceEvent<Interval>(
     [](const DateTime &dt)
     {
@@ -75,7 +74,7 @@ void setup()
           rtc.now().timestamp(DateTime::TIMESTAMP_TIME).c_str());
       }
     },
-    1, TimeSpan(0, 1, 0, 0));
+    1, 1 * 60 * 60);
 
   server.begin(
     []()
