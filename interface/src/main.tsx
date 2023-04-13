@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { ErrorScreen } from './components/Errors/ErrorScreen'
 import { Ntp } from './components/Ntp'
 import { Root } from './components/Root'
+import { SchedulerConfig } from './components/SchedulerConfig'
 import { TimeTables } from './components/TimeTables/TimeTables'
 import { WiFi } from './components/WiFi'
 import './index.css'
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: '/wifi',
         element: <WiFi />,
+      },
+      {
+        path: '/scheduler',
+        element: <SchedulerConfig />,
       },
     ],
   },

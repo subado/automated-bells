@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { schedulerAPI } from '../../APIs/schedulerAPI'
 import { tablesAPI } from '../../APIs/tablesAPI'
 import { useOptions } from '../../contexts/OptionsContext'
-import { useScheduler } from '../../contexts/SchedulerContext'
+import { useSchedulerTitle } from '../../contexts/SchedulerTitleContext'
 import { useTableDispatch } from '../../contexts/TableContext'
 import { ButtonList } from '../ButtonList'
 import { Button } from './../Button'
@@ -10,7 +10,7 @@ import { Button } from './../Button'
 export function TableSelect() {
   const [options, setOptions] = useOptions()
   const [selected, setSelected] = useState<string>('')
-  const [scheduler, setScheduler] = useScheduler()
+  const [title, setTitle] = useSchedulerTitle()
   const dispatchTable = useTableDispatch()
 
   async function fetchTableTitles() {
@@ -26,8 +26,9 @@ export function TableSelect() {
     }
   }
 
-  function postScheduler() {
-    setScheduler({ ...scheduler, title: selected })
+  async function postScheduler() {
+    setTitle(selected)
+    const scheduler = await schedulerAPI.get()
     schedulerAPI.post({ ...scheduler, title: selected })
   }
 

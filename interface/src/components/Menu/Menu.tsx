@@ -12,6 +12,7 @@ export function Menu() {
       <MenuItem to='/'>Time</MenuItem>
       <MenuItem to='/ntp/'>NTP</MenuItem>
       <MenuItem to='/wifi/'>WiFi</MenuItem>
+      <MenuItem to='/scheduler/'>Scheduler</MenuItem>
       <span className='border' />
       <Button
         className='px-1 py-2 font-normal rounded-none'

@@ -1,18 +1,18 @@
 import { useEffect } from 'react'
 import { schedulerAPI } from '../../APIs/schedulerAPI'
-import { useScheduler } from '../../contexts/SchedulerContext'
+import { useSchedulerTitle } from '../../contexts/SchedulerTitleContext'
 
 export function SchedulerTitle() {
-  const [scheduler, setScheduler] = useScheduler()
+  const [title, setTitle] = useSchedulerTitle()
 
-  async function fetchScheduler() {
+  async function fetchSchedulerTitle() {
     const data = await schedulerAPI.get()
-    setScheduler(data)
+    setTitle(data.title)
   }
 
   useEffect(() => {
-    fetchScheduler()
+    fetchSchedulerTitle()
   }, [])
 
-  return <span>{scheduler.title}</span>
+  return <span>{title}</span>
 }
