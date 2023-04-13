@@ -223,6 +223,20 @@ void WebServer::_addHandlers()
       ESP.restart();
     });
 
+  // Sync time on RTC
+  _server.on("/api/sync/", HTTP_POST,
+    [](AsyncWebServerRequest *request)
+    {
+      eventManager.emplaceEvent<AbsoluteAlarm>(
+        [](const DateTime &dt)
+        {
+          ntp.syncTime(rtc);
+        },
+        2, rtc.now());
+
+      request->send(200);
+    });
+
   // Endpoint to facilitate development
   // Response contains config from CONFIG_FILENAME
   _server.on("/api/config/", HTTP_GET,
