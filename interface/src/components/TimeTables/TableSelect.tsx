@@ -62,7 +62,7 @@ export function TableSelect() {
           setSelected(e.currentTarget.value)
         }}
       >
-        <option value=''>-- Select Table --</option>
+        <option value=''>-- Выберите расписание --</option>
         {options.map((opt) => (
           <option key={opt} value={opt}>
             {opt}
@@ -71,13 +71,13 @@ export function TableSelect() {
       </select>
       <ButtonList buttonClassName='p-2 text-white'>
         <Button color='green' onClick={createButtonAction(postScheduler)}>
-          Set
+          Установить
         </Button>
         <Button color='blue' onClick={createButtonAction(editTable)}>
-          Edit
+          Редактировать
         </Button>
         <Button color='red' onClick={createButtonAction(deleteTable)}>
-          Delete
+          Удалить
         </Button>
       </ButtonList>
     </div>

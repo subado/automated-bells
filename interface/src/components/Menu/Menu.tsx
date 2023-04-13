@@ -12,10 +12,10 @@ export function Menu() {
 
   return (
     <ul className='overflow-auto fixed h-screen w-full md:w-[calc(320px_+_10vw)] z-10 py-8 px-3 bg-white shadow-xl shadow-black text-center text-2xl flex flex-col gap-y-6 tracking-wide'>
-      <MenuItem to='/'>Time</MenuItem>
+      <MenuItem to='/'>Расписания</MenuItem>
       <MenuItem to='/ntp/'>NTP</MenuItem>
       <MenuItem to='/wifi/'>WiFi</MenuItem>
-      <MenuItem to='/scheduler/'>Scheduler</MenuItem>
+      <MenuItem to='/scheduler/'>Параметры звонка</MenuItem>
       <span className='border' />
       <Button
         className='px-1 py-2 font-normal rounded-none text-white'
@@ -25,21 +25,21 @@ export function Menu() {
         onTouchStart={startRing}
         onTouchEnd={stopRing}
       >
-        Ring
+        Позвонить
       </Button>
       <Button
         className='px-1 py-2 font-normal rounded-none text-white'
         color='darkSky'
         onClick={() => api.post('sync/')}
       >
-        Sync
+        Синхронизировать время
       </Button>
       <Button
         className='px-1 py-2 font-normal rounded-none text-white'
         color='darkRose'
         onClick={() => api.post('restart/')}
       >
-        Restart
+        Перезагрузить
       </Button>
     </ul>
   )

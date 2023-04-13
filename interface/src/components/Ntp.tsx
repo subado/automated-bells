@@ -22,7 +22,7 @@ export function Ntp() {
     setTimeZone(data.timeZone)
     dispatchServersTable({
       type: 'set',
-      table: { title: 'Servers', items: data.servers },
+      table: { title: 'Сервера', items: data.servers },
     })
   }
 
@@ -42,11 +42,11 @@ export function Ntp() {
         setTimeZone({} as number)
         dispatchServersTable({ type: 'clearItems' })
       }}
-      submitButtonContent='Submit Config'
-      clearButtonContent='Clear Config'
+      submitButtonContent='Отправить'
+      clearButtonContent='Очистить'
     >
       <Input
-        label='Time zone'
+        label='Временная зона'
         id='timeZone'
         type='number'
         min='-12'

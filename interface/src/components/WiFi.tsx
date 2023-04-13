@@ -35,8 +35,8 @@ export function WiFi() {
     <Form
       onSubmit={handleSubmit}
       onClear={handleClear}
-      submitButtonContent='Submit Config'
-      clearButtonContent='Clear Config'
+      submitButtonContent='Отправить'
+      clearButtonContent='Очистить'
     >
       <WiFiDetailsContext.Provider value={[staConfig, setStaConfig]}>
         <WiFiDetails

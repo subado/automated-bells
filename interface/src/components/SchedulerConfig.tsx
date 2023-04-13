@@ -33,11 +33,11 @@ export function SchedulerConfig() {
           duration: {} as number,
         })
       }}
-      submitButtonContent={'Submit config'}
-      clearButtonContent={'Clear config'}
+      submitButtonContent={'Отправить'}
+      clearButtonContent={'Очистить'}
     >
       <Input
-        label='Pin'
+        label='Пин'
         id='pin'
         type='number'
         min={0}
@@ -48,7 +48,7 @@ export function SchedulerConfig() {
         }}
       />
       <Input
-        label='Duration'
+        label='Длительность'
         id='duration'
         type='number'
         min={1}
