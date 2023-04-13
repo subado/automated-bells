@@ -16,7 +16,7 @@ export function RemoveButton({ index }: RemoveButtonProps) {
           index: index,
         })
       }}
-      className='w-[50%] py-2'
+      className='w-[50%] py-2 text-white'
     >
       -
     </Button>

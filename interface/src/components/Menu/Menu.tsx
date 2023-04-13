@@ -11,18 +11,26 @@ export function Menu() {
       <MenuItem to='/scheduler/'>Scheduler</MenuItem>
       <span className='border' />
       <Button
-        className='px-1 py-2 font-normal rounded-none'
-        color='darkRose'
-        onClick={() => api.post('restart/')}
+        className='px-1 py-2 font-normal rounded-none text-white'
+        color='slate'
+        onMouseDown={() => api.post('ring/', { state: 'high' })}
+        onMouseUp={() => api.post('ring/', { state: 'low' })}
       >
-        Restart
+        Ring
       </Button>
       <Button
-        className='px-1 py-2 font-normal rounded-none'
+        className='px-1 py-2 font-normal rounded-none text-white'
         color='darkSky'
         onClick={() => api.post('sync/')}
       >
         Sync
+      </Button>
+      <Button
+        className='px-1 py-2 font-normal rounded-none text-white'
+        color='darkRose'
+        onClick={() => api.post('restart/')}
+      >
+        Restart
       </Button>
     </ul>
   )

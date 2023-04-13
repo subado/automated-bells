@@ -11,7 +11,6 @@ export function Header() {
       <Button
         color='lightGray'
         className='w-[15%] pr-2'
-        text='text-black'
         isAnimated={false}
         onClick={() => setMenuOpen(true)}
       >

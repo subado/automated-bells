@@ -237,6 +237,21 @@ void WebServer::_addHandlers()
       request->send(200);
     });
 
+  // Toggling on scheduler.pin()
+  _server.addHandler(new AsyncCallbackJsonWebHandler("/api/ring/",
+    [](AsyncWebServerRequest *request, JsonVariant &json)
+    {
+      if (std::strcmp(json["state"].as<const char *>(), "high"))
+      {
+        pinMode(scheduler.pin(), HIGH);
+      }
+      else if (std::strcmp(json["state"].as<const char *>(), "low"))
+      {
+        pinMode(scheduler.pin(), LOW);
+      }
+      request->send(200);
+    }));
+
   // Endpoint to facilitate development
   // Response contains config from CONFIG_FILENAME
   _server.on("/api/config/", HTTP_GET,

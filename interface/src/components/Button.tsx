@@ -1,12 +1,8 @@
+import type { ButtonHTMLAttributes } from 'react'
 import { useState } from 'react'
-import type { IChildrenProps } from '../interfaces'
 
-export interface IButtonProps extends IChildrenProps {
+export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   color: keyof typeof Colors
-  type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type']
-  className?: string
-  text?: string
-  onClick?: React.MouseEventHandler<HTMLButtonElement>
   isAnimated?: boolean
 }
 
@@ -23,16 +19,14 @@ const Colors = {
   sky: 'bg-sky-500',
   darkSky: 'bg-sky-700',
   pink: 'bg-pink-500',
+  slate: 'bg-slate-500',
 }
 
 export function Button({
   color,
-  type,
-  className,
-  text,
-  onClick,
   isAnimated = true,
   children,
+  ...rest
 }: IButtonProps) {
   const ClickColor: typeof Colors = {
     green: 'shadow-green-500 bg-green-700',
@@ -47,26 +41,39 @@ export function Button({
     sky: 'shadow-sky-500 bg-sky-700',
     darkSky: 'shadow-sky-700 bg-sky-900',
     pink: 'shadow-pink-500 bg-pink-700',
+    slate: 'shadow-slate-500 bg-slate-700',
   }
 
-  const [isClicked, setClicked] = useState(false)
-  function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-    setClicked(true)
-    onClick?.(e)
-  }
+  const [isActive, setActive] = useState(false)
 
-  return (
-    <button
-      type={type || 'button'}
-      className={`${(!isClicked || !isAnimated) && Colors[color]}
-         font-bold rounded ${text || 'text-white'} ${className}
+  rest = {
+    ...rest,
+    className: `${(!isActive || !isAnimated) && Colors[color]}
+         font-bold rounded ${rest.className}
         ${
-          isAnimated && isClicked && `animate-click shadow ${ClickColor[color]}`
-        }`}
-      onClick={handleClick}
-      onAnimationEnd={() => setClicked(false)}
-    >
-      {children}
-    </button>
-  )
+          isAnimated && isActive && ` animate-click shadow ${ClickColor[color]}`
+        }`,
+    type: rest.type || 'button',
+  }
+
+  if (rest.onClick != undefined) {
+    const handleClick = rest.onClick
+    rest.onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      setActive(true)
+      handleClick?.(e)
+    }
+    rest.onAnimationEnd = () => setActive(false)
+  } else if (rest.onMouseDown != undefined && rest.onMouseUp) {
+    const handleDown = rest.onMouseDown
+    rest.onMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
+      setActive(true)
+      handleDown?.(e)
+    }
+    const handleUp = rest.onMouseUp
+    rest.onMouseUp = (e: React.MouseEvent<HTMLButtonElement>) => {
+      setActive(false)
+      handleUp?.(e)
+    }
+  }
+  return <button {...rest}>{children}</button>
 }

@@ -69,7 +69,7 @@ export function TableSelect() {
           </option>
         ))}
       </select>
-      <ButtonList buttonClassName='p-2'>
+      <ButtonList buttonClassName='p-2 text-white'>
         <Button color='green' onClick={createButtonAction(postScheduler)}>
           Set
         </Button>

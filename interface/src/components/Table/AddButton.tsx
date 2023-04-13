@@ -16,7 +16,7 @@ export function AddButton({ index }: AddButtonProps) {
           index: index + 1,
         })
       }}
-      className='w-[50%] py-2'
+      className='w-[50%] py-2 text-white'
     >
       +
     </Button>
