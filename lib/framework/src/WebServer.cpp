@@ -215,12 +215,12 @@ void WebServer::_addHandlers()
       request->send(200);
     }));
 
-  // Restart ESP and send empty html
-  _server.on("/api/restart/", HTTP_POST,
+  // Reboot ESP
+  _server.on("/api/reset/", HTTP_POST,
     [](AsyncWebServerRequest *request)
     {
       request->send(200);
-      ESP.restart();
+      ESP.reset();
     });
 
   // Sync time on RTC

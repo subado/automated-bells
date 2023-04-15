@@ -32,7 +32,7 @@ void setup()
   if (!rtc.begin(RTC_SDA, RTC_SCL))
   {
     Serial.println("Couldn't find RTC\n");
-    ESP.restart();
+    ESP.reset();
   }
 
   if (!LittleFS.begin())

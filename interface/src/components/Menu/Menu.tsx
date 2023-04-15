@@ -37,7 +37,7 @@ export function Menu() {
       <Button
         className='px-1 py-2 font-normal rounded-none text-white'
         color='darkRose'
-        onClick={() => api.post('restart/')}
+        onClick={() => api.post('reset/')}
       >
         Перезагрузить
       </Button>
