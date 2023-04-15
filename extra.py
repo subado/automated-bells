@@ -11,7 +11,7 @@ env.AddCustomTarget(
 )
 
 env.AddCustomTarget(
-    name="build-react",
+    name="build-interface",
     dependencies=None,
     actions=[
         "cd interface/ && yarn build",
