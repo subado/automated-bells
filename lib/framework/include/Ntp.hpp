@@ -46,7 +46,7 @@ private:
   std::vector<String> _servers;
   std::size_t _serverIndex;
   IPAddress _serverIp;
-  int8_t _timeZone; // 0 means UTC+0
+  int8_t _timeZone;                // 0 means UTC+0
 
   byte _packetBuffer[PACKET_SIZE]; // buffer to hold incoming & outgoing packets
 };
