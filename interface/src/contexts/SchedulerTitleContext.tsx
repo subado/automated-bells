@@ -1,14 +1,14 @@
-import type { Dispatch, SetStateAction } from 'react'
-import { useState } from 'react'
-import { useContext, createContext } from 'react'
-import type { IChildrenProps } from '../interfaces'
+import type { PropsWithChildren } from 'react'
+import { useContext, createContext, useState } from 'react'
 
-type SchedulerTitleContextProps = [string, Dispatch<SetStateAction<string>>]
+const initialState = ''
+const wrappedUseState = () => useState(initialState)
+type SchedulerTitleContextProps = ReturnType<typeof wrappedUseState>
 
 const SchedulerTitleContext = createContext({} as SchedulerTitleContextProps)
 
-export function SchedulerTitleProvider({ children }: IChildrenProps) {
-  const [schedulerTitle, setSchedulerTitle] = useState('')
+export function SchedulerTitleProvider({ children }: PropsWithChildren) {
+  const [schedulerTitle, setSchedulerTitle] = wrappedUseState()
 
   return (
     <SchedulerTitleContext.Provider value={[schedulerTitle, setSchedulerTitle]}>

@@ -1,20 +1,21 @@
+import type { ChangeEvent, FormEvent } from 'react'
 import { useEffect, useReducer, useState } from 'react'
 import { ntpAPI } from '../APIs/ntpAPI'
 import {
-  initialTable,
+  initialState,
   TableContext,
   TableDispatchContext,
 } from '../contexts/TableContext'
 import { tableReducer } from '../reducers/tableReducer'
 import { Form } from './Form'
-import { Input } from './Input'
-import { Table } from './Table/Table'
+import { Input } from './styled'
+import { Table } from './Table/'
 
 export function Ntp() {
   const [timeZone, setTimeZone] = useState({} as number)
   const [serversTable, dispatchServersTable] = useReducer(
     tableReducer,
-    initialTable
+    initialState
   )
 
   async function fetchNtpConfig() {
@@ -30,7 +31,7 @@ export function Ntp() {
     fetchNtpConfig()
   }, [])
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault()
     ntpAPI.post({ timeZone: timeZone, servers: serversTable.items })
   }
@@ -45,17 +46,19 @@ export function Ntp() {
       submitButtonContent='Отправить'
       clearButtonContent='Очистить'
     >
-      <Input
-        label='Временная зона'
-        id='timeZone'
-        type='number'
-        min='-12'
-        max='14'
-        value={timeZone}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setTimeZone(e.target.valueAsNumber)
-        }}
-      />
+      <label htmlFor='timeZone'>
+        timeZone
+        <Input
+          id='timeZone'
+          type='number'
+          min='-12'
+          max='14'
+          value={timeZone}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            setTimeZone(e.target.valueAsNumber)
+          }}
+        />
+      </label>
       <TableContext.Provider value={serversTable}>
         <TableDispatchContext.Provider value={dispatchServersTable}>
           <Table inputType='text' inputName='server' readOnlyTitle={true} />

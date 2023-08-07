@@ -4,13 +4,12 @@ import { tablesAPI } from '../../APIs/tablesAPI'
 import { useOptions } from '../../contexts/OptionsContext'
 import { useSchedulerTitle } from '../../contexts/SchedulerTitleContext'
 import { useTableDispatch } from '../../contexts/TableContext'
-import { ButtonList } from '../ButtonList'
 import { Button } from './../Button'
 
 export function TableSelect() {
   const [options, setOptions] = useOptions()
   const [selected, setSelected] = useState<string>('')
-  const [title, setTitle] = useSchedulerTitle()
+  const [, setTitle] = useSchedulerTitle()
   const dispatchTable = useTableDispatch()
 
   async function fetchTableTitles() {
@@ -69,17 +68,29 @@ export function TableSelect() {
           </option>
         ))}
       </select>
-      <ButtonList buttonClassName='py-2 px-7 text-white'>
-        <Button color='green' onClick={createButtonAction(postScheduler)}>
+      <div className='flex flex-wrap flex-row gap-x-2 w-full justify-center gap-y-2'>
+        <Button
+          color='green'
+          className='py-2 px-7 text-white'
+          onClick={createButtonAction(postScheduler)}
+        >
           Установить
         </Button>
-        <Button color='red' onClick={createButtonAction(deleteTable)}>
+        <Button
+          color='red'
+          className='py-2 px-7 text-white'
+          onClick={createButtonAction(deleteTable)}
+        >
           Удалить
         </Button>
-        <Button color='blue' onClick={createButtonAction(editTable)}>
+        <Button
+          color='blue'
+          className='py-2 px-7 text-white'
+          onClick={createButtonAction(editTable)}
+        >
           Редактировать
         </Button>
-      </ButtonList>
+      </div>
     </div>
   )
 }

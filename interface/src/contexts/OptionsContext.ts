@@ -1,7 +1,8 @@
-import type { Dispatch, SetStateAction } from 'react'
-import { useContext, createContext } from 'react'
+import { useContext, createContext, useState } from 'react'
 
-type OptionsContextProps = [string[], Dispatch<SetStateAction<string[]>>]
+const initialState = Array<string>
+const wrappedUseState = () => useState(initialState)
+type OptionsContextProps = ReturnType<typeof wrappedUseState>
 
 export const OptionsContext = createContext({} as OptionsContextProps)
 

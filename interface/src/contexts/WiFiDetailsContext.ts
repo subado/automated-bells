@@ -1,16 +1,14 @@
-import type { Dispatch, SetStateAction } from 'react'
+import { useState } from 'react'
 import { useContext, createContext } from 'react'
 import type { IWiFiDetails } from '../interfaces'
 
-export const initialWiFiDetails: IWiFiDetails = {
+export const initialState: IWiFiDetails = {
   ssid: '',
   psk: '',
 }
 
-type WiFiDetailsContextProps = [
-  IWiFiDetails,
-  Dispatch<SetStateAction<IWiFiDetails>>
-]
+const wrappedUseState = () => useState(initialState)
+type WiFiDetailsContextProps = ReturnType<typeof wrappedUseState>
 
 export const WiFiDetailsContext = createContext({} as WiFiDetailsContextProps)
 

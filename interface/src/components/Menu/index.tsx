@@ -1,6 +1,6 @@
 import { api } from '../../constants'
 import { Button } from '../Button'
-import { MenuItem } from './MenuItem'
+import { MenuItem } from './Item'
 
 export function Menu() {
   function startRing() {

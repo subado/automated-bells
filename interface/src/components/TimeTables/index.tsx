@@ -2,17 +2,17 @@ import { useReducer, useState } from 'react'
 import { tablesAPI } from '../../APIs/tablesAPI'
 import { OptionsContext } from '../../contexts/OptionsContext'
 import {
-  initialTable,
+  initialState,
   TableContext,
   TableDispatchContext,
 } from '../../contexts/TableContext'
 import { tableReducer } from '../../reducers/tableReducer'
 import { Form } from '../Form'
-import { Table } from '../Table/Table'
-import { TableSelect } from './TableSelect'
+import { Table } from '../Table'
+import { TableSelect } from './Select'
 
 export function TimeTables() {
-  const [timeTable, dispatchTimeTable] = useReducer(tableReducer, initialTable)
+  const [timeTable, dispatchTimeTable] = useReducer(tableReducer, initialState)
   const [options, setOptions] = useState([] as string[])
 
   function handleTableSubmit(e: React.FormEvent) {

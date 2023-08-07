@@ -1,8 +1,8 @@
 import { NavLink } from 'react-router-dom'
 import { useMenuOpen } from '../../contexts/MenuOpenContext'
-import type { IChildrenProps } from '../../interfaces'
+import type { PropsWithChildren } from 'react'
 
-interface IMenuItemProps extends IChildrenProps {
+interface IMenuItemProps extends PropsWithChildren {
   to: string
 }
 

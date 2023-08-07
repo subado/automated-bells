@@ -1,9 +1,7 @@
 import React from 'react'
-import type { IChildrenProps } from '../interfaces'
+import type { PropsWithChildren } from 'react'
 import { Button } from './Button'
-import { ButtonList } from './ButtonList'
-
-interface IFormProps extends IChildrenProps {
+interface IFormProps extends PropsWithChildren {
   onSubmit: React.FormEventHandler<HTMLFormElement>
   onClear: React.MouseEventHandler<HTMLButtonElement>
   submitButtonContent: string
@@ -23,14 +21,15 @@ export function Form({
       onSubmit={onSubmit}
     >
       {children}
-      <ButtonList buttonClassName='py-2 px-7 text-white'>
-        <Button color='orange' type='submit'>
+
+      <div className='flex flex-wrap flex-row gap-x-2 w-full justify-center gap-y-2'>
+        <Button color='orange' className='py-2 px-7 text-white' type='submit'>
           {submitButtonContent}
         </Button>
-        <Button color='sky' onClick={onClear}>
+        <Button color='sky' className='py-2 px-7 text-white' onClick={onClear}>
           {clearButtonContent}
         </Button>
-      </ButtonList>
+      </div>
     </form>
   )
 }

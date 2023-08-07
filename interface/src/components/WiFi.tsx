@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 import { wifiAPI } from '../APIs/wifiAPI'
 import {
-  initialWiFiDetails,
+  initialState,
   WiFiDetailsContext,
 } from '../contexts/WiFiDetailsContext'
 import { Form } from './Form'
 import { WiFiDetails } from './WiFiDetails'
 
 export function WiFi() {
-  const [staConfig, setStaConfig] = useState(initialWiFiDetails)
-  const [apConfig, setApConfig] = useState(initialWiFiDetails)
+  const [staConfig, setStaConfig] = useState(initialState)
+  const [apConfig, setApConfig] = useState(initialState)
 
   async function fetchWiFiConfig() {
     const data = await wifiAPI.get()
@@ -27,8 +27,8 @@ export function WiFi() {
   }
 
   function handleClear() {
-    setStaConfig(initialWiFiDetails)
-    setApConfig(initialWiFiDetails)
+    setStaConfig(initialState)
+    setApConfig(initialState)
   }
 
   return (

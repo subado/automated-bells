@@ -18,10 +18,6 @@ export interface ITime {
   second: string
 }
 
-export interface IChildrenProps {
-  children: React.ReactNode
-}
-
 export interface IScheduler {
   pin: number
   duration: number

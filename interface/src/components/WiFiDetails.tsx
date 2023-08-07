@@ -1,5 +1,6 @@
+import type { ChangeEvent } from 'react'
 import { useWiFiDetails } from '../contexts/WiFiDetailsContext'
-import { Input } from './Input'
+import { Input } from './styled'
 
 interface IWiFIDetailsProps {
   title: string
@@ -16,12 +17,12 @@ export function WiFiDetails({
 }: IWiFIDetailsProps) {
   const [details, setDetails] = useWiFiDetails()
 
-  function onChangeSsid(e: React.ChangeEvent<HTMLInputElement>) {
-    setDetails({ ...details, ssid: e.target.value })
+  function onChangeSsid(e: ChangeEvent<HTMLInputElement>) {
+    setDetails({ ...details, ssid: e.currentTarget.value })
   }
 
-  function onChangePsk(e: React.ChangeEvent<HTMLInputElement>) {
-    setDetails({ ...details, psk: e.target.value })
+  function onChangePsk(e: ChangeEvent<HTMLInputElement>) {
+    setDetails({ ...details, psk: e.currentTarget.value })
   }
 
   return (
@@ -32,21 +33,25 @@ export function WiFiDetails({
         >
           {title}
         </h1>
-        <Input
-          label='SSID'
-          id={idForSsid}
-          type='text'
-          value={details.ssid}
-          onChange={onChangeSsid}
-          required={true}
-        />
-        <Input
-          label='PSK'
-          id={idForPsk}
-          type='text'
-          value={details.psk}
-          onChange={onChangePsk}
-        />
+        <label htmlFor={idForSsid}>
+          SSID
+          <Input
+            id={idForSsid}
+            type='text'
+            value={details.ssid}
+            onChange={onChangeSsid}
+            required={true}
+          />
+        </label>
+        <label htmlFor={idForPsk}>
+          PSK
+          <Input
+            id={idForPsk}
+            type='text'
+            value={details.psk}
+            onChange={onChangePsk}
+          />
+        </label>
       </div>
     </>
   )

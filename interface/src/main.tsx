@@ -1,10 +1,11 @@
-import ReactDOM from 'react-dom/client'
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { ErrorScreen } from './components/Errors/ErrorScreen'
+import { ErrorScreen } from './components/Errors/Screen'
 import { Ntp } from './components/Ntp'
 import { Root } from './components/Root'
 import { SchedulerConfig } from './components/SchedulerConfig'
-import { TimeTables } from './components/TimeTables/TimeTables'
+import { TimeTables } from './components/TimeTables'
 import { WiFi } from './components/WiFi'
 import './index.css'
 
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   },
 ])
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <RouterProvider router={router} />
+const container = document.getElementById('root')
+const root = createRoot(container!)
+root.render(
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>
 )

@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { schedulerAPI } from '../APIs/schedulerAPI'
 import type { IScheduler } from '../interfaces'
 import { Form } from './Form'
-import { Input } from './Input'
+import { Input } from './styled'
 
 export function SchedulerConfig() {
   const [scheduler, setScheduler] = useState({} as IScheduler)
@@ -36,27 +36,30 @@ export function SchedulerConfig() {
       submitButtonContent={'Отправить'}
       clearButtonContent={'Очистить'}
     >
-      <Input
-        label='Пин'
-        id='pin'
-        type='number'
-        min={0}
-        max={255}
-        value={scheduler.pin}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setScheduler({ ...scheduler, pin: e.target.valueAsNumber })
-        }}
-      />
-      <Input
-        label='Длительность'
-        id='duration'
-        type='number'
-        min={1}
-        value={scheduler.duration}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setScheduler({ ...scheduler, duration: e.target.valueAsNumber })
-        }}
-      />
+      <label htmlFor='pin'>
+        pin
+        <Input
+          type='number'
+          min={0}
+          max={255}
+          value={scheduler.pin}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setScheduler({ ...scheduler, pin: e.target.valueAsNumber })
+          }}
+        />
+      </label>
+      <label htmlFor='duration'>
+        duration
+        <Input
+          id='duration'
+          type='number'
+          min={1}
+          value={scheduler.duration}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setScheduler({ ...scheduler, duration: e.target.valueAsNumber })
+          }}
+        />
+      </label>
     </Form>
   )
 }
