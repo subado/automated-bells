@@ -33,8 +33,8 @@ export function TimeTables() {
             onClear={() => {
               dispatchTimeTable({ type: 'clearItems' })
             }}
-            submitButtonContent='Отправить'
-            clearButtonContent='Очистить'
+            submitButtonContent='Submit Table'
+            clearButtonContent='Clear Table'
           >
             <Table
               inputType='time'

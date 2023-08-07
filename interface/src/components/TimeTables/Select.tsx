@@ -61,7 +61,7 @@ export function TableSelect() {
           setSelected(e.currentTarget.value)
         }}
       >
-        <option value=''>-- Выберите расписание --</option>
+        <option value=''>-- Select Table --</option>
         {options.map((opt) => (
           <option key={opt} value={opt}>
             {opt}
@@ -74,21 +74,21 @@ export function TableSelect() {
           className='py-2 px-7 text-white'
           onClick={createButtonAction(postScheduler)}
         >
-          Установить
+          Set
         </Button>
         <Button
           color='red'
           className='py-2 px-7 text-white'
           onClick={createButtonAction(deleteTable)}
         >
-          Удалить
+          Delete
         </Button>
         <Button
           color='blue'
           className='py-2 px-7 text-white'
           onClick={createButtonAction(editTable)}
         >
-          Редактировать
+          Edit
         </Button>
       </div>
     </div>

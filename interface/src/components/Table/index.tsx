@@ -35,7 +35,7 @@ export function Table({
           <th colSpan={3}>
             <input
               className='text-center w-full bg-inherit p-2 tracking-wide placeholder:italic placeholder:text-slate-400'
-              placeholder='Заголовок'
+              placeholder='Title'
               type='text'
               name='title'
               pattern={titlePattern}
